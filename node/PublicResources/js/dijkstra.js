@@ -18,7 +18,7 @@ export function dijkstra(graph, startNode) {
   let queue = new PriorityQueue();
 
   graph.nodes.forEach((element) => {
-    queue.enqueue(element.name, element.distanceOrigin);
+    queue.enqueue(element.id, element.distanceOrigin);
   });
 
   while (!queue.isEmpty) {
@@ -33,4 +33,17 @@ export function dijkstra(graph, startNode) {
   }
 }
 
-function traceback(backtrack, endNode) {}
+export function traceback(graph, endNode) {
+  let shortestPath = "";
+  let jump = endNode;
+
+  while (jump.parent !== null && jump.distance !== 0) {
+    shortestPath = jump.id() + " -> " + shortestPath;
+    jump = graph.getElementById(`${jump.parent.identifier}`);
+  }
+  // Add the start node to the list.
+  shortestPath = jump.id() + " -> " + shortestPath;
+  // Test print
+  // Change this function to animate the courier
+  console.log(`Shortest path: ${shortestPath}`);
+}
