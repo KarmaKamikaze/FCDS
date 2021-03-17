@@ -3,9 +3,9 @@
  * which in this case is their priority.
  */
 class QueueElement {
-  constructor(identifier, distance) {
+  constructor(identifier, distanceOrigin) {
     this.identifier = identifier;
-    this.distance = distance;
+    this.distanceOrigin = distanceOrigin;
   }
 }
 
@@ -18,8 +18,8 @@ export class PriorityQueue {
     this.distances = new Array();
   }
 
-  enqueue(identifier, distance) {
-    let queueElement = new QueueElement(identifier, distance);
+  enqueue(identifier, distanceOrigin) {
+    let queueElement = new QueueElement(identifier, distanceOrigin);
     let fitsBetween = false; // Boolean to decide if the element fits between others.
 
     for (let i = 0; i < this.distances.length; i++) {
@@ -29,7 +29,7 @@ export class PriorityQueue {
        * until we hit an element who has a larger distance. Then we insert the
        * queue element in the queue.
        */
-      if (this.distances[i].distance > queueElement.distance) {
+      if (this.distances[i].distance > queueElement.distanceOrigin) {
         this.distances.splice(i, 0, queueElement);
         fitsBetween = true;
         break;

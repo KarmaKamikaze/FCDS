@@ -4,27 +4,33 @@
 // Priority queue (increasing order) (min-heap)
 // (Weight function)
 import { PriorityQueue } from "./queue.js";
+import { initializeSingleSource, relax } from "./pathModules.js";
 
-function initializeSingleSource(graph, startNode) {
-  // Change identifier after cytoscape is implemented
-  graph.forEach((element) => {
-    element.node.distance = Infinity;
-    element.node.parent = null;
-  });
-  startNode.node.distance = 0;
-}
-
+/**
+ *
+ * @param {The graph nodes will be updated with new distances
+ * and parents in terms of the new starting point.} graph
+ * @param {The starting point node. Also called source.} startNode
+ */
 export function dijkstra(graph, startNode) {
   initializeSingleSource(graph, startNode);
-  let distances = new Set();
+  //let distances = new Object();
   let queue = new PriorityQueue();
 
-  graph.forEach((element) => {
-    queue.enqueue(element.node.name, element.node.distance);
+  graph.nodes.forEach((element) => {
+    queue.enqueue(element.name, element.distanceOrigin);
   });
 
   while (!queue.isEmpty) {
     let shortestDistance = queue.dequeue();
-    distances.add(shortestDistance);
+    //distances.add(shortestDistance);
+    // For-loop that checks if each edge's source is the observed node.
+    graph.edges.forEach((edge) => {
+      if (edge.source() === shortestDistance.identifier) {
+        relax(shortestDistance, edge.target());
+      }
+    });
   }
 }
+
+function traceback(backtrack, endNode) {}
