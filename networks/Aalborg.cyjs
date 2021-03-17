@@ -1,0 +1,93 @@
+{
+  "format_version" : "1.0",
+  "generated_by" : "cytoscape-3.8.2",
+  "target_cytoscapejs_version" : "~2.1",
+  "data" : {
+    "shared_name" : "Network",
+    "name" : "Network",
+    "SUID" : 51,
+    "shared_name" : "Network",
+    "__Annotations" : [ ],
+    "selected" : true
+  },
+  "elements" : {
+    "nodes" : [ {
+      "data" : {
+        "id" : "center_node",
+        "shared_name" : "Center",
+        "name" : "Center",
+        "SUID" : 64,
+        "shared_name" : "center_node",
+        "id_original" : "0",
+        "selected" : false
+      },
+      "position" : {
+        "x" : 0.0,
+        "y" : 0.0
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "rest1",
+        "shared_name" : "Restaurant1",
+        "name" : "Restaurant1",
+        "SUID" : 63,
+        "shared_name" : "rest1",
+        "id_original" : "r1",
+        "selected" : false
+      },
+      "position" : {
+        "x" : -193.2378447792324,
+        "y" : 28.225995078284175
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "rest2",
+        "shared_name" : "Restaurant2",
+        "name" : "Restaurant2",
+        "SUID" : 62,
+        "shared_name" : "rest2",
+        "id_original" : "r2",
+        "selected" : false
+      },
+      "position" : {
+        "x" : 19.260948344114098,
+        "y" : -135.78569091515462
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "cust1",
+        "shared_name" : "Customer1",
+        "name" : "Customer1",
+        "SUID" : 61,
+        "shared_name" : "cust1",
+        "id_original" : "c1",
+        "selected" : false
+      },
+      "position" : {
+        "x" : 121.67251503383957,
+        "y" : 113.70889958073586
+      },
+      "selected" : false
+    } ],
+    "edges" : [ {
+      "data" : {
+        "id" : "r1r2",
+        "source" : "rest2",
+        "target" : "rest1",
+        "shared_name" : "r2-r1",
+        "distance" : 100.0,
+        "name" : "r2-r1",
+        "SUID" : 65,
+        "source_original" : "252",
+        "shared_name" : "r2-r1",
+        "id_original" : "259",
+        "selected" : false,
+        "target_original" : "250"
+      },
+      "selected" : false
+    } ]
+  }
+}
