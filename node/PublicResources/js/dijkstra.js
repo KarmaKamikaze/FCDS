@@ -3,7 +3,7 @@
 // Dijkstra
 // Priority queue (increasing order) (min-heap)
 // (Weight function)
-import PriorityQueue from "queues.js";
+import { PriorityQueue } from "./queue.js";
 
 function initializeSingleSource(graph, startNode) {
   // Change identifier after cytoscape is implemented
@@ -11,10 +11,20 @@ function initializeSingleSource(graph, startNode) {
     element.node.distance = Infinity;
     element.node.parent = null;
   });
-  startNode.distance = 0;
+  startNode.node.distance = 0;
 }
 
-function dijkstra(graph, startNode) {
+export function dijkstra(graph, startNode) {
   initializeSingleSource(graph, startNode);
   let distances = new Set();
+  let queue = new PriorityQueue();
+
+  graph.forEach((element) => {
+    queue.enqueue(element.node.name, element.node.distance);
+  });
+
+  while (!queue.isEmpty) {
+    let shortestDistance = queue.dequeue();
+    distances.add(shortestDistance);
+  }
 }

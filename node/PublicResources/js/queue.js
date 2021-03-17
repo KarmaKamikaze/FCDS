@@ -1,10 +1,3 @@
-//queue
-//priorityqueue
-//enqueue
-//dequeue
-//front
-//isempty
-
 /**
  * Class to create queue elements and assign their distance,
  * which in this case is their priority.
@@ -55,7 +48,7 @@ export class PriorityQueue {
     }
     // Removes the first element of the queue.
     else {
-      this.distances.shift();
+      return this.distances.shift();
     }
   }
 
