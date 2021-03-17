@@ -16,9 +16,21 @@
   * MAIN
   * Går array af edges igennem og kører weightingFunction for dem, hvis funktion skal anvendes.
   */
- /*
  edges_array.forEach(edge => {
    weightingFunction(courier, edge); 
  });
- */
  
+/* kasper
+let edges = {
+  distance: 1000,
+  speedLimit: 50,
+  obstructions: 2,
+  intersection: 1,
+  traffic: trafficGeneration(),
+  weight: () => {
+    return (edges.distance *(130 / edges.speedLimit) * edges.traffic * edges.obstructions * edges.intersection);
+  }
+}
+
+console.log(edges.weight());
+*/
