@@ -41,7 +41,7 @@ export function relax(currentNode, adjacentNode, weight) {
  * @param {The object for the courier en route} courierObject
  * @param {The edge whose weight is being calculated} edgeObject
  */
-export function weightingFunction(edgeObject, courierObject) {
+export function calculateWeight(edgeObject, courierObject) {
   edgeObject.weight =
     edgeObject.distance *
     (maxSpeedLimit /
