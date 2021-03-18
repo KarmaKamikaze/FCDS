@@ -181,10 +181,11 @@ function initNames () {
  * @returns The length of the edge
  */
 function calcLength (edgeId) {
-  let edge = cy.getElementById(edgeId);
-  let pos1 = getPos(edge.data("source"));
-  let pos2 = getPos(edge.data("target"));
-  let length = Math.sqrt((pos2.x- pos1.x)*(pos2.x-pos1.x)+(pos2.y-pos1.y)*(pos2.y-pos1.y)); 
+  let edge = cy.getElementById(edgeId),
+      pos1 = getPos(edge.data("source")),
+      pos2 = getPos(edge.data("target")),
+      length = Math.sqrt((pos2.x- pos1.x)*(pos2.x-pos1.x)+(pos2.y-pos1.y)*(pos2.y-pos1.y)); 
+
   edge.data("length", length);
   return length;
 }
@@ -251,22 +252,23 @@ function randomNode (id) {
  * @param {The number of the courier} courierNum 
  */
 function moveCourier (source, target, courierNum) {
-  let diff1 = getPos(target).x - getPos(source).x;
-  let diff2 = getPos(target).y - getPos(source).y;
-  let edge = cy.getElementById(source + target);
-  let i = 0;
-  let steps = getLength(source,target)*2;
+  let diff1 = getPos(target).x - getPos(source).x,
+      diff2 = getPos(target).y - getPos(source).y,
+      edge = cy.getElementById(source + target),
+      steps = getLength(source,target)*2,
+      i = 0;
+    
   edge.addClass("route");
   let anim = setInterval( () => {
       cy.getElementById("courier" + courierNum).shift({x: diff1/steps, y: diff2/steps});
-  i++;
-  if (i >= steps) {
-      clearInterval(anim);
-      edge.addClass(CLASS_ROUTE_DONE);
-      setTimeout( () => {
-        edge.removeClass(CLASS_ROUTE + " " + CLASS_ROUTE_DONE);
-      }, 500);
-  }
+      i++;
+      if (i >= steps) {
+          clearInterval(anim);
+          edge.addClass(CLASS_ROUTE_DONE);
+          setTimeout( () => {
+            edge.removeClass(CLASS_ROUTE + " " + CLASS_ROUTE_DONE);
+          }, 500);
+      }
   }, 5);
 }
 
@@ -274,8 +276,8 @@ function moveCourier (source, target, courierNum) {
  * Prints the nodes of the network as well as their connected edges
  */
 function listNetwork () {
-  let nodes = cy.nodes();
-  let netStr = "";
+  let nodes = cy.nodes(),
+      netStr = "";
   
   for (let i = 0; i < nodes.length; i++) {
       netStr += ("Node: " + nodes[i].id() + "\n")
@@ -304,16 +306,14 @@ let numCustomers = 0;
  * 
  */
 function generateCustomer() {
-  let maxNodeDistance = 100; // global variable?
-
-  let randPos = getRandomPos();
-
-  let nodes = cy.nodes(),
+  let maxNodeDistance = 100, // global variable?
+      randPos = getRandomPos(),
+      nodes = cy.nodes(),
       n = nodes.length;
 
   for(i = 0; i < n; i++) {
-      let orgPos = nodes[i].position();
-      let distance = Math.sqrt((randPos.x-orgPos.x)*(randPos.x-orgPos.x)+(randPos.y-orgPos.y)*(randPos.y-orgPos.y));
+      let orgPos = nodes[i].position(),
+          distance = Math.sqrt((randPos.x-orgPos.x)*(randPos.x-orgPos.x)+(randPos.y-orgPos.y)*(randPos.y-orgPos.y));
 
       if(distance <= maxNodeDistance) {
           if(i === n-1) {
