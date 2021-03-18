@@ -1,0 +1,104 @@
+{
+  "format_version" : "1.0",
+  "generated_by" : "cytoscape-3.8.2",
+  "target_cytoscapejs_version" : "~2.1",
+  "data" : {
+    "shared_name" : "Network",
+    "name" : "Network",
+    "SUID" : 51,
+    "shared_name" : "Network",
+    "__Annotations" : [ ],
+    "selected" : true
+  },
+  "elements" : {
+    "nodes" : [ {
+      "data" : {
+        "id" : "R3",
+        "shared_name" : "R3",
+        "name" : "R3",
+        "SUID" : 64,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 201.52360978258537,
+        "y" : 158.88025638341102
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "R2",
+        "shared_name" : "Restaurant2",
+        "name" : "R2",
+        "SUID" : 63,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -0.17961110438342587,
+        "y" : -180.57087552194778
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "R1",
+        "shared_name" : "Restaurant1",
+        "name" : "R1",
+        "SUID" : 62,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -229.65133656913915,
+        "y" : -8.072723357804406
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "C",
+        "shared_name" : "Center",
+        "name" : "C",
+        "SUID" : 61,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 0.0,
+        "y" : 0.0
+      },
+      "selected" : false
+    } ],
+    "edges" : [ {
+      "data" : {
+        "id" : "R2-R3",
+        "source" : "R2",
+        "target" : "R3",
+        "shared_name" : "R2-R3",
+        "name" : "R2-R3",
+        "SUID" : 89,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "R1-R2",
+        "source" : "R1",
+        "target" : "R2",
+        "shared_name" : "R1-R2",
+        "name" : "R1-R2",
+        "interaction" : "",
+        "SUID" : 66,
+        "shared_interaction" : "",
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "R3-R1",
+        "source" : "R3",
+        "target" : "R1",
+        "shared_name" : "R3-R1",
+        "name" : "R3-R1",
+        "SUID" : 91,
+        "selected" : false
+      },
+      "selected" : false
+    } ]
+  }
+}
