@@ -35,7 +35,8 @@ function initNetwork() {
         'width': 3,
         'line-color': 'white',
         'target-arrow-color': 'white',
-        'content': ''
+        'color': 'lightgreen',
+        'content': 'data(length)'
       })
     .selector(`.${CLASS_ROUTE}`)
       .style({
@@ -172,6 +173,7 @@ function initNames () {
       n = edges.length;
   for (let i = 0; i < n; i++) {
     addEdge (edges[i].data("source"), edges[i].data("target"));
+    addEdge (edges[i].data("target"), edges[i].data("source"));
     delNode(edges[i].id());
   }
 }
@@ -187,7 +189,7 @@ function calcLength (edgeId) {
       pos2 = getPos(edge.data("target")),
       length = Math.sqrt((pos2.x- pos1.x)*(pos2.x-pos1.x)+(pos2.y-pos1.y)*(pos2.y-pos1.y)); 
 
-  edge.data("length", length);
+  edge.data("length", length.toFixed(2));
   return length;
 }
 
@@ -257,18 +259,22 @@ function moveCourier (source, target, courierNum) {
   let diff1 = getPos(target).x - getPos(source).x,
       diff2 = getPos(target).y - getPos(source).y,
       edge = cy.getElementById(source + target),
+      edgeRev = cy.getElementById(target + source),
       steps = getLength(source,target)*2,
       i = 0;
     
   edge.addClass("route");
+  edgeRev.addClass("route");
   let anim = setInterval( () => {
       cy.getElementById("courier" + courierNum).shift({x: diff1/steps, y: diff2/steps});
       i++;
       if (i >= steps) {
           clearInterval(anim);
           edge.addClass(CLASS_ROUTE_DONE);
+          edgeRev.addClass(CLASS_ROUTE_DONE)
           setTimeout( () => {
             edge.removeClass(CLASS_ROUTE + " " + CLASS_ROUTE_DONE);
+            edgeRev.removeClass(CLASS_ROUTE + " " + CLASS_ROUTE_DONE);
           }, 500);
       }
   }, 5);

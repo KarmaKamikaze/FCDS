@@ -25,7 +25,8 @@
                     darkBtn.value = "Light mode";
                     cy.style().selector('node').style('color', 'white')
                     cy.style().selector('edge').style('line-color', 'white')
-                    cy.style().selector('edge').style('target-arrow-color', 'white').update()
+                    cy.style().selector('edge').style('target-arrow-color', 'white')
+                    cy.style().selector('edge').style('color', 'lightgreen').update()
                 }
                 else {
                     document.body.style.backgroundColor = "white";
@@ -34,7 +35,8 @@
                     documentTheme = "Light mode";
                     cy.style().selector('node').style('color', 'black')
                     cy.style().selector('edge').style('line-color', 'black')
-                    cy.style().selector('edge').style('target-arrow-color', 'black').update()
+                    cy.style().selector('edge').style('target-arrow-color', 'black')
+                    cy.style().selector('edge').style('color', 'darkgreen').update()
                 }
             })
             document.getElementById('cy').after(darkBtn);
