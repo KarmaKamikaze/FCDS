@@ -156,8 +156,9 @@ function addEdge (sourceNode, targetNode, isOneWay = false) {
 function initLength () {
   let edges = cy.edges(),
       n = edges.n;
-  for (let i = 0; i < n; i++)
+  for (let i = 0; i < n; i++) {
     calcLength(edges[i].id());
+  }
 }
 
 /**
@@ -201,8 +202,9 @@ function getLength (node1, node2, ignoreDirection = false) {
   let edges = cy.getElementById(node1).connectedEdges(),
       n = edges.length;
   for(let i = 0; i < n; i++) {
-    if(edges[i].data("target") === node2 || (ignoreDirection && edges[i].data("source") === node2))
+    if(edges[i].data("target") === node2 || (ignoreDirection && edges[i].data("source") === node2)) {
       return edges[i].data("length");
+    }
   }
 }
 
@@ -280,10 +282,12 @@ function listNetwork () {
       netStr = "";
   
   for (let i = 0; i < nodes.length; i++) {
-      netStr += ("Node: " + nodes[i].id() + "\n")
-      if (nodes[i].connectedEdges().length)
-        for (let j = 0; j < nodes[i].connectedEdges().length; j++)
-          netStr += ("Connected edge: " + nodes[i].connectedEdges()[j].id() + "\n");
+    netStr += ("Node: " + nodes[i].id() + "\n")
+    if (nodes[i].connectedEdges().length) {
+      for (let j = 0; j < nodes[i].connectedEdges().length; j++) {
+        netStr += ("Connected edge: " + nodes[i].connectedEdges()[j].id() + "\n");
+      }
+    }
   }
   console.log(netStr);
 }
