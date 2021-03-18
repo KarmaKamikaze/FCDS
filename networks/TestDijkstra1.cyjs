@@ -1,0 +1,150 @@
+{
+  "format_version" : "1.0",
+  "generated_by" : "cytoscape-3.8.2",
+  "target_cytoscapejs_version" : "~2.1",
+  "data" : {
+    "shared_name" : "Network",
+    "name" : "DijkstraTest1",
+    "SUID" : 107,
+    "shared_name" : "Network",
+    "__Annotations" : [ ],
+    "selected" : true
+  },
+  "elements" : {
+    "nodes" : [ {
+      "data" : {
+        "id" : "n1",
+        "shared_name" : "Node 11",
+        "name" : "n1",
+        "SUID" : 243,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 167.91918195504854,
+        "y" : 10.963905655070905
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "start",
+        "shared_name" : "Node 10",
+        "name" : "start",
+        "SUID" : 241,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 65.2791932215768,
+        "y" : 154.95160579237637
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "n3",
+        "shared_name" : "n3",
+        "name" : "n3",
+        "SUID" : 239,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -85.98757928052437,
+        "y" : 148.8727692378992
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "n2",
+        "shared_name" : "Node 8",
+        "name" : "n2",
+        "SUID" : 237,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -139.51626571986282,
+        "y" : -58.1527761364528
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "end",
+        "shared_name" : "Node 7",
+        "name" : "end",
+        "SUID" : 235,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -46.441908741219805,
+        "y" : -243.62557516685646
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "center",
+        "shared_name" : "Center",
+        "name" : "C",
+        "SUID" : 117,
+        "id_original" : "C",
+        "selected" : false
+      },
+      "position" : {
+        "x" : 0.0,
+        "y" : 0.0
+      },
+      "selected" : false
+    } ],
+    "edges" : [ {
+      "data" : {
+        "id" : "249",
+        "source" : "start",
+        "target" : "n1",
+        "SUID" : 249,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "245",
+        "source" : "n1",
+        "target" : "end",
+        "SUID" : 245,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "255",
+        "source" : "start",
+        "target" : "end",
+        "SUID" : 255,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "251",
+        "source" : "start",
+        "target" : "n3",
+        "SUID" : 251,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "253",
+        "source" : "n3",
+        "target" : "n2",
+        "SUID" : 253,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "247",
+        "source" : "n2",
+        "target" : "end",
+        "SUID" : 247,
+        "selected" : false
+      },
+      "selected" : false
+    } ]
+  }
+}
