@@ -3,7 +3,7 @@ import { initializeSingleSource, relax } from "./pathModules.js";
 // IMPORT CYTOSCOPE
 
 /**
- *
+ * Dijkstra's algorithm will find the shortest path between all nodes in a weighted graph.
  * @param {The graph nodes will be updated with new distances
  * and parents in terms of the new starting point.} graph
  * @param {The starting point node. Also called source.} startNode
@@ -42,8 +42,10 @@ export function traceback(graph, endNode) {
   let shortestPath = "";
   let jump = endNode;
 
-  /* While-loop that reiterates through the parents of jump,
-   * creating a list of nodes used to go from startnode to endnode. */
+  /**
+   * While-loop that reiterates through the parents of jump,
+   * creating a list of nodes used to go from start node to end node.
+   */
   while (jump.parent !== null && jump.distance !== 0) {
     if (shortestPath === "") {
       shortestPath = jump.id();

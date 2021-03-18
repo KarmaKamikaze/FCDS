@@ -1,28 +1,28 @@
 const maxSpeedLimit = 130;
 
 /**
- *
+ * All nodes are initialized by setting their distance to
+ * the origin/source to infinity and setting their parents to null.
  * @param {The graph which will be initialized and reset: The starting point will be set to 0,
  * while every other node will have a distance of Infinity. All parents will be zero.} graph
  * @param {The source node/origin point.} startNode
  */
 export function initializeSingleSource(graph, startNode) {
-  // Change identifier after cytoscape is implemented
-  /* All nodes are initialized by setting their distance to
-   * the origin/source to infinity and setting their parents to null. */
+  // Change identifier after Cytoscape is implemented
   graph.nodes.forEach((element) => {
     element.distanceOrigin = Infinity;
     element.parent = null;
   });
-  // The startnode's distance to itself is assigned to 0
+  // The startNode's distance to itself is assigned to 0
   startNode.nodes.distanceOrigin = 0;
 }
 
 /**
- *
- * @param {The current node being observed, which adjacentnode is adjecent to} currentNode
- * @param {A node adjacent to currentnode.
- * This node is the target of an edge, which has the source of currentnode} adjacentNode
+ * The relax function assigns the appropriate distance and parent to adjacent nodes of the current nodes.
+ * @param {The current node being observed, which adjacentNode is adjacent to} currentNode
+ * @param {A node adjacent to currentNode.
+ * This node is the target of an edge, which has the source of currentNode} adjacentNode
+ * @param {The weight associated with the edge between currentNode and adjacentNode.} weight
  */
 export function relax(currentNode, adjacentNode, weight) {
   if (adjacentNode.distance > currentNode.distance + weight) {
@@ -45,7 +45,7 @@ export function calculateWeight(edgeObject, courierObject) {
   edgeObject.weight =
     edgeObject.distance *
     (maxSpeedLimit / edgeObject.speedLimit) *
-    edgeObject.permObstructions; // * (edge.tempObstructions) <- multiply onto when taking traffix and temporary obstructions into account.
+    edgeObject.permObstructions; // * (edge.tempObstructions) <- multiply onto when taking traffic and temporary obstructions into account.
   console.log(edgeObject.weight);
 }
 
