@@ -1,36 +1,70 @@
-// Generates random value for traffic as placeholder for now.
- const trafficGeneration = () => { Math.floor(Math.random() * Math.floor(100)) };
-
+let maxSpeedLimit = 130;
  /** 
   * Gives an edge a weight by calculating its property and assigning to weight property 
-  * @param {The object for the courier en route} courier_object
-  * @param {The edge whose weight is being calculated} edge_object
+  * @param {The object for the courier en route} courierObject
+  * @param {The edge whose weight is being calculated} edgeObject
   */
- export function weightingFunction(courier_object, edge_object) {
-   trafic = trafficGeneration();
-   
-   edge_object.weight = edge_object.distance * 130/edge_object['speed limit'] * edge_object.traffic * edge_object.obstructions * edge_object.intersection;
- }
+  export function weightingFunction(courierObject, edgeObject) {
+    edgeObject.weight = ((edgeObject.distance) * (maxSpeedLimit/(Math.max(edgeObject.speedLimit,edgeObject.permObstructions)))); // * (edge.tempObstructions) <- multiply onto when taking traffix and temporary obstructions into account.
+    console.log(edgeObject.weight);
+  }
+  
+
+//Test area below
+
+/* Generates random value for determining traffic and temporary obstructions. Not yet implemented.
+const randomNumber = (max) => (Math.floor(Math.random() * max));
+*/
  
- /** 
-  * MAIN
-  * Går array af edges igennem og kører weightingFunction for dem, hvis funktion skal anvendes.
-  */
- edges_array.forEach(edge => {
+/**
+ * Not implemented yet. Needs to calculate factor for temporary obstructions: traffic and road work, etc.
+ */
+/* function tempSlowdown() {
+ let obstructions;
+ let maxTraffic = 60; //navn?
+ let maxObstruction = 10;
+ let traffic = randomNumber(max);
+
+ if (randomNumber(10) === 9) {
+   obstructions = 20;
+ }
+
+ if (traffic + obstructions > maxTraffic) {
+   return maxTraffic;
+ } else {
+   return (traffic + obstructions);
+ }
+} */
+
+//Placeholder for edge
+/* 
+let edge = {
+  distance: 100,
+  speedLimit: 50,
+  permObstructions: 60,
+  weight: 1,
+};
+
+//Placeholder for courier
+let courier = 2;
+  edgesArray = [edge];
+*/
+
+/*
+//Testing function
+ edgesArray.forEach(edge => {
    weightingFunction(courier, edge); 
  });
- 
-/* kasper
-let edges = {
-  distance: 1000,
-  speedLimit: 50,
-  obstructions: 2,
-  intersection: 1,
-  traffic: trafficGeneration(),
-  weight: () => {
-    return (edges.distance *(130 / edges.speedLimit) * edges.traffic * edges.obstructions * edges.intersection);
-  }
-}
+ */
 
-console.log(edges.weight());
-*/
+//Placeholder for edge
+/*
+let edge = {
+    distance: 1000,
+    speed_limit: 50,
+    perm_obstructions: 1,
+    temp_obstructions: tempObstructions(),
+    traffic: trafficGeneration(),
+    weight: () => (edges.distance *(130 / edges.speedLimit) * edges.traffic * edges.obstructions * edges.intersection);
+  }
+  */
