@@ -1,10 +1,10 @@
-let maxSpeedLimit = 130;
+const maxSpeedLimit = 130;
  /** 
   * Gives an edge a weight by calculating its property and assigning to weight property 
   * @param {The object for the courier en route} courierObject
   * @param {The edge whose weight is being calculated} edgeObject
   */
-  export function weightingFunction(courierObject, edgeObject) {
+  export function weightingFunction(edgeObject, courierObject) {
     edgeObject.weight = ((edgeObject.distance) * (maxSpeedLimit/(Math.max(edgeObject.speedLimit,edgeObject.permObstructions)))); // * (edge.tempObstructions) <- multiply onto when taking traffix and temporary obstructions into account.
     console.log(edgeObject.weight);
   }
