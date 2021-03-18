@@ -1,6 +1,6 @@
 import { PriorityQueue } from "./queue.js";
 import { initializeSingleSource, relax } from "./pathModules.js";
-// IMPORT CYTOSCOPE
+import "cytoscape";
 
 /**
  * Dijkstra's algorithm will find the shortest path between all nodes in a weighted graph.
