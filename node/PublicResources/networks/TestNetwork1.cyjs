@@ -90,11 +90,11 @@
       "selected" : false
     }, {
       "data" : {
-        "id" : "R1-R3",
-        "source" : "R1",
-        "target" : "R3",
-        "shared_name" : "R1-R3",
-        "name" : "R1-R3",
+        "id" : "R3-R1",
+        "source" : "R3",
+        "target" : "R1",
+        "shared_name" : "R3-R1",
+        "name" : "R3-R1",
         "SUID" : 91,
         "selected" : false
       },

@@ -1,5 +1,8 @@
 body { 
     font: 14px helvetica neue, helvetica, arial, sans-serif;
+    background-color: rgb(30,30,30);
+    color: white;
+    font-family: arial;
   }
   
   #cy {
@@ -8,5 +11,5 @@ body {
     margin:auto;
     left: 0;
     top: 0;
-    border: 3px solid darkslateblue;
+    border: 3px solid black;
   }
