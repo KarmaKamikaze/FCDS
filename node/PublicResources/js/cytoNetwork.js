@@ -1,3 +1,5 @@
+import { dijkstra, traceback } from '../js/dijkstra.js'
+
 let NETWORK_FILE = "../networks/TestDijkstra1.cyjs";
 let CLASS_COURIER = "courier",
     CLASS_RESTAURANT = "restaurant",
@@ -36,7 +38,7 @@ function initNetwork() {
         'line-color': 'white',
         'target-arrow-color': 'white',
         'color': 'lightgreen',
-        'content': 'data(length)'
+        'content': ''
       })
     .selector(`.${CLASS_ROUTE}`)
       .style({
@@ -77,7 +79,11 @@ function initNetwork() {
   })
   .then( () => initLength() )
   .then( () => initNames() )
-  .then( () => cy.fit(cy.elements()));
+  .then( () => cy.fit(cy.elements()))
+  .then( () => {
+    dijkstra(cy.elements(), cy.getElementById("start"));
+    traceback (cy.elements(), cy.getElementById("n2"));
+  });
   return cy; // return the initialized network cy
 }
 
@@ -94,7 +100,7 @@ function addNode (nodeId, xCoord, yCoord, nodeWeight = 1) {
     data: {
       weight: nodeWeight,
       id: nodeId,
-      parent: null,
+      _parent: null,
       distanceOrigin: 0
     },
     position: {
@@ -189,7 +195,7 @@ function calcLength (edgeId) {
       pos2 = getPos(edge.data("target")),
       length = Math.sqrt((pos2.x- pos1.x)*(pos2.x-pos1.x)+(pos2.y-pos1.y)*(pos2.y-pos1.y)); 
 
-  edge.data("length", length.toFixed(2));
+  edge.data("length", length);
   return length;
 }
 

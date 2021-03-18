@@ -18,10 +18,10 @@ export class PriorityQueue {
     this.distances = new Array();
   }
 
-  enqueue(identifier, distanceOrigin) {
-    let queueElement = new QueueElement(identifier, distanceOrigin);
+  enqueue(element) {
+    // let queueElement = new QueueElement(identifier, distanceOrigin);
     let fitsBetween = false; // Boolean to decide if the element fits between others.
-
+    
     for (let i = 0; i < this.distances.length; i++) {
       /**
        * Since it is a min-queue, we check from the first element, which
@@ -29,8 +29,8 @@ export class PriorityQueue {
        * until we hit an element who has a larger distance. Then we insert the
        * queue element in the queue.
        */
-      if (this.distances[i].distance > queueElement.distanceOrigin) {
-        this.distances.splice(i, 0, queueElement);
+      if (this.distances[i].data("distanceOrigin") > element.data("distanceOrigin")) {
+        this.distances.splice(i, 0, element);
         fitsBetween = true;
         break;
       }
@@ -38,12 +38,12 @@ export class PriorityQueue {
 
     // Element is pushed to the end of the queue if it does not fit between.
     if (!fitsBetween) {
-      this.distances.push(queueElement);
+      this.distances.push(element);
     }
   }
 
   dequeue() {
-    if (this.isEmpty) {
+    if (this.isEmpty()) {
       throw new Error("Cannot dequeue (Underflow). The queue is empty!");
     }
     // Removes the first element of the queue.
@@ -53,7 +53,7 @@ export class PriorityQueue {
   }
 
   front() {
-    if (this.isEmpty) {
+    if (this.isEmpty()) {
       throw new Error("There is no front. The queue is empty!");
     }
     // Return the lowest distance element, as this is a minimum priority queue.
