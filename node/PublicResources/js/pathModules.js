@@ -44,8 +44,8 @@ export function relax(currentNode, adjacentNode, weight) {
 export function calculateWeight(edgeObject, courierObject) {
   edgeObject.weight =
     edgeObject.distance *
-    (maxSpeedLimit /
-      Math.max(edgeObject.speedLimit, edgeObject.permObstructions)); // * (edge.tempObstructions) <- multiply onto when taking traffix and temporary obstructions into account.
+    (maxSpeedLimit / edgeObject.speedLimit) *
+    edgeObject.permObstructions; // * (edge.tempObstructions) <- multiply onto when taking traffix and temporary obstructions into account.
   console.log(edgeObject.weight);
 }
 
