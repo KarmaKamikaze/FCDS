@@ -9,12 +9,12 @@ const maxSpeedLimit = 130;
  */
 export function initializeSingleSource(graph, startNode) {
   // Change identifier after Cytoscape is implemented
-  graph.nodes.forEach((element) => {
-    element.distanceOrigin = Infinity;
-    element.parent = null;
+  graph.nodes().forEach((element) => {
+    element.data("distanceOrigin", Infinity);
+    element.data("_parent", null);
   });
   // The startNode's distance to itself is assigned to 0
-  startNode.nodes.distanceOrigin = 0;
+  startNode.data("distanceOrigin", 0);
 }
 
 /**
@@ -25,14 +25,15 @@ export function initializeSingleSource(graph, startNode) {
  * @param {The weight associated with the edge between currentNode and adjacentNode.} weight
  */
 export function relax(currentNode, adjacentNode, weight) {
-  if (adjacentNode.distance > currentNode.distance + weight) {
+  if (adjacentNode.data("distanceOrigin") > currentNode.data("distanceOrigin") + weight) {
+    let tempWeight = currentNode.data("distanceOrigin") + weight;
     /* The distance from the source to the adjacent node is updated through addition
      * of the source's distance to the current node
      * and the weight between the current node and the adjacent node */
-    adjacentNode.distance = currentNode.distance + weight;
+    adjacentNode.data("distanceOrigin", tempWeight);
     /* The parent will retain the path back to the starting points,
      * if combined with all other parents. */
-    adjacentNode.parent = currentNode;
+    adjacentNode.data("_parent", currentNode.id());
   }
 }
 

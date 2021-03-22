@@ -1,3 +1,5 @@
+import { dijkstra, traceback } from '../js/dijkstra.js'
+
 let NETWORK_FILE = "../networks/TestDijkstra1.cyjs";
 let CLASS_COURIER = "courier",
     CLASS_RESTAURANT = "restaurant",
@@ -36,7 +38,7 @@ function initNetwork() {
         'line-color': 'white',
         'target-arrow-color': 'white',
         'color': 'lightgreen',
-        'content': 'data(length)'
+        'content': ''
       })
     .selector(`.${CLASS_ROUTE}`)
       .style({
@@ -44,7 +46,7 @@ function initNetwork() {
         'line-color': '#B22222',
         'target-arrow-color': '#B22222',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0.5s'
+        'transition-duration': '0.25s'
       })
     .selector(`.${CLASS_ROUTE_DONE}`)
       .style({
@@ -52,7 +54,7 @@ function initNetwork() {
         'line-color': 'white',
         'target-arrow-color': 'white',
         'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0.5s'
+        'transition-duration': '0.25s'
       })
     .selector(`.${CLASS_COURIER}`)
       .style({
@@ -77,7 +79,17 @@ function initNetwork() {
   })
   .then( () => initLength() )
   .then( () => initNames() )
-  .then( () => cy.fit(cy.elements()));
+  .then( () => cy.fit(cy.elements()))
+  .then( () => {
+    addEdge("n2", "center");
+    addEdge("end", "center");
+    delNode("startend");
+    delNode("endstart");
+    addCourier("start");
+    addCourier("start");
+    traversePath("courier1", "center");
+    traversePath("courier2", "end");
+  });
   return cy; // return the initialized network cy
 }
 
@@ -94,7 +106,7 @@ function addNode (nodeId, xCoord, yCoord, nodeWeight = 1) {
     data: {
       weight: nodeWeight,
       id: nodeId,
-      parent: null,
+      _parent: null,
       distanceOrigin: 0
     },
     position: {
@@ -110,7 +122,7 @@ function addNode (nodeId, xCoord, yCoord, nodeWeight = 1) {
  * @returns The deleted node
  */
 function delNode (nodeId) {
-  return cy.getElementById(nodeId).remove();
+  return cy.$id(nodeId).remove();
 }
 
 /**
@@ -123,11 +135,12 @@ function addCourier (rootNode, _hasCar = false) {
     group: 'nodes',
     data: { 
       id: (`courier${++courierCount}`),
-      hasCar: _hasCar},
-      position: { 
+      hasCar: _hasCar,
+      currentNode: rootNode},
+      position: {
         x: getPos(rootNode).x, 
         y: getPos(rootNode).y
-      }
+      },
   });
   node.addClass(CLASS_COURIER);
 }
@@ -184,12 +197,12 @@ function initNames () {
  * @returns The length of the edge
  */
 function calcLength (edgeId) {
-  let edge = cy.getElementById(edgeId),
+  let edge = cy.$id(edgeId),
       pos1 = getPos(edge.data("source")),
       pos2 = getPos(edge.data("target")),
       length = Math.sqrt((pos2.x- pos1.x)*(pos2.x-pos1.x)+(pos2.y-pos1.y)*(pos2.y-pos1.y)); 
 
-  edge.data("length", length.toFixed(2));
+  edge.data("length", length);
   return length;
 }
 
@@ -201,7 +214,7 @@ function calcLength (edgeId) {
  * @returns The length of the edge between the specified nodes
  */
 function getLength (node1, node2, ignoreDirection = false) {
-  let edges = cy.getElementById(node1).connectedEdges(),
+  let edges = cy.$id(node1).connectedEdges(),
       n = edges.length;
   for(let i = 0; i < n; i++) {
     if(edges[i].data("target") === node2 || (ignoreDirection && edges[i].data("source") === node2)) {
@@ -217,7 +230,7 @@ function getLength (node1, node2, ignoreDirection = false) {
  * @param {The Y coordinate of the new position} yCoord
  */
 function moveNode (nodeId, xCoord, yCoord) {
-  cy.getElementById(nodeId).relativePosition({
+  cy.$id(nodeId).relativePosition({
     x: xCoord,
     y: yCoord
   });
@@ -228,8 +241,8 @@ function moveNode (nodeId, xCoord, yCoord) {
  * @param {The ID of the element to inspect} id 
  * @returns The position (x, y) of the element
  */
-function getPos (id) {
-  return cy.getElementById(id)["_private"].position
+function getPos (nodeId) {
+  return cy.$id(nodeId)["_private"].position
 }
 
 /**
@@ -242,31 +255,31 @@ function getRandomInt(max) {
 }
 
 /**
- * Adds a node at a random location
- * @param {The intended ID for the node} id 
- */
-function randomNode (id) {
-    addNode (id, 0, GetRandomInt(950) - 475, GetRandomInt(950) - 475);
-}
-
-/**
  * Animates the movement of a courier from point A to B, highlighting the route.
  * @param {The source node} source 
  * @param {The target node} target 
  * @param {The number of the courier} courierNum 
  */
-function moveCourier (source, target, courierNum) {
-  let diff1 = getPos(target).x - getPos(source).x,
-      diff2 = getPos(target).y - getPos(source).y,
-      edge = cy.getElementById(source + target),
-      edgeRev = cy.getElementById(target + source),
-      steps = getLength(source,target)*2,
+
+function traversePath (courierId, endId) {
+  let courierPos = cy.$id(courierId).data("currentNode");
+  dijkstra(cy.elements(), cy.$id(courierPos));
+  let path = traceback (cy.elements(), cy.$id(endId));
+  animateCourier (path, courierId);
+}
+
+function animateCourier (path, courierId, index = 0) {
+  let diff1 = getPos(path[index + 1]).x - getPos(path[index]).x,
+      diff2 = getPos(path[index + 1]).y - getPos(path[index]).y,
+      edge = cy.$id(path[index] + path[index + 1]),
+      edgeRev = cy.$id(path[index + 1] + path[index]),
+      steps = getLength(path[index], path[index + 1])*2,
+      courier = cy.$id(courierId),
       i = 0;
-    
   edge.addClass("route");
   edgeRev.addClass("route");
   let anim = setInterval( () => {
-      cy.getElementById("courier" + courierNum).shift({x: diff1/steps, y: diff2/steps});
+      courier.shift({x: diff1/steps, y: diff2/steps});
       i++;
       if (i >= steps) {
           clearInterval(anim);
@@ -275,9 +288,30 @@ function moveCourier (source, target, courierNum) {
           setTimeout( () => {
             edge.removeClass(CLASS_ROUTE + " " + CLASS_ROUTE_DONE);
             edgeRev.removeClass(CLASS_ROUTE + " " + CLASS_ROUTE_DONE);
-          }, 500);
+            courier.data("currentNode", path[index + 1]);
+            if (index + 1 < path.length - 1) {
+              console.log(courier.id() + " went through " + courier.data("currentNode"));
+              return animateCourier (path, courierId, index + 1);
+            }
+            else {
+              console.log(courier.id() + " arrived at " + courier.data("currentNode"));
+              return;
+            }
+          }, 250);
       }
-  }, 5);
+  }, 10);
+}
+
+/**
+ * Selects a random position in the map
+ * @returns The coordinates of the random position
+ */
+ function getRandomPos() {
+  let pos = {    
+    x: getRandomInt(Viewport.width)-(Viewport.width/2),
+    y: getRandomInt(Viewport.height)-(Viewport.height/2)  
+  };
+  return pos;
 }
 
 /**
@@ -299,15 +333,11 @@ function listNetwork () {
 }
 
 /**
- * Selects a random position in the map
- * @returns The coordinates of the random position
+ * Adds a node at a random location
+ * @param {The intended ID for the node} id 
  */
-function getRandomPos() {
-  let pos = {    
-    x: getRandomInt(Viewport.width)-(Viewport.width/2),
-    y: getRandomInt(Viewport.height)-(Viewport.height/2)  
-  };
-  return pos;
+ function randomNode (id) {
+  addNode (id, 0, GetRandomInt(950) - 475, GetRandomInt(950) - 475);
 }
 
 let numCustomers = 0;
