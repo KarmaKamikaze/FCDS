@@ -3,9 +3,9 @@ const maxSpeedLimit = 130;
 /**
  * All nodes are initialized by setting their distance to
  * the origin/source to infinity and setting their parents to null.
- * @param {The graph which will be initialized and reset: The starting point will be set to 0,
- * while every other node will have a distance of Infinity. All parents will be zero.} graph
- * @param {The source node/origin point.} startNode
+ * @param {Object} graph The graph which will be initialized and reset: The starting point will be set to 0,
+ * while every other node will have a distance of Infinity. All parents will be zero.
+ * @param {Object} startNode The source node/origin point.
  */
 export function initializeSingleSource(graph, startNode) {
   // Change identifier after Cytoscape is implemented
@@ -19,13 +19,16 @@ export function initializeSingleSource(graph, startNode) {
 
 /**
  * The relax function assigns the appropriate distance and parent to adjacent nodes of the current nodes.
- * @param {The current node being observed, which adjacentNode is adjacent to} currentNode
- * @param {A node adjacent to currentNode.
- * This node is the target of an edge, which has the source of currentNode} adjacentNode
- * @param {The weight associated with the edge between currentNode and adjacentNode.} weight
+ * @param {Object} currentNode The current node being observed, which adjacentNode is adjacent to
+ * @param {Object} adjacentNode A node adjacent to currentNode.
+ * This node is the target of an edge, which has the source of currentNode
+ * @param {Number} weight The weight associated with the edge between currentNode and adjacentNode.
  */
 export function relax(currentNode, adjacentNode, weight) {
-  if (adjacentNode.data("distanceOrigin") > currentNode.data("distanceOrigin") + weight) {
+  if (
+    adjacentNode.data("distanceOrigin") >
+    currentNode.data("distanceOrigin") + weight
+  ) {
     let tempWeight = currentNode.data("distanceOrigin") + weight;
     /* The distance from the source to the adjacent node is updated through addition
      * of the source's distance to the current node
@@ -39,8 +42,8 @@ export function relax(currentNode, adjacentNode, weight) {
 
 /**
  * Gives an edge a weight by calculating its property and assigning to weight property
- * @param {The object for the courier en route} courierObject
- * @param {The edge whose weight is being calculated} edgeObject
+ * @param {Object} courierObject The object for the courier en route
+ * @param {Object} edgeObject The edge whose weight is being calculated
  */
 export function calculateWeight(edgeObject, courierObject) {
   edgeObject.weight =

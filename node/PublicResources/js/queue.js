@@ -21,7 +21,7 @@ export class PriorityQueue {
   enqueue(element) {
     // let queueElement = new QueueElement(identifier, distanceOrigin);
     let fitsBetween = false; // Boolean to decide if the element fits between others.
-    
+
     for (let i = 0; i < this.distances.length; i++) {
       /**
        * Since it is a min-queue, we check from the first element, which
@@ -29,7 +29,10 @@ export class PriorityQueue {
        * until we hit an element who has a larger distance. Then we insert the
        * queue element in the queue.
        */
-      if (this.distances[i].data("distanceOrigin") > element.data("distanceOrigin")) {
+      if (
+        this.distances[i].data("distanceOrigin") >
+        element.data("distanceOrigin")
+      ) {
         this.distances.splice(i, 0, element);
         fitsBetween = true;
         break;
