@@ -95,10 +95,10 @@ function initNetwork() {
 
  /** 
   * Adds a node at specified location with potential weight
-  * @param {An ID for the node} nodeId
-  * @param {The x coordinate} xCoord
-  * @param {The y coordinate} yCoord
-  * @param {The specified weight (defaults to 1)} nodeWeight
+  * @param {String} nodeId An ID for the node
+  * @param {Number} xCoord The x coordinate
+  * @param {Number} yCoord The y coordinate
+  * @param {Number} nodeWeight The specified weight (defaults to 1)
   */
 function addNode (nodeId, xCoord, yCoord, nodeWeight = 1) {
   cy.add({
@@ -118,7 +118,7 @@ function addNode (nodeId, xCoord, yCoord, nodeWeight = 1) {
 
 /**
  * Removes a node and returns it
- * @param {The node ID to remove} nodeId
+ * @param {String} nodeId The node ID to remove
  * @returns The deleted node
  */
 function delNode (nodeId) {
@@ -127,8 +127,8 @@ function delNode (nodeId) {
 
 /**
  * Adds a courier to the map on rootNode
- * @param {The node for the courier to be placed on} rootNode 
- * @param {Whether the courier drives a car or not} _hasCar 
+ * @param {String} rootNode The node for the courier to be placed on
+ * @param {Boolean} _hasCar Whether the courier drives a car or not
  */
 function addCourier (rootNode, _hasCar = false) {
   let node = cy.add({
@@ -147,9 +147,9 @@ function addCourier (rootNode, _hasCar = false) {
 
 /**
  * Adds an edge between two nodes in the network
- * @param {The source node of the edge} sourceNode
- * @param {The target node of the edge} targetNode
- * @param {Whether the edge is only traversible one way (boolean value)} isOneWay
+ * @param {String} sourceNode The source node of the edge
+ * @param {String} targetNode The target node of the edge
+ * @param {Boolean} isOneWay Whether the edge is only traversible one way (true) or not (false)
  */
 function addEdge (sourceNode, targetNode, isOneWay = false) {
   cy.add({
@@ -164,9 +164,7 @@ function addEdge (sourceNode, targetNode, isOneWay = false) {
   calcLength (sourceNode+targetNode);
 }
 
-/**
- * Initialises length for all edges
- */
+/** Initialises length for all edges */
 function initLength () {
   let edges = cy.edges(),
       n = edges.n;
@@ -193,7 +191,7 @@ function initNames () {
 
 /**
  * Calculates the length of a specific edge using Pythagora's theorem
- * @param {The ID of the edge to calculate the length of} edgeId 
+ * @param {String} edgeId The ID of the edge to calculate the length of
  * @returns The length of the edge
  */
 function calcLength (edgeId) {
@@ -208,37 +206,24 @@ function calcLength (edgeId) {
 
 /**
  * Gets the length of an edge between two nodes.
- * @param {The source node} node1 
- * @param {The target node} node2 
- * @param {Whether to ignore the edge direction or not (boolean)} ignoreDirection
+ * @param {String} sourceNode The source node
+ * @param {String} targetNode 
+ * @param {Boolean} ignoreDirection Whether to ignore the edge direction (true) or not (false)
  * @returns The length of the edge between the specified nodes
  */
-function getLength (node1, node2, ignoreDirection = false) {
-  let edges = cy.$id(node1).connectedEdges(),
+function getLength (sourceNode, targetNode, ignoreDirection = false) {
+  let edges = cy.$id(sourceNode).connectedEdges(),
       n = edges.length;
   for(let i = 0; i < n; i++) {
-    if(edges[i].data("target") === node2 || (ignoreDirection && edges[i].data("source") === node2)) {
+    if(edges[i].data("target") === targetNode || (ignoreDirection && edges[i].data("source") === targetNode)) {
       return edges[i].data("length");
     }
   }
 }
 
 /**
- * Moves a node to a new point in the network
- * @param {The ID of node to be moved} nodeID
- * @param {The X coordinate of the new position} xCoord
- * @param {The Y coordinate of the new position} yCoord
- */
-function moveNode (nodeId, xCoord, yCoord) {
-  cy.$id(nodeId).relativePosition({
-    x: xCoord,
-    y: yCoord
-  });
-}
-
-/**
  * Gets the position (x, y) of an element
- * @param {The ID of the element to inspect} id 
+ * @param {String} nodeId The ID of the element to inspect
  * @returns The position (x, y) of the element
  */
 function getPos (nodeId) {
@@ -247,7 +232,7 @@ function getPos (nodeId) {
 
 /**
  * Choose random integer between 0 and max
- * @param {The maximum integer to return} max 
+ * @param {Number} max The maximum integer to return
  * @returns The random integer
  */
 function getRandomInt(max) {
@@ -255,12 +240,10 @@ function getRandomInt(max) {
 }
 
 /**
- * Animates the movement of a courier from point A to B, highlighting the route.
- * @param {The source node} source 
- * @param {The target node} target 
- * @param {The number of the courier} courierNum 
+ * Uses Dijkstra's algorithm to find the shortest path between a start and end node.
+ * @param {String} courierId The ID of the courier.
+ * @param {String} EndId The ID of the destination.
  */
-
 function traversePath (courierId, endId) {
   let courierPos = cy.$id(courierId).data("currentNode");
   dijkstra(cy.elements(), cy.$id(courierPos));
@@ -268,6 +251,12 @@ function traversePath (courierId, endId) {
   animateCourier (path, courierId);
 }
 
+/**
+ * Animates the movement of a courier from point A to B, highlighting the route.
+ * @param {Array} path The array of nodes produced by a pathfinding algorithm
+ * @param {String} courierId The ID of the courier to animate
+ * @param {Number} index The index to start from (default: 0) 
+ */
 function animateCourier (path, courierId, index = 0) {
   let diff1 = getPos(path[index + 1]).x - getPos(path[index]).x,
       diff2 = getPos(path[index + 1]).y - getPos(path[index]).y,
@@ -302,6 +291,8 @@ function animateCourier (path, courierId, index = 0) {
   }, 10);
 }
 
+// Unused functions
+
 /**
  * Selects a random position in the map
  * @returns The coordinates of the random position
@@ -314,9 +305,7 @@ function animateCourier (path, courierId, index = 0) {
   return pos;
 }
 
-/**
- * Prints the nodes of the network as well as their connected edges
- */
+/** Prints the nodes of the network as well as their connected edges */
 function listNetwork () {
   let nodes = cy.nodes(),
       netStr = "";
@@ -333,18 +322,20 @@ function listNetwork () {
 }
 
 /**
- * Adds a node at a random location
- * @param {The intended ID for the node} id 
+ * Moves a node to a new point in the network
+ * @param {String} nodeID The ID of node to be moved
+ * @param {Number} xCoord The X coordinate of the new position
+ * @param {Number} yCoord The Y coordinate of the new position
  */
- function randomNode (id) {
-  addNode (id, 0, GetRandomInt(950) - 475, GetRandomInt(950) - 475);
+function moveNode (nodeId, xCoord, yCoord) {
+  cy.$id(nodeId).relativePosition({
+    x: xCoord,
+    y: yCoord
+  });
 }
 
+/* WIP: Generate random customers in the network
 let numCustomers = 0;
-/**
- * (WIP) Generates a customer node randomly on the map
- * 
- */
 function generateCustomer() {
   let maxNodeDistance = 100, // global variable?
       randPos = getRandomPos(),
@@ -366,4 +357,4 @@ function generateCustomer() {
       }
   }
   addNode(`C${++numCustomers}`, randPos.x, randPos.y);
-}
+}*/
