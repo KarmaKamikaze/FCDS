@@ -40,6 +40,7 @@ export function dijkstra(graph, startNode) {
 export function traceback(graph, endNode) {
   let shortestPath = "";
   let jump = endNode;
+  let path = new Array;
 
   /**
    * While-loop that reiterates through the parents of jump,
@@ -51,11 +52,14 @@ export function traceback(graph, endNode) {
     } else {
       shortestPath = jump.id() + " -> " + shortestPath;
     }
+    path.unshift(jump.id());
     jump = graph.getElementById(`${jump.data("_parent")}`);
   }
   // Add the start node to the list.
   shortestPath = jump.id() + " -> " + shortestPath;
+  path.unshift(jump.id())
   // Test print
   // Change this function to animate the courier
   console.log(`Shortest path: ${shortestPath}`);
+  return path;
 }
