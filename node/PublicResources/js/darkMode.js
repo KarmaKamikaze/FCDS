@@ -1,4 +1,4 @@
-let darkBtn = document.createElement("input");
+/*let darkBtn = document.createElement("input");
 let documentTheme = "Dark mode";
 darkBtn.type = "button";
 darkBtn.value = "Light mode";
@@ -25,4 +25,4 @@ darkBtn.addEventListener("mousedown", function () {
         cy.style().selector('edge').style('color', 'darkgreen').update()
     }
 })
-document.getElementById('cy').after(darkBtn);
+document.getElementById('cy').after(darkBtn);*/

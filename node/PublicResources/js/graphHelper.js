@@ -1,11 +1,12 @@
 import { dijkstra, traceback } from '../js/dijkstra.js'
 
-export let CLASSES = {
-  CLASS_COURIER: "courier",
-  CLASS_RESTAURANT: "restaurant",
-  CLASS_CUSTOMER: "customer",
-  CLASS_ROUTE: "route",
-  CLASS_ROUTE_DONE: "routeDone"
+export let eleType = {
+  default: "default",
+  courier: "courier",
+  restaurant: "restaurant",
+  customer: "customer",
+  route: "route",
+  routeDone: "routeDone"
 };
 
 export class CyGraph {
@@ -14,6 +15,12 @@ export class CyGraph {
     this.courierCount = courierCount;
   }
 
+  // Arrays that keep track of all the elements in the graph
+  couriers = [];
+  restaurants = [];
+  customers = [];
+  orders = [];
+
   /**
     * Adds a node at specified location with potential weight
     * @param {String} nodeId An ID for the node
@@ -21,8 +28,8 @@ export class CyGraph {
     * @param {Number} yCoord The y coordinate
     * @param {Number} nodeWeight The specified weight (defaults to 1)
     */
-  addNode(nodeId, xCoord, yCoord, nodeWeight = 1) {
-    this.graph.add({
+  addNode(nodeId, type = eleType.default, xCoord, yCoord, nodeWeight = 1) {
+    let node = this.graph.add({
       group: "nodes",
       data: {
         weight: nodeWeight,
@@ -35,6 +42,11 @@ export class CyGraph {
         y: yCoord,
       },
     });
+
+    // add the node to the corresponding type-array of the CyGraph
+    if(type !== eleType.default) {
+      this[type + "s"].push(node);
+    }   
   }
 
   /**
@@ -64,7 +76,8 @@ export class CyGraph {
         y: this.getPos(rootNode).y,
       },
     });
-    node.addClass(CLASSES.CLASS_COURIER);
+    node.addClass(eleType.courier);
+    this.couriers.push(node); // add the courier to the list of couriers
   }
 
   /**
@@ -86,18 +99,37 @@ export class CyGraph {
     this.calcLength(sourceNode + targetNode);
   }
 
-  /** Initialises names and length for all edges. */
+  /** Initializes name and length of every edges. */
   initializeEdges() {
     let edges = this.graph.edges(),
         n = edges.length;
     for (let i = 0; i < n; i++) {
-      let newId = edges[i].data("source")+edges[i].data("target");
-      this.addEdge(edges[i].data("source"), edges[i].data("target"));
-      this.addEdge(edges[i].data("target"), edges[i].data("source"));
+      let source = edges[i].data("source"),
+          target = edges[i].data("target"),
+          newId = source + target;
+      this.addEdge(source, target);
+      this.addEdge(target, source); // add a reverse edge for bidirectional movement ;D
       this.delNode(edges[i].id());
       this.calcLength(newId);
     }
   }
+
+  /** Initializes the type of every nodes */
+  initializeNodes() {
+    let nodes = this.graph.nodes(),
+        n = nodes.length;
+    for (let i = 0; i < n; i++) {
+      let type = nodes[i].data("type");
+      try {
+        if(type !== eleType.default) {
+          this[type + "s"].push(nodes[i]);
+        }
+      } catch (e) {
+        console.warn(`Node type: ${type} is invalid. (Error:${e})`);
+      }
+    }
+  }
+
 
   /**
    * Calculates the length of a specific edge using Pythagora's theorem
@@ -124,10 +156,9 @@ export class CyGraph {
     let edges = this.graph.$id(sourceNode).connectedEdges(),
         n = edges.length;
     for (let i = 0; i < n; i++) {
-      if (
-        edges[i].data("target") === targetNode ||
-        (ignoreDirection && edges[i].data("source") === targetNode)
-      ) {
+      let target = edges[i].data("target"),
+          source = edges[i].data("source");
+      if (target === targetNode || (ignoreDirection && source === targetNode)) {
         return edges[i].data("length");
       }
     }
@@ -177,18 +208,18 @@ export class CyGraph {
         steps = this.getLength(path[index], path[index + 1]) * 2,
         courier = this.graph.$id(courierId),
         i = 0;
-    edge.addClass(CLASSES.CLASS_ROUTE);
-    edgeRev.addClass(CLASSES.CLASS_ROUTE);
+    edge.addClass(eleType.route);
+    edgeRev.addClass(eleType.routeDone);
     let anim = setInterval(() => {
       courier.shift({ x: diff1 / steps, y: diff2 / steps });
       i++;
       if (i >= steps) {
         clearInterval(anim);
-        edge.addClass(CLASSES.CLASS_ROUTE_DONE);
-        edgeRev.addClass(CLASSES.CLASS_ROUTE_DONE);
+        edge.addClass(eleType.routeDone);
+        edgeRev.addClass(eleType.routeDone);
         setTimeout(() => {
-          edge.removeClass(CLASSES.CLASS_ROUTE + " " + CLASSES.CLASS_ROUTE_DONE);
-          edgeRev.removeClass(CLASSES.CLASS_ROUTE + " " + CLASSES.CLASS_ROUTE_DONE);
+          edge.removeClass(eleType.route + " " + eleType.routeDone);
+          edgeRev.removeClass(eleType.route + " " + eleType.routeDone);
           courier.data("currentNode", path[index + 1]);
           if (index + 1 < path.length - 1) {
             console.log(
@@ -204,6 +235,25 @@ export class CyGraph {
         }, 250);
       }
     }, 10);
+  }
+
+  /** Prints the nodes of the network as well as their connected edges */
+  listNetwork() {
+    let nodes = this.graph.nodes(),
+        n = nodes.length,
+        netStr = "";
+
+    for (let i = 0; i < n; i++) {
+      netStr += `Node: ${nodes[i].id()}\n`;
+      let conEdges = nodes[i].connectedEdges(),
+          m = conEdges.length;
+      if (conEdges) {
+        for (let j = 0; j < m; j++) {
+          netStr += `Connected edge: ${conEdges[j].id()}\n`;
+        }
+      }
+    }
+    console.log(netStr);
   }
 }
 
@@ -223,21 +273,7 @@ function getRandomPos() {
   return pos;
 }
 
-/** Prints the nodes of the network as well as their connected edges */
-function listNetwork() {
-  let nodes = this.graph.nodes(),
-    netStr = "";
 
-  for (let i = 0; i < nodes.length; i++) {
-    netStr += "Node: " + nodes[i].id() + "\n";
-    if (nodes[i].connectedEdges().length) {
-      for (let j = 0; j < nodes[i].connectedEdges().length; j++) {
-        netStr += "Connected edge: " + nodes[i].connectedEdges()[j].id() + "\n";
-      }
-    }
-  }
-  console.log(netStr);
-}
 
 /**
  * Moves a node to a new point in the network
