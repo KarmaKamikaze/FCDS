@@ -1,4 +1,6 @@
-import { dijkstra, traceback } from "../js/dijkstra.js";
+import { dijkstra } from "../js/dijkstra.js";
+import { aStar } from "../js/aStar.js";
+import { traceback } from "../js/pathModules.js";
 
 let NETWORK_FILE = "../networks/TestDijkstra1.cyjs";
 let CLASS_COURIER = "courier",
@@ -273,7 +275,8 @@ function getRandomInt(max) {
 
 function traversePath(courierId, endId) {
   let courierPos = cy.$id(courierId).data("currentNode");
-  dijkstra(cy.elements(), cy.$id(courierPos));
+  //dijkstra(cy.elements(), cy.$id(courierPos));
+  aStar(cy.elements(), cy.$id(courierPos), cy.$id(endId));
   let path = traceback(cy.elements(), cy.$id(endId));
   animateCourier(path, courierId);
 }

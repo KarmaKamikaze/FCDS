@@ -30,36 +30,3 @@ export function dijkstra(graph, startNode) {
     });
   }
 }
-
-/**
- *
- * @param {Object} graph The graph which contains distances and parents,
- * which we will use for navigation.
- * @param {Object} endNode The end goal for which we want to find the shortest path.
- */
-export function traceback(graph, endNode) {
-  let shortestPath = "";
-  let jump = endNode;
-  let path = new Array();
-
-  /**
-   * While-loop that reiterates through the parents of jump,
-   * creating a list of nodes used to go from start node to end node.
-   */
-  while (jump.data("_parent") !== null && jump.data("distanceOrigin") !== 0) {
-    if (shortestPath === "") {
-      shortestPath = jump.id();
-    } else {
-      shortestPath = jump.id() + " -> " + shortestPath;
-    }
-    path.unshift(jump.id());
-    jump = graph.getElementById(`${jump.data("_parent")}`);
-  }
-  // Add the start node to the list.
-  shortestPath = jump.id() + " -> " + shortestPath;
-  path.unshift(jump.id());
-  // Test print
-  // Change this function to animate the courier
-  console.log(`Shortest path: ${shortestPath}`);
-  return path;
-}

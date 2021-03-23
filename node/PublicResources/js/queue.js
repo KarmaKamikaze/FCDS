@@ -15,14 +15,14 @@ class QueueElement {
  */
 export class PriorityQueue {
   constructor() {
-    this.distances = new Array();
+    this.nodes = new Array();
   }
 
   enqueue(element) {
     // let queueElement = new QueueElement(identifier, distanceOrigin);
     let fitsBetween = false; // Boolean to decide if the element fits between others.
 
-    for (let i = 0; i < this.distances.length; i++) {
+    for (let i = 0; i < this.nodes.length; i++) {
       /**
        * Since it is a min-queue, we check from the first element, which
        * contains the lowest distance and therefore has the highest priority,
@@ -30,10 +30,9 @@ export class PriorityQueue {
        * queue element in the queue.
        */
       if (
-        this.distances[i].data("distanceOrigin") >
-        element.data("distanceOrigin")
+        this.nodes[i].data("distanceOrigin") > element.data("distanceOrigin")
       ) {
-        this.distances.splice(i, 0, element);
+        this.nodes.splice(i, 0, element);
         fitsBetween = true;
         break;
       }
@@ -41,7 +40,7 @@ export class PriorityQueue {
 
     // Element is pushed to the end of the queue if it does not fit between.
     if (!fitsBetween) {
-      this.distances.push(element);
+      this.nodes.push(element);
     }
   }
 
@@ -51,7 +50,7 @@ export class PriorityQueue {
     }
     // Removes the first element of the queue.
     else {
-      return this.distances.shift();
+      return this.nodes.shift();
     }
   }
 
@@ -61,11 +60,11 @@ export class PriorityQueue {
     }
     // Return the lowest distance element, as this is a minimum priority queue.
     else {
-      return this.distances[0];
+      return this.nodes[0];
     }
   }
 
   isEmpty() {
-    return this.distances.length == 0;
+    return this.nodes.length === 0;
   }
 }
