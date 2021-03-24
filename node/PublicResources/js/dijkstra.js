@@ -11,23 +11,30 @@ export function dijkstra(graph, startNode) {
   initializeSingleSource(graph, startNode);
   //let distances = new Object();
   let queue = new PriorityQueue();
-  
+
   graph.nodes().forEach((element) => {
     queue.enqueue(element);
   });
-  
+
   while (!queue.isEmpty()) {
     let shortestDistance = queue.dequeue();
     //distances.add(shortestDistance);
     // For-loop that checks if each edge's source is the observed node.
-    graph.edges().forEach((edge) => {
-      if (edge.source().id() === shortestDistance.id()) {
-        let weight = graph.getElementById(
-          `${shortestDistance.id()}${edge.target().id()}`
-        ).data("length");
-        relax(shortestDistance, edge.target(), weight);
+    let nodes = shortestDistance.neighborhood((ele) => ele.isNode());
+
+    for (let i = 0; i < nodes.length; i++) {
+      let edge =
+        shortestDistance.id().localeCompare(nodes[i].id()) == -1
+          ? graph.$id(shortestDistance.id() + nodes[i].id())
+          : graph.$id(nodes[i].id() + shortestDistance.id());
+
+      if (edge.data("target") !== nodes[i].id() && edge.data("isOneWay")) {
+        continue;
+      } else {
+        let weight = edge.data("length");
+        relax(shortestDistance, nodes[i], weight);
       }
-    });
+    }
   }
 }
 
@@ -40,7 +47,7 @@ export function dijkstra(graph, startNode) {
 export function traceback(graph, endNode) {
   let shortestPath = "";
   let jump = endNode;
-  let path = new Array;
+  let path = new Array();
 
   /**
    * While-loop that reiterates through the parents of jump,
@@ -53,13 +60,15 @@ export function traceback(graph, endNode) {
       shortestPath = jump.id() + " -> " + shortestPath;
     }
     path.unshift(jump.id());
+
     jump = graph.getElementById(`${jump.data("_parent")}`);
   }
   // Add the start node to the list.
   shortestPath = jump.id() + " -> " + shortestPath;
-  path.unshift(jump.id())
+  path.unshift(jump.id());
+
   // Test print
   // Change this function to animate the courier
-  console.log(`Shortest path: ${shortestPath}`);
+  //console.log(`Shortest path: ${shortestPath}`);
   return path;
 }

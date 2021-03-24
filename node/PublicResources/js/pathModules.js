@@ -25,7 +25,10 @@ export function initializeSingleSource(graph, startNode) {
  * @param {The weight associated with the edge between currentNode and adjacentNode.} weight
  */
 export function relax(currentNode, adjacentNode, weight) {
-  if (adjacentNode.data("distanceOrigin") > currentNode.data("distanceOrigin") + weight) {
+  if (
+    adjacentNode.data("distanceOrigin") >
+    currentNode.data("distanceOrigin") + weight
+  ) {
     let tempWeight = currentNode.data("distanceOrigin") + weight;
     /* The distance from the source to the adjacent node is updated through addition
      * of the source's distance to the current node

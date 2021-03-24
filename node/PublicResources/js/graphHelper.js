@@ -1,4 +1,4 @@
-import { dijkstra, traceback } from '../js/dijkstra.js'
+import { dijkstra, traceback } from "../js/dijkstra.js";
 
 export let eleType = {
   default: "default",
@@ -6,11 +6,12 @@ export let eleType = {
   restaurant: "restaurant",
   customer: "customer",
   route: "route",
-  routeDone: "routeDone"
+  routeDone: "routeDone",
 };
 
 export class CyGraph {
-  constructor(graph, courierCount = 0) {
+  constructor(name, graph, courierCount = 0) {
+    this.name = name;
     this.graph = graph;
     this.courierCount = courierCount;
   }
@@ -22,12 +23,12 @@ export class CyGraph {
   orders = [];
 
   /**
-    * Adds a node at specified location with potential weight
-    * @param {String} nodeId An ID for the node
-    * @param {Number} xCoord The x coordinate
-    * @param {Number} yCoord The y coordinate
-    * @param {Number} nodeWeight The specified weight (defaults to 1)
-    */
+   * Adds a node at specified location with potential weight
+   * @param {String} nodeId An ID for the node
+   * @param {Number} xCoord The x coordinate
+   * @param {Number} yCoord The y coordinate
+   * @param {Number} nodeWeight The specified weight (defaults to 1)
+   */
   addNode(nodeId, type = eleType.default, xCoord, yCoord, nodeWeight = 1) {
     let node = this.graph.add({
       group: "nodes",
@@ -44,9 +45,9 @@ export class CyGraph {
     });
 
     // add the node to the corresponding type-array of the CyGraph
-    if(type !== eleType.default) {
+    if (type !== eleType.default) {
       this[type + "s"].push(node);
-    }   
+    }
   }
 
   /**
@@ -84,52 +85,49 @@ export class CyGraph {
    * Adds an edge between two nodes in the network
    * @param {String} sourceNode The source node of the edge
    * @param {String} targetNode The target node of the edge
-   * @param {Boolean} isOneWay Whether the edge is only traversible one way (true) or not (false)
+   * @param {Boolean} isOneWay Whether the edge is only traversible one way (default: false)
    */
-  addEdge(sourceNode, targetNode, isOneWay = false) {
+  addEdge(_id, _source, _target, _isOneWay = false) {
     this.graph.add({
       group: "edges",
       data: {
-        source: sourceNode,
-        target: targetNode,
-        id: sourceNode + targetNode,
-        oneway: isOneWay,
+        source: _source,
+        target: _target,
+        id: _id,
+        isOneWay: _isOneWay, //! check if this option is already set (when designing the network)
       },
     });
-    this.calcLength(sourceNode + targetNode);
+    this.calcLength(_id);
   }
 
-  /** Initializes name and length of every edges. */
+  /** Initializes name and length of all edges. */
   initializeEdges() {
     let edges = this.graph.edges(),
-        n = edges.length;
+      n = edges.length;
     for (let i = 0; i < n; i++) {
       let source = edges[i].data("source"),
-          target = edges[i].data("target"),
-          newId = source + target;
-      this.addEdge(source, target);
-      this.addEdge(target, source); // add a reverse edge for bidirectional movement ;D
+        target = edges[i].data("target"),
+        newId = this.getEdgeId(source, target);
+      this.addEdge(newId, source, target, false);
       this.delNode(edges[i].id());
-      this.calcLength(newId);
     }
   }
 
   /** Initializes the type of every nodes */
   initializeNodes() {
     let nodes = this.graph.nodes(),
-        n = nodes.length;
+      n = nodes.length;
     for (let i = 0; i < n; i++) {
       let type = nodes[i].data("type");
       try {
-        if(type !== eleType.default) {
+        if (type !== eleType.default) {
           this[type + "s"].push(nodes[i]);
         }
       } catch (e) {
-        console.warn(`Node type: ${type} is invalid. (Error:${e})`);
+        console.warn(`[${this.name}] type: ${type} is invalid. (Error:${e})`);
       }
     }
   }
-
 
   /**
    * Calculates the length of a specific edge using Pythagora's theorem
@@ -138,9 +136,12 @@ export class CyGraph {
    */
   calcLength(edgeId) {
     let edge = this.graph.$id(edgeId),
-        pos1 = this.getPos(edge.data("source")),
-        pos2 = this.getPos(edge.data("target")),
-        length = Math.sqrt((pos2.x - pos1.x) * (pos2.x - pos1.x) + (pos2.y - pos1.y) * (pos2.y - pos1.y));
+      pos1 = this.getPos(edge.data("source")),
+      pos2 = this.getPos(edge.data("target")),
+      length = Math.sqrt(
+        (pos2.x - pos1.x) * (pos2.x - pos1.x) +
+          (pos2.y - pos1.y) * (pos2.y - pos1.y)
+      );
     edge.data("length", length);
     return length;
   }
@@ -149,19 +150,23 @@ export class CyGraph {
    * Gets the length of an edge between two nodes.
    * @param {String} sourceNode The source node
    * @param {String} targetNode
-   * @param {Boolean} ignoreDirection Whether to ignore the edge direction (true) or not (false)
    * @returns The length of the edge between the specified nodes
    */
-  getLength(sourceNode, targetNode, ignoreDirection = false) {
-    let edges = this.graph.$id(sourceNode).connectedEdges(),
-        n = edges.length;
-    for (let i = 0; i < n; i++) {
-      let target = edges[i].data("target"),
-          source = edges[i].data("source");
-      if (target === targetNode || (ignoreDirection && source === targetNode)) {
-        return edges[i].data("length");
-      }
-    }
+  getLength(sourceNode, targetNode) {
+    let edgeId = this.getEdgeId(sourceNode, targetNode);
+    return this.graph.$id(edgeId).data("length");
+  }
+
+  /**
+   * Returns the ID of the edge connecting the two nodes.
+   * @param {String} node1Id The ID of the first node
+   * @param {String} node2Id The ID of the second node
+   * @returns A concatenated string of the two nodes sorted lexicographically
+   */
+  getEdgeId(node1Id, node2Id) {
+    return node1Id.localeCompare(node2Id) === -1
+      ? node1Id + node2Id
+      : node2Id + node1Id;
   }
 
   /**
@@ -188,10 +193,21 @@ export class CyGraph {
    * @param {String} EndId The ID of the destination.
    */
   traversePath(courierId, endId) {
-    let courierPos = this.graph.$id(courierId).data("currentNode");
-    dijkstra(this.graph.elements(), this.graph.$id(courierPos));
-    let path = traceback(this.graph.elements(), this.graph.$id(endId));
-    this.animateCourier(path, courierId);
+    let graph = this.graph.elements(),
+      courier = this.graph.$id(courierId),
+      startNode = this.graph.$id(courier.data("currentNode")),
+      endNode = this.graph.$id(endId);
+
+    dijkstra(graph, startNode);
+    let path = traceback(graph, endNode);
+    this.animateCourier(path, courier);
+    //#region DEBUG
+    let pathStr = `[${this.name}] ${courierId} ${startNode}`;
+    for (let k of path) {
+      if (k !== startNode) pathStr += `->${k}`;
+    }
+    console.log(pathStr);
+    //#endregion
   }
 
   /**
@@ -200,53 +216,55 @@ export class CyGraph {
    * @param {String} courierId The ID of the courier to animate
    * @param {Number} index The index to start from (default: 0)
    */
-  animateCourier(path, courierId, index = 0) {
-    let diff1 = this.getPos(path[index + 1]).x - this.getPos(path[index]).x,
-        diff2 = this.getPos(path[index + 1]).y - this.getPos(path[index]).y,
-        edge = this.graph.$id(path[index] + path[index + 1]),
-        edgeRev = this.graph.$id(path[index + 1] + path[index]),
-        steps = this.getLength(path[index], path[index + 1]) * 2,
-        courier = this.graph.$id(courierId),
-        i = 0;
+  animateCourier(path, courier, index = 0) {
+    let nextPos = this.getPos(path[index + 1]),
+      currentPos = this.getPos(path[index]),
+      diff1 = nextPos.x - currentPos.x,
+      diff2 = nextPos.y - currentPos.y,
+      edgeId = this.getEdgeId(path[index], path[index + 1]),
+      edge = this.graph.$id(edgeId),
+      steps = this.getLength(path[index], path[index + 1]),
+      i = 0;
     edge.addClass(eleType.route);
-    edgeRev.addClass(eleType.routeDone);
     let anim = setInterval(() => {
       courier.shift({ x: diff1 / steps, y: diff2 / steps });
       i++;
       if (i >= steps) {
         clearInterval(anim);
         edge.addClass(eleType.routeDone);
-        edgeRev.addClass(eleType.routeDone);
         setTimeout(() => {
           edge.removeClass(eleType.route + " " + eleType.routeDone);
-          edgeRev.removeClass(eleType.route + " " + eleType.routeDone);
           courier.data("currentNode", path[index + 1]);
-          if (index + 1 < path.length - 1) {
+          if (index < path.length - 2) {
             console.log(
-              courier.id() + " went through " + courier.data("currentNode")
+              `[${this.name}] ${courier.id()} went through ${courier.data(
+                "currentNode"
+              )}`
             );
-            return this.animateCourier(path, courierId, index + 1);
+            return this.animateCourier(path, courier, index + 1);
           } else {
             console.log(
-              courier.id() + " arrived at " + courier.data("currentNode")
+              `(${this.name}) ${courier.id()} arrived at ${courier.data(
+                "currentNode"
+              )}`
             );
             return;
           }
         }, 250);
       }
-    }, 10);
+    }, 5);
   }
 
   /** Prints the nodes of the network as well as their connected edges */
   listNetwork() {
     let nodes = this.graph.nodes(),
-        n = nodes.length,
-        netStr = "";
+      n = nodes.length,
+      netStr = "";
 
     for (let i = 0; i < n; i++) {
       netStr += `Node: ${nodes[i].id()}\n`;
       let conEdges = nodes[i].connectedEdges(),
-          m = conEdges.length;
+        m = conEdges.length;
       if (conEdges) {
         for (let j = 0; j < m; j++) {
           netStr += `Connected edge: ${conEdges[j].id()}\n`;
@@ -256,8 +274,6 @@ export class CyGraph {
     console.log(netStr);
   }
 }
-
-
 
 // Unused functions
 
@@ -272,8 +288,6 @@ function getRandomPos() {
   };
   return pos;
 }
-
-
 
 /**
  * Moves a node to a new point in the network

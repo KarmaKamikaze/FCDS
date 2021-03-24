@@ -1,123 +1,20 @@
-import { CyGraph, eleType } from '../js/graphHelper.js'
+import { CyGraph, eleType } from "./graphHelper.js";
+import { CytoStyle } from "./cytoStylesheet.js";
 
-let GRAPH_PRESET_FILE = "../graphPresets/TestDijkstra1.cyjs";
+let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
 
 let Viewport = {
-  width: 768,//parseInt(getComputedStyle(document.querySelector("cy")).width),
-  height: 768//parseInt(getComputedStyle(document.querySelector("cy")).height)
+  // get width and height of the graph container class from the stylesheet
+  width: parseInt(
+    getComputedStyle(document.getElementsByClassName("cy")[0]).width
+  ),
+  height: parseInt(
+    getComputedStyle(document.getElementsByClassName("cy")[0]).height
+  ),
 };
 
-//TODO: Make general cytoscape settings global - restrict min/max zoom
-
-let cy1 = cytoscape({
-    container: document.getElementById('cy1'),
-    boxSelectionEnabled: false,
-    autounselectify: true,
-    autoungrabify: true,
-    //#region Cytoscape Stylesheet
-    style: cytoscape.stylesheet()
-    .selector('node')
-      .style({
-        'content': 'data(id)',
-        'color': 'white'
-      })
-    .selector('edge')
-      .style({
-        'curve-style': 'straight',
-        'target-arrow-shape': 'none',
-        'width': 3,
-        'line-color': 'white',
-        'target-arrow-color': 'white',
-        'color': 'lightgreen',
-        'content': ''
-      })
-    .selector(`.${eleType.route}`)
-      .style({
-        'background-color': '#B22222',
-        'line-color': '#B22222',
-        'target-arrow-color': '#B22222',
-        'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0.25s'
-      })
-    .selector(`.${eleType.routeDone}`)
-      .style({
-        'background-color': 'white',
-        'line-color': 'white',
-        'target-arrow-color': 'white',
-        'transition-property': 'background-color, line-color, target-arrow-color',
-        'transition-duration': '0.25s'
-      })
-    .selector(`.${eleType.courier}`)
-      .style({
-        'width': 20,
-        'height':20,
-        'background-color': '#B22222',
-        'content': ''
-      })
-    .selector(`.${eleType.customer}`)
-      .style({
-        'width': 20,
-        'height':20,
-        'background-color': '#00CED1',
-        'content': ''
-      })
-      //#endregion
-});
-
-let cy2 = cytoscape({
-  container: document.getElementById('cy2'),
-  boxSelectionEnabled: false,
-  autounselectify: true,
-  autoungrabify: true,
-  //#region Cytoscape Stylesheet
-  style: cytoscape.stylesheet()
-  .selector('node')
-    .style({
-      'content': 'data(id)',
-      'color': 'white'
-    })
-  .selector('edge')
-    .style({
-      'curve-style': 'straight',
-      'target-arrow-shape': 'none',
-      'width': 3,
-      'line-color': 'white',
-      'target-arrow-color': 'white',
-      'color': 'lightgreen',
-      'content': ''
-    })
-  .selector(`.${eleType.route}`)
-    .style({
-      'background-color': '#B22222',
-      'line-color': '#B22222',
-      'target-arrow-color': '#B22222',
-      'transition-property': 'background-color, line-color, target-arrow-color',
-      'transition-duration': '0.25s'
-    })
-  .selector(`.${eleType.routeDone}`)
-    .style({
-      'background-color': 'white',
-      'line-color': 'white',
-      'target-arrow-color': 'white',
-      'transition-property': 'background-color, line-color, target-arrow-color',
-      'transition-duration': '0.25s'
-    })
-  .selector(`.${eleType.courier}`)
-    .style({
-      'width': 20,
-      'height':20,
-      'background-color': '#B22222',
-      'content': ''
-    })
-  .selector(`.${eleType.customer}`)
-    .style({
-      'width': 20,
-      'height':20,
-      'background-color': '#00CED1',
-      'content': ''
-    })
-    //#endregion
-});
+let cy1 = new CytoStyle("cy1");
+let cy2 = new CytoStyle("cy2");
 
 /**
  * Performs setup and initialization of the input Cytoscape graph
@@ -125,13 +22,13 @@ let cy2 = cytoscape({
  * @param {File} presetFile The graph preset file to load
  */
 function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
-  if(presetFile === null) return;
+  if (presetFile === null) return;
 
   fetch(presetFile)
-    .then(response => response.json())
-    .then(exportedJson => cyGraph.graph.json(exportedJson))
+    .then((response) => response.json())
+    .then((exportedJson) => cyGraph.graph.json(exportedJson))
     // initialize the graph
-    .then(function() { 
+    .then(function () {
       cyGraph.initializeEdges();
       cyGraph.initializeNodes();
       cyGraph.graph.fit(cyGraph.graph.elements());
@@ -143,30 +40,35 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
     });
 }
 
-/** Callback function which starts the simulation once the graph is initialized 
+/** Callback function which starts the simulation once the graph is initialized
  *  @param {CyGraph} cyGraph The graph to perform the simulation on
-*/
+ */
 function simulationTest1(cyGraph) {
-  cyGraph.addEdge("n2", "center");
-  cyGraph.addEdge("end", "center");
-  cyGraph.delNode("startend");
-  cyGraph.delNode("endstart");
-  cyGraph.addCourier("start");
-  cyGraph.addCourier("start");
-  cyGraph.traversePath("courier1", "center");
-  cyGraph.traversePath("courier2", "end");
+  cyGraph.addCourier("N2");
+  cyGraph.addCourier("N2");
+  cyGraph.traversePath("courier1", "R1");
+  cyGraph.traversePath("courier2", "R2");
 }
 
 function simulationTest2(cyGraph) {
-  cyGraph.addCourier("start");
-  cyGraph.addCourier("start");
-  cyGraph.traversePath("courier1", "n2");
-  cyGraph.traversePath("courier2", "end");
+  cyGraph.addCourier("C2");
+  cyGraph.delNode(cyGraph.getEdgeId("C2", "N1"));
+  cyGraph.delNode(cyGraph.getEdgeId("C2", "N2"));
+  cyGraph.delNode(cyGraph.getEdgeId("N2", "N1"));
+  cyGraph.addEdge("C2N2", "N2", "C2", false);
+  cyGraph.addEdge("N1N2", "N1", "N2", false);
+  cyGraph.addEdge("C2N1", "C2", "N1", false);
+  cyGraph.addEdge("C2N5", "N5", "C2", true);
+  cyGraph.delNode(cyGraph.getEdgeId("N4", "R1"));
+  cyGraph.addEdge("N4R1", "R1", "N4", false);
+  //cyGraph.addEdge("N2", "R1")
+
+  cyGraph.traversePath("courier1", "R1");
 }
 
 /// MAIN ///
 
-let graph1 = new CyGraph(cy1);
-let graph2 = new CyGraph(cy2);
+let graph1 = new CyGraph("Cy1", cy1);
+let graph2 = new CyGraph("Cy2", cy2);
 SetupGraph(graph1, GRAPH_PRESET_FILE, simulationTest1);
 SetupGraph(graph2, GRAPH_PRESET_FILE, simulationTest2);
