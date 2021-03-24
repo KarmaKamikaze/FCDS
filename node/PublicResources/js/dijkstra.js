@@ -9,7 +9,6 @@ import { initializeSingleSource, relax } from "../js/pathModules.js";
  */
 export function dijkstra(graph, startNode) {
   initializeSingleSource(graph, startNode);
-  //let distances = new Object();
   let queue = new PriorityQueue();
 
   graph.nodes().forEach((element) => {
@@ -18,7 +17,6 @@ export function dijkstra(graph, startNode) {
 
   while (!queue.isEmpty()) {
     let shortestDistance = queue.dequeue();
-    //distances.add(shortestDistance);
     // For-loop that checks if each edge's source is the observed node.
     graph.edges().forEach((edge) => {
       if (edge.source().id() === shortestDistance.id()) {

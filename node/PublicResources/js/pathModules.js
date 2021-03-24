@@ -32,21 +32,27 @@ export function relax(currentNode, adjacentNode, weight) {
     currentNode.data("distanceOrigin") + weight
   ) {
     let tempWeight = currentNode.data("distanceOrigin") + weight;
-    /* The distance from the source to the adjacent node is updated through addition
+    /** The distance from the source to the adjacent node is updated through addition
      * of the source's distance to the current node
      * and the weight between the current node and the adjacent node */
     adjacentNode.data("distanceOrigin", tempWeight);
-    /* The parent will retain the path back to the starting points,
+    /** The parent will retain the path back to the starting points,
      * if combined with all other parents. */
     adjacentNode.data("_parent", currentNode.id());
   }
 }
 
+/**
+ * Approximates the direct distance from the current node being observed
+ * @param {Object} currentNodeId The current node we are evaluating in respect to the end goal.
+ * @param {Object} endNodeId The end goal node.
+ * @returns The Pythagorean distance between the currentNodeId and the endNodeId.
+ */
 export function heuristicApprox(currentNodeId, endNodeId) {
-  let currentX = getPos(currentNodeId).x;
-  let currentY = getPos(currentNodeId).y;
-  let endX = getPos(endNodeId).x;
-  let endY = getPos(endNodeId).y;
+  let currentPos = getPos(currentNodeId);
+  let endPos = getPos(endNodeId);
+  let [currentX, currentY] = [currentPos.x, currentPos.y];
+  let [endX, endY] = [endPos.x, endPos.y];
 
   return Math.sqrt(Math.pow(currentX - endX, 2) + Math.pow(currentY - endY, 2));
 }
@@ -75,10 +81,8 @@ export function traceback(graph, endNode) {
   let jump = endNode;
   let path = new Array();
 
-  /**
-   * While-loop that reiterates through the parents of jump,
-   * creating a list of nodes used to go from start node to end node.
-   */
+  /** While-loop that reiterates through the parents of jump,
+   * creating a list of nodes used to go from start node to end node. */
   while (jump.data("_parent") !== null && jump.data("distanceOrigin") !== 0) {
     if (shortestPath === "") {
       shortestPath = jump.id();
@@ -91,9 +95,8 @@ export function traceback(graph, endNode) {
   // Add the start node to the list.
   shortestPath = jump.id() + " -> " + shortestPath;
   path.unshift(jump.id());
-  // Test print
-  // Change this function to animate the courier
-  console.log(`Shortest path: ${shortestPath}`);
+
+  console.log(`Shortest path: ${shortestPath}`); // Test print
   return path;
 }
 
