@@ -7,7 +7,7 @@ import { initializeSingleSource, relax } from "../js/pathModules.js";
  * and parents in terms of the new starting point.
  * @param {Object} startNode The starting point node. Also called source.
  */
-export function dijkstra(graph, startNode) {
+function dijkstra(graph, startNode) {
   initializeSingleSource(graph, startNode);
   let queue = new PriorityQueue();
 
@@ -34,3 +34,5 @@ export function dijkstra(graph, startNode) {
     }
   }
 }
+
+export { dijkstra };

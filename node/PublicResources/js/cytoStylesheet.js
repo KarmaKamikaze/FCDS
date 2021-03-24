@@ -1,6 +1,6 @@
 import { eleType } from "./graphHelper.js";
 
-export function CytoStyle(containerId) {
+function CytoStyle(containerId) {
   return cytoscape({
     container: document.getElementById(containerId),
 
@@ -63,3 +63,5 @@ export function CytoStyle(containerId) {
       }),
   });
 }
+
+export { CytoStyle };

@@ -13,7 +13,7 @@ class QueueElement {
  * Class to hold the priority queue set. Since the queue can keep
  * growing dynamically, as we add elements, it will never overflow.
  */
-export class PriorityQueue {
+class PriorityQueue {
   constructor() {
     this.nodes = new Array();
   }
@@ -68,3 +68,5 @@ export class PriorityQueue {
     return this.nodes.length === 0;
   }
 }
+
+export { PriorityQueue };
