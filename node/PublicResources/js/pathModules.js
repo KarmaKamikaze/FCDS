@@ -1,4 +1,4 @@
-import { getPos } from "../js/cytoNetwork.js";
+import { CyGraph } from "../js/graphHelper.js";
 
 const maxSpeedLimit = 130;
 
@@ -49,8 +49,8 @@ export function relax(currentNode, adjacentNode, weight) {
  * @returns The Pythagorean distance between the currentNodeId and the endNodeId.
  */
 export function heuristicApprox(currentNodeId, endNodeId) {
-  let currentPos = getPos(currentNodeId);
-  let endPos = getPos(endNodeId);
+  let currentPos = CyGraph.getPos(currentNodeId);
+  let endPos = CyGraph.getPos(endNodeId);
   let [currentX, currentY] = [currentPos.x, currentPos.y];
   let [endX, endY] = [endPos.x, endPos.y];
 

@@ -1,4 +1,5 @@
-import { dijkstra, traceback } from "../js/dijkstra.js";
+import { dijkstra } from "../js/dijkstra.js";
+import { traceback } from "../js/pathModules.js";
 
 export let eleType = {
   default: "default",
