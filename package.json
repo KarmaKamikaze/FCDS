@@ -1,4 +1,23 @@
 {
+  "name": "food_courier_distribution",
+  "description": "This program will simulate the distribution of food delivery couriers",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node node/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarmaKamikaze/P2-Project.git"
+  },
+  "author": "B2-14",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/KarmaKamikaze/P2-Project/issues"
+  },
+  "homepage": "https://github.com/KarmaKamikaze/P2-Project#readme",
   "dependencies": {
     "cytoscape": "^3.18.1"
   }
