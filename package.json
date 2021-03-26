@@ -3,7 +3,6 @@
   "description": "This program will simulate the distribution of food delivery couriers",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node node/index.js"
@@ -19,6 +18,7 @@
   },
   "homepage": "https://github.com/KarmaKamikaze/P2-Project#readme",
   "dependencies": {
-    "cytoscape": "^3.18.1"
+    "cytoscape": "^3.18.1",
+    "express": "^4.17.1"
   }
 }
