@@ -1,5 +1,3 @@
-import { CyGraph } from "../js/graphHelper.js";
-
 const maxSpeedLimit = 130;
 
 /**
@@ -25,21 +23,21 @@ function initializeSingleSource(graph, startNode) {
  * @param {Object} adjacentNode A node adjacent to currentNode.
  * This node is the target of an edge, which has the source of currentNode
  * @param {Number} weight The weight associated with the edge between currentNode and adjacentNode.
+ * @returns A boolean that confirms if the newWeight was adjusted or not.
  */
 function relax(currentNode, adjacentNode, weight) {
-  if (
-    adjacentNode.data("distanceOrigin") >
-    currentNode.data("distanceOrigin") + weight
-  ) {
-    let tempWeight = currentNode.data("distanceOrigin") + weight;
+  let newWeight = currentNode.data("distanceOrigin") + weight;
+  if (adjacentNode.data("distanceOrigin") > newWeight) {
     /** The distance from the source to the adjacent node is updated through addition
      * of the source's distance to the current node
      * and the weight between the current node and the adjacent node */
-    adjacentNode.data("distanceOrigin", tempWeight);
+    adjacentNode.data("distanceOrigin", newWeight);
     /** The parent will retain the path back to the starting points,
      * if combined with all other parents. */
     adjacentNode.data("_parent", currentNode.id());
+    return true;
   }
+  return false;
 }
 
 /**
@@ -48,9 +46,9 @@ function relax(currentNode, adjacentNode, weight) {
  * @param {Object} endNodeId The end goal node.
  * @returns The Pythagorean distance between the currentNodeId and the endNodeId.
  */
-function heuristicApprox(currentNodeId, endNodeId) {
-  let currentPos = CyGraph.getPos(currentNodeId);
-  let endPos = CyGraph.getPos(endNodeId);
+function heuristicApprox(cyGraph, currentNodeId, endNodeId) {
+  let currentPos = cyGraph.getPos(currentNodeId);
+  let endPos = cyGraph.getPos(endNodeId);
   let [currentX, currentY] = [currentPos.x, currentPos.y];
   let [endX, endY] = [endPos.x, endPos.y];
 
@@ -58,7 +56,7 @@ function heuristicApprox(currentNodeId, endNodeId) {
 }
 
 /**
- * Gives an edge a weight by calculating its property and assigning to weight property
+ * Gives an edge a weight by calculating its property and assigning it to weight property
  * @param {Object} courierObject The object for the courier en route
  * @param {Object} edgeObject The edge whose weight is being calculated
  */

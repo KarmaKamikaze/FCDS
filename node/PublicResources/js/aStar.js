@@ -19,7 +19,7 @@ function aStar(graph, startNode, endNode) {
   // Initialization
   startNode.data(
     "distanceOrigin",
-    heuristicApprox(startNode.id(), endNode.id())
+    heuristicApprox(cyGraph, startNode.id(), endNode.id())
   );
   startNode.data("_parent", null);
   pending.enqueue(startNode);
@@ -34,8 +34,11 @@ function aStar(graph, startNode, endNode) {
     }
 
     // forEach loop that manages the queue for the successors of the currently observed node.
-    graph.edges().forEach((edge) => {
-      if (edge.source().id() === currentShortest.id()) {
+    cyGraph.graph.edges().forEach((edge) => {
+      if (edge.target().id === currentShortest.id() && !edge.data("isOneWay")) {
+        console.warn(`Traversing one-way edge!`);
+        return;
+      } else if (edge.source().id() === currentShortest.id()) {
         let successor = edge.target();
         let weight = edge.data("length");
         /** possibleImprovedCost is a variable used to describe the possible improvement
@@ -69,7 +72,8 @@ function aStar(graph, startNode, endNode) {
          * approximation. Also assigns the parent of the successor. */
         successor.data(
           "distanceOrigin",
-          possibleImprovedCost + heuristicApprox(successor.id(), endNode.id())
+          possibleImprovedCost +
+            heuristicApprox(cyGraph, successor.id(), endNode.id())
         );
         successor.data("_parent", currentShortest.id());
       }

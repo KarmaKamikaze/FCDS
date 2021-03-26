@@ -9,7 +9,7 @@ function CytoStyle(containerId) {
     autounselectify: true,
     autoungrabify: true,
     minZoom: 1,
-    maxZoom: 2,
+    maxZoom: 1.5,
 
     // Stylesheet
     style: cytoscape
