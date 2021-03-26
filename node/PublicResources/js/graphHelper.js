@@ -39,6 +39,7 @@ class CyGraph {
         id: nodeId,
         _parent: null,
         distanceOrigin: 0,
+        distanceOrigin1: 0,
       },
       position: {
         x: xCoord,
