@@ -1,5 +1,7 @@
 import { CyGraph, eleType } from "./graphHelper.js";
 import { CytoStyle } from "./cytoStylesheet.js";
+import { dijkstra } from "./dijkstra.js";
+import { aStar } from "./aStar.js";
 
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
 
@@ -44,26 +46,13 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
  *  @param {CyGraph} cyGraph The graph to perform the simulation on
  */
 function simulationTest1(cyGraph) {
-  cyGraph.addCourier("N2");
-  cyGraph.addCourier("N2");
-  cyGraph.traversePath("courier1", "R1");
-  cyGraph.traversePath("courier2", "R2");
+  cyGraph.addCourier("C2");
+  cyGraph.traversePath("courier1", "R1", dijkstra);
 }
 
 function simulationTest2(cyGraph) {
   cyGraph.addCourier("C2");
-  cyGraph.delNode(cyGraph.getEdgeId("C2", "N1"));
-  cyGraph.delNode(cyGraph.getEdgeId("C2", "N2"));
-  cyGraph.delNode(cyGraph.getEdgeId("N2", "N1"));
-  cyGraph.addEdge("C2N2", "N2", "C2", false);
-  cyGraph.addEdge("N1N2", "N1", "N2", false);
-  cyGraph.addEdge("C2N1", "C2", "N1", false);
-  cyGraph.addEdge("C2N5", "N5", "C2", true);
-  cyGraph.delNode(cyGraph.getEdgeId("N4", "R1"));
-  cyGraph.addEdge("N4R1", "R1", "N4", false);
-  //cyGraph.addEdge("N2", "R1")
-
-  cyGraph.traversePath("courier1", "R1");
+  cyGraph.traversePath("courier1", "R1", aStar);
 }
 
 /// MAIN ///

@@ -3,12 +3,15 @@ import { initializeSingleSource, relax } from "../js/pathModules.js";
 
 /**
  * Dijkstra's algorithm will find the shortest path between all nodes in a weighted graph.
- * @param {Object} graph The graph nodes will be updated with new distances
+ * @param {Object} cyGraph The graph nodes will be updated with new distances
  * and parents in terms of the new starting point.
  * @param {Object} startNode The starting point node. Also called source.
  */
-export function dijkstra(graph, startNode) {
-  initializeSingleSource(graph, startNode);
+export function dijkstra(cyGraph, startNode, initSrc = true) {
+  let graph = cyGraph.graph;
+  if (initSrc) {
+    initializeSingleSource(graph, startNode);
+  }
   let queue = new PriorityQueue();
 
   graph.nodes().forEach((element) => {
@@ -17,9 +20,11 @@ export function dijkstra(graph, startNode) {
 
   while (!queue.isEmpty()) {
     let shortestDistance = queue.dequeue();
-    let nodes = shortestDistance.neighborhood((ele) => ele.isNode());
+    let nodes = shortestDistance.openNeighborhood((ele) => ele.isNode()),
+      n = nodes.length;
+
     // For loop that checks if node can traverse each edge
-    for (let i = 0; i < nodes.length; i++) {
+    for (let i = 0; i < n; i++) {
       let edge =
         shortestDistance.id().localeCompare(nodes[i].id()) == -1
           ? graph.$id(shortestDistance.id() + nodes[i].id())
@@ -32,5 +37,8 @@ export function dijkstra(graph, startNode) {
         relax(shortestDistance, nodes[i], weight);
       }
     }
+  }
+  if (initSrc) {
+    dijkstra(cyGraph, startNode, false);
   }
 }

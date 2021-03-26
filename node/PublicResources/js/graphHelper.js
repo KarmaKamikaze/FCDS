@@ -1,5 +1,6 @@
 import { dijkstra } from "../js/dijkstra.js";
 import { traceback } from "../js/pathModules.js";
+import { aStar } from "../js/aStar.js";
 
 export let eleType = {
   default: "default",
@@ -189,18 +190,20 @@ export class CyGraph {
   }
 
   /**
-   * Uses Dijkstra's algorithm to find the shortest path between a start and end node.
+   * Uses Dijkstra's console.log
+   * algorithm to find the shortest path between a start and end node.
    * @param {String} courierId The ID of the courier.
    * @param {String} EndId The ID of the destination.
    */
-  traversePath(courierId, endId) {
+  traversePath(courierId, endId, pathFunc) {
     let graph = this.graph.elements(),
       courier = this.graph.$id(courierId),
       startNode = this.graph.$id(courier.data("currentNode")),
       endNode = this.graph.$id(endId);
 
-    dijkstra(graph, startNode);
+    pathFunc(this, startNode, endNode);
     let path = traceback(graph, endNode);
+    console.log(path);
     this.animateCourier(path, courier);
     //#region DEBUG
     let pathStr = `[${this.name}] ${courierId} ${startNode}`;
@@ -253,7 +256,7 @@ export class CyGraph {
           }
         }, 250);
       }
-    }, 5);
+    }, 10);
   }
 
   /** Prints the nodes of the network as well as their connected edges */

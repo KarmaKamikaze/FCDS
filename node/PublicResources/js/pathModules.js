@@ -1,5 +1,3 @@
-import { CyGraph } from "../js/graphHelper.js";
-
 const maxSpeedLimit = 130;
 
 /**
@@ -48,9 +46,9 @@ export function relax(currentNode, adjacentNode, weight) {
  * @param {Object} endNodeId The end goal node.
  * @returns The Pythagorean distance between the currentNodeId and the endNodeId.
  */
-export function heuristicApprox(currentNodeId, endNodeId) {
-  let currentPos = CyGraph.getPos(currentNodeId);
-  let endPos = CyGraph.getPos(endNodeId);
+export function heuristicApprox(cyGraph, currentNodeId, endNodeId) {
+  let currentPos = cyGraph.getPos(currentNodeId);
+  let endPos = cyGraph.getPos(endNodeId);
   let [currentX, currentY] = [currentPos.x, currentPos.y];
   let [endX, endY] = [endPos.x, endPos.y];
 
@@ -58,7 +56,7 @@ export function heuristicApprox(currentNodeId, endNodeId) {
 }
 
 /**
- * Gives an edge a weight by calculating its property and assigning to weight property
+ * Gives an edge a weight by calculating its property and console.log(signing to weight property
  * @param {Object} courierObject The object for the courier en route
  * @param {Object} edgeObject The edge whose weight is being calculated
  */
