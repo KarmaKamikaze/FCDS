@@ -58,8 +58,8 @@ function simulationTest2(cyGraph) {
 }
 
 function simulationTest3(cyGraph) {
-  cyGraph.addCourier("C2");
-  cyGraph.traversePath("courier1", "N4", bestFirstSearch);
+  cyGraph.addCourier("R2");
+  cyGraph.traversePath("courier1", "C3", bestFirstSearch);
 }
 
 /// MAIN ///

@@ -18,7 +18,7 @@ class PriorityQueue {
     this.nodes = new Array();
   }
 
-  enqueue(element) {
+  enqueue(element, distanceOrigin) {
     // let queueElement = new QueueElement(identifier, distanceOrigin);
     let fitsBetween = false; // Boolean to decide if the element fits between others.
 
@@ -30,7 +30,7 @@ class PriorityQueue {
        * queue element in the queue.
        */
       if (
-        this.nodes[i].data("distanceOrigin") > element.data("distanceOrigin")
+        this.nodes[i].data(`${distanceOrigin}`) > element.data(`${distanceOrigin}`)
       ) {
         this.nodes.splice(i, 0, element);
         fitsBetween = true;
