@@ -7,16 +7,13 @@ import { initializeSingleSource, relax } from "../js/pathModules.js";
  * and parents in terms of the new starting point.
  * @param {Object} startNode The starting point node. Also called source.
  */
-export function dijkstra(cyGraph, startNode, initSrc = true) {
+export function dijkstra(cyGraph, startNode) {
   let graph = cyGraph.graph;
-  if (initSrc) {
-    initializeSingleSource(graph, startNode);
-  }
+  initializeSingleSource(graph, startNode);
   let queue = new PriorityQueue();
 
-  graph.nodes().forEach((element) => {
-    queue.enqueue(element);
-  });
+  // Initialization
+  queue.enqueue(startNode);
 
   while (!queue.isEmpty()) {
     let shortestDistance = queue.dequeue();
@@ -30,15 +27,15 @@ export function dijkstra(cyGraph, startNode, initSrc = true) {
           ? graph.$id(shortestDistance.id() + nodes[i].id())
           : graph.$id(nodes[i].id() + shortestDistance.id());
 
-      if (edge.data("target") !== nodes[i].id() && edge.data("isOneWay")) {
-        continue;
-      } else {
+      /** Checks if the edge runs from node to target node, or if it is bidirectional
+       * and can ignore going "against" the edge */
+      if (edge.data("source") === nodes[i].id() || !edge.data("isOneWay")) {
         let weight = edge.data("length");
-        relax(shortestDistance, nodes[i], weight);
+        let adjusted = relax(shortestDistance, nodes[i], weight);
+        if (adjusted) {
+          queue.enqueue(nodes[i]);
+        }
       }
     }
-  }
-  if (initSrc) {
-    dijkstra(cyGraph, startNode, false);
   }
 }

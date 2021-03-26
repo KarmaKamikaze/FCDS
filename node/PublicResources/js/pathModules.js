@@ -23,21 +23,21 @@ export function initializeSingleSource(graph, startNode) {
  * @param {Object} adjacentNode A node adjacent to currentNode.
  * This node is the target of an edge, which has the source of currentNode
  * @param {Number} weight The weight associated with the edge between currentNode and adjacentNode.
+ * @returns A boolean that confirms if the newWeight was adjusted or not.
  */
 export function relax(currentNode, adjacentNode, weight) {
-  if (
-    adjacentNode.data("distanceOrigin") >
-    currentNode.data("distanceOrigin") + weight
-  ) {
-    let tempWeight = currentNode.data("distanceOrigin") + weight;
+  let newWeight = currentNode.data("distanceOrigin") + weight;
+  if (adjacentNode.data("distanceOrigin") > newWeight) {
     /** The distance from the source to the adjacent node is updated through addition
      * of the source's distance to the current node
      * and the weight between the current node and the adjacent node */
-    adjacentNode.data("distanceOrigin", tempWeight);
+    adjacentNode.data("distanceOrigin", newWeight);
     /** The parent will retain the path back to the starting points,
      * if combined with all other parents. */
     adjacentNode.data("_parent", currentNode.id());
+    return true;
   }
+  return false;
 }
 
 /**
