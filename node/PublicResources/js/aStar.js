@@ -11,7 +11,7 @@ import { heuristicApprox } from "../js/pathModules.js";
  * A courier's location usually determines where to begin the journey.
  * @param {Object} endNode The end goal node, which is the destination of the journey.
  */
-function aStar(graph, startNode, endNode) {
+function aStar(cyGraph, startNode, endNode) {
   let pending = new PriorityQueue(); // Open list
   let fullyExpanded = new Set(); // Close list
   let currentShortest = {}; // The minimum distance element from the priority queue.
