@@ -17,6 +17,7 @@
     "url": "https://github.com/KarmaKamikaze/P2-Project/issues"
   },
   "homepage": "https://github.com/KarmaKamikaze/P2-Project#readme",
+  "type": "module",
   "dependencies": {
     "cytoscape": "^3.18.1",
     "express": "^4.17.1"
