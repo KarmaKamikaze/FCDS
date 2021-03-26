@@ -7,7 +7,7 @@ import { initializeSingleSource, relax } from "../js/pathModules.js";
  * and parents in terms of the new starting point.
  * @param {Object} startNode The starting point node. Also called source.
  */
-export function dijkstra(cyGraph, startNode) {
+function dijkstra(cyGraph, startNode) {
   let graph = cyGraph.graph;
   initializeSingleSource(graph, startNode);
   let queue = new PriorityQueue();
@@ -39,3 +39,5 @@ export function dijkstra(cyGraph, startNode) {
     }
   }
 }
+
+export { dijkstra };

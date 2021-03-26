@@ -2,7 +2,7 @@ import { dijkstra } from "../js/dijkstra.js";
 import { traceback } from "../js/pathModules.js";
 import { aStar } from "../js/aStar.js";
 
-export let eleType = {
+let eleType = {
   default: "default",
   courier: "courier",
   restaurant: "restaurant",
@@ -11,7 +11,7 @@ export let eleType = {
   routeDone: "routeDone",
 };
 
-export class CyGraph {
+class CyGraph {
   constructor(name, graph, courierCount = 0) {
     this.name = name;
     this.graph = graph;
@@ -330,3 +330,5 @@ function moveNode(nodeId, xCoord, yCoord) {
     }
     addNode(`C${++numCustomers}`, randPos.x, randPos.y);
   }*/
+
+export { eleType, CyGraph };
