@@ -16,6 +16,7 @@
         "id" : "n1",
         "shared_name" : "Node 11",
         "name" : "n1",
+        "type" : "courier",
         "SUID" : 243,
         "selected" : false
       },
@@ -29,6 +30,7 @@
         "id" : "start",
         "shared_name" : "Node 10",
         "name" : "start",
+        "type" : "courier",
         "SUID" : 241,
         "selected" : false
       },
@@ -42,6 +44,7 @@
         "id" : "n3",
         "shared_name" : "n3",
         "name" : "n3",
+        "type" : "courier",
         "SUID" : 239,
         "selected" : false
       },
@@ -55,6 +58,7 @@
         "id" : "n2",
         "shared_name" : "Node 8",
         "name" : "n2",
+        "type" : "courier",
         "SUID" : 237,
         "selected" : false
       },
@@ -68,6 +72,7 @@
         "id" : "end",
         "shared_name" : "Node 7",
         "name" : "end",
+        "type" : "courier",
         "SUID" : 235,
         "selected" : false
       },
@@ -81,6 +86,7 @@
         "id" : "center",
         "shared_name" : "Center",
         "name" : "C",
+        "type" : "default",
         "SUID" : 117,
         "id_original" : "C",
         "selected" : false
