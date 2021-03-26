@@ -2,7 +2,7 @@ let timeMinutes = 480;
 let tickSpeed = 250;
 let orders = [];
 
-export function startSimulation() {
+function startSimulation() {
   return setInterval(perTick, tickSpeed);
 }
 
@@ -18,7 +18,7 @@ function perTick() {
   if (order) {
     orders.push(order);
   }
-  assignCourier(orders, orders.length, couriers);
+  // assignCourier(orders, orders.length, couriers);
   console.log(orders.length);
   console.log("Time: " + printTime(timeMinutes));
 }
@@ -96,3 +96,5 @@ function assignCourier(orders, index, couriers) {
     orders.slice(index);
   }
 }
+
+startSimulation();
