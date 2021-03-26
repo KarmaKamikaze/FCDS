@@ -1,7 +1,9 @@
 import { CyGraph, eleType } from "./graphHelper.js";
 import { CytoStyle } from "./cytoStylesheet.js";
+import { startSimulation } from "./orderGeneration.js";
 
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
+const TICKSPEED = 250;
 
 let Viewport = {
   // get width and height of the graph container class from the stylesheet
@@ -46,8 +48,12 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
 function simulationTest1(cyGraph) {
   cyGraph.addCourier("N2");
   cyGraph.addCourier("N2");
-  cyGraph.traversePath("courier1", "R1");
-  cyGraph.traversePath("courier2", "R2");
+  cyGraph.addCourier("N2");
+  cyGraph.addCourier("N2");
+  cyGraph.addCourier("N2");
+  startSimulation(cyGraph, TICKSPEED);
+  /*   cyGraph.traversePath("courier1", "R1");
+    cyGraph.traversePath("courier2", "R2"); */
 }
 
 function simulationTest2(cyGraph) {
@@ -68,7 +74,8 @@ function simulationTest2(cyGraph) {
 
 /// MAIN ///
 
-let graph1 = new CyGraph("Cy1", cy1);
-let graph2 = new CyGraph("Cy2", cy2);
+let graph1 = new CyGraph("Cy1", cy1, TICKSPEED);
+// let graph2 = new CyGraph("Cy2", cy2);
 SetupGraph(graph1, GRAPH_PRESET_FILE, simulationTest1);
-SetupGraph(graph2, GRAPH_PRESET_FILE, simulationTest2);
+/* SetupGraph(graph2, GRAPH_PRESET_FILE, simulationTest2);
+ */
