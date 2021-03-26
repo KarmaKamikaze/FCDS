@@ -56,7 +56,7 @@ function heuristicApprox(cyGraph, currentNodeId, endNodeId) {
 }
 
 /**
- * Gives an edge a weight by calculating its property and console.log(signing to weight property
+ * Gives an edge a weight by calculating its property and assigning it to weight property
  * @param {Object} courierObject The object for the courier en route
  * @param {Object} edgeObject The edge whose weight is being calculated
  */
