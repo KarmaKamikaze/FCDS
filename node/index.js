@@ -10,7 +10,7 @@ const port = 3000;
 let options = {
   dotfiles: "ignore", // allow, deny, ignore
   etag: true,
-  extensions: ["htm", "html", "js", "css", "ico", "cyjs"],
+  extensions: ["htm", "html", "js", "css", "ico", "cyjs", "png", "jpg"],
   index: false, // Disables directory indexing - won't serve a whole folder
   maxAge: "7d", // Expires after 7 days
   redirect: false,
