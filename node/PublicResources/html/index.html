@@ -16,8 +16,10 @@
       <div class="navbar">
         <img src="../html/logo.png" class="logo" />
         <ul>
-          <li><a href="">Home</a></li>
-          <li><a href="">Project</a></li>
+          <li><a href="/">Home</a></li>
+          <li>
+            <a href="https://github.com/KarmaKamikaze/P2-Project">Project</a>
+          </li>
           <li><a href="">About</a></li>
         </ul>
       </div>
@@ -31,16 +33,14 @@
         </p>
 
         <div>
-          <button type="button"><span></span>Graph Visualization</button>
-          <button type="button"><span></span>Headless Simulation</button>
+          <form action="/visualization" method="POST">
+            <button type="submit"><span></span>Graph Visualization</button>
+            <button type="submit" formaction="/" formmethod="GET">
+              <span></span>Headless Simulation
+            </button>
+          </form>
         </div>
       </div>
     </div>
-    <form action="/visualization" method="post">
-      <input type="submit" class="redirectBtn" value="Graph Visualization" />
-    </form>
-    <form accept="/" method="get">
-      <input type="submit" class="redirectBtn" value="Headless Simulation" />
-    </form>
   </body>
 </html>
