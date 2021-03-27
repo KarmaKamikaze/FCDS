@@ -1,3 +1,4 @@
+import "../../../node_modules/cytoscape/dist/cytoscape.min.js";
 import { eleType } from "./graphHelper.js";
 
 function CytoStyle(containerId) {
