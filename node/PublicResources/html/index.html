@@ -1,24 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <link href="../css/style.css" rel="stylesheet" />
-    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui"
+      content="user-scalable=no, initial-scale=1.0, 
+    minimum-scale=1.0, maximum-scale=1.0, minimal-ui"
     />
     <title>Graphs only go UP 🚀</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
   </head>
   <body>
-    <div style="text-align: center">
-      <div id="cy1" class="cy"></div>
-      <div id="cy2" class="cy"></div>
-    </div>
-
-    <!-- Load application code at the end to ensure DOM is loaded -->
-    <script src="../js/graphHelper.js" type="module"></script>
-    <script src="../js/graphCore.js" type="module"></script>
-    <!-- <script src="../js/darkMode.js"></script> -->
+    <p>Welcome!</p>
+    <form action="/visualization" method="post">
+      <input type="submit" class="redirectBtn" value="Graph Visualization" />
+    </form>
+    <form accept="/" method="get">
+      <input type="submit" class="redirectBtn" value="Headless Simulation" />
+    </form>
   </body>
 </html>

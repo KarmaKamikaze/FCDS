@@ -32,10 +32,28 @@ app.use(
 );
 
 // Routes
-app.get("/", (req, res, next) => {
-  res.sendFile(
-    path.join(__dirname, "node", "PublicResources", "html", "index.html")
+app.get("/", (req, res) => {
+  const fileName = path.join(
+    __dirname,
+    "node",
+    "PublicResources",
+    "html",
+    "index.html"
   );
+  res.sendFile(fileName);
+  console.log("Sent:", fileName);
+});
+
+app.post("/visualization", (req, res) => {
+  const fileName = path.join(
+    __dirname,
+    "node",
+    "PublicResources",
+    "html",
+    "visualization.html"
+  );
+  res.sendFile(fileName);
+  console.log("Sent:", fileName);
 });
 
 // Start the server app
