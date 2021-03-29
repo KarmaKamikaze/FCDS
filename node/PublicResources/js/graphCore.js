@@ -1,8 +1,9 @@
 import { CyGraph, eleType } from "./graphHelper.js";
 import { CytoStyle } from "./cytoStylesheet.js";
-import { startSimulation } from "./orderGeneration.js";
 import { dijkstra } from "./dijkstra.js";
 import { aStar } from "./aStar.js";
+import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
+import { startSimulation } from "./orderGeneration.js";
 
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
 const DEFAULT_TICKSPEED = 100;

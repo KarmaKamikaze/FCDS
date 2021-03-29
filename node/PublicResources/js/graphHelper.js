@@ -199,7 +199,8 @@ class CyGraph {
   }
 
   /**
-   * Uses Dijkstra's algorithm to find the shortest path between a start and end node.
+   * Uses Dijkstra's console.log
+   * algorithm to find the shortest path between a start and end node.
    * @param {String} courierId The ID of the courier.
    * @param {String} EndId The ID of the destination.
    */
@@ -211,6 +212,7 @@ class CyGraph {
 
     pathFunc(this, startNode, endNode);
     let path = traceback(graph, endNode);
+    console.log(path);
     this.animateCourier(path, courier);
     //#region DEBUG
     let pathStr = `[${this.name}] ${courierId} ${startNode}`;
