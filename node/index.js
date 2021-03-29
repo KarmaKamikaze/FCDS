@@ -4,7 +4,7 @@ const __dirname = path.resolve();
 
 // Server configuration
 const app = express();
-const port = 3000;
+const port = 3190;
 
 // Middleware
 let options = {
@@ -15,7 +15,7 @@ let options = {
   maxAge: "7d", // Expires after 7 days
   redirect: false,
   setHeaders: function (res, path, stat) {
-    // Add this to header of all statis responses
+    // Add this to header of all static responses
     res.set("x-timestamp", Date.now());
   },
 };
