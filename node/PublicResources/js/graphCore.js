@@ -2,7 +2,7 @@ import { CyGraph, eleType } from "./graphHelper.js";
 import { CytoStyle } from "./cytoStylesheet.js";
 import { dijkstra } from "./dijkstra.js";
 import { aStar } from "./aStar.js";
-import { bestFirstSearch } from "./bestFirstSearch.js";
+import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
 
@@ -58,8 +58,8 @@ function simulationTest2(cyGraph) {
 }
 
 function simulationTest3(cyGraph) {
-  cyGraph.addCourier("R2");
-  cyGraph.traversePath("courier1", "C3", bestFirstSearch);
+  cyGraph.addCourier("C2");
+  cyGraph.traversePath("courier1", "R1", greedyBestFirstSearch);
 }
 
 /// MAIN ///
