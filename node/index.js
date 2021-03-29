@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
-const __dirname = path.resolve();
+// const __dirname = path.resolve(); // Local
+const __dirname = path.resolve("node0"); // AAU Server
 
 // Server configuration
 const app = express();
