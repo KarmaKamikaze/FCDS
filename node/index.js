@@ -1,4 +1,5 @@
 import express from "express";
+import RateLimit from "express-rate-limit";
 import path from "path";
 const __dirname = path.resolve();
 
@@ -30,6 +31,10 @@ app.use(
     options
   )
 );
+
+// Apply a rate limiter to all requests to prevent DDOS attacks
+let limiter = new RateLimit({ windowMs: 1 * 60 * 1000, max: 5 });
+app.use(limiter);
 
 // Routes
 app.get("/", (req, res) => {
