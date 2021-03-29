@@ -1,26 +1,46 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <link href="../css/style.css" rel="stylesheet" />
-        <meta charset="utf-8" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
-        <title>Apes together strong 🙉</title>
-        <script src="../../../node_modules/cytoscape/dist/cytoscape.min.js"></script>
-        <link rel="icon" href="favicon.ico" />
-    </head>
-    <body>
-      <div style="text-align: center;">
-        <div id="cy1" class="cy"> </div>
-        <div id="cy2" class="cy"> </div>
-        <div id="cy3" class="cy"> </div>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="user-scalable=no, initial-scale=1.0, 
+    minimum-scale=1.0, maximum-scale=1.0, minimal-ui"
+    />
+    <title>Food Courier Distribution Simulation - SW2|B2-14</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="icon" type="image/x-icon" href="../html/favicon.ico" />
+  </head>
+  <body>
+    <div class="banner">
+      <div class="navbar">
+        <img src="../html/logo.png" class="logo" />
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li>
+            <a href="https://github.com/KarmaKamikaze/P2-Project">Project</a>
+          </li>
+          <li><a href="">About</a></li>
+        </ul>
       </div>
+      <div class="content">
+        <h1>Food Courier Distribution Simulation</h1>
+        <p>
+          The food courier distribution problem has its roots in network design,
+          and requires the use of appropriate algorithms <br />
+          to bring restaurants closer to meeting the increased demand for
+          delivery services.
+        </p>
 
-        <!-- Load application code at the end to ensure DOM is loaded -->
-        <script src="../js/graphHelper.js" type="module"></script>
-        <script src="../js/graphCore.js" type="module"></script>
-        <!-- <script src="../js/darkMode.js"></script> -->
-    </body>
+        <div>
+          <form action="/visualization" method="POST">
+            <button type="submit"><span></span>Graph Visualization</button>
+            <button type="submit" formaction="/" formmethod="GET">
+              <span></span>Headless Simulation
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
-
-
-<link rel="icon" href="favicon.ico" />
