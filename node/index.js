@@ -1,7 +1,6 @@
 import express from "express";
 import path from "path";
-// const __dirname = path.resolve(); // Local
-const __dirname = path.resolve("node0"); // AAU Server
+const __dirname = path.resolve();
 
 // Server configuration
 const app = express();
@@ -33,7 +32,7 @@ app.use(
 );
 
 // Routes
-app.get("/", (req, res) => {
+app.get("/node0/", (req, res) => {
   const fileName = path.join(
     __dirname,
     "node",
@@ -45,7 +44,7 @@ app.get("/", (req, res) => {
   console.log("Sent:", fileName);
 });
 
-app.post("/visualization", (req, res) => {
+app.post("/node0/visualization", (req, res) => {
   const fileName = path.join(
     __dirname,
     "node",
