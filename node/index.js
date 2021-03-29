@@ -32,7 +32,7 @@ app.use(
 );
 
 // Routes
-app.get("/node0/", (req, res) => {
+app.get("/", (req, res) => {
   const fileName = path.join(
     __dirname,
     "node",
@@ -44,7 +44,7 @@ app.get("/node0/", (req, res) => {
   console.log("Sent:", fileName);
 });
 
-app.post("/node0/visualization", (req, res) => {
+app.post("/visualization", (req, res) => {
   const fileName = path.join(
     __dirname,
     "node",
