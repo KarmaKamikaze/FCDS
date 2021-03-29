@@ -30,7 +30,7 @@ class PriorityQueue {
        * queue element in the queue.
        */
       if (
-        this.nodes[i].data("distanceOrigin") > element.data("distanceOrigin")
+        this.nodes[i].data(`distanceOrigin`) > element.data(`distanceOrigin`)
       ) {
         this.nodes.splice(i, 0, element);
         fitsBetween = true;
