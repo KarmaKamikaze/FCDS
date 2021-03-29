@@ -37,7 +37,7 @@ function greedyBestFirstSearch(cyGraph, startNode, endNode) {
 
     // forEach loop that manages the queue for the successors of the currently observed node.
     cyGraph.graph.edges().forEach((edge) => {
-      // Check if edge is a one-way, and if so, nodes connected via the wrong way are not added to open list.
+      // Check if edge connecting current node to adjacent node is a one-way, and if so, it does not add it to open list.
       if (edge.target().id === currentShortest.id() && !edge.data("isOneWay")) {
         console.warn(`Traversing one-way edge!`);
         return;
