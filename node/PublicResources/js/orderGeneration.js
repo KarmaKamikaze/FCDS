@@ -1,8 +1,6 @@
 import { dijkstra } from "./dijkstra.js";
-import { traceback } from "./pathModules.js";
 
 let timeMinutes = 480; // start at 8:00
-//let orders = [];
 
 /**
  * Starts the order generation simulation
@@ -22,22 +20,16 @@ function perTick(cyGraph) {
 
   if (timeMinutes == 1440) {
     timeMinutes = 0;
-    // clearInterval(timeTrack);
   }
+
   let order = generateOrder(cyGraph, timeMinutes);
   if (order) {
     cyGraph.orders.push(order);
-    // assignCourierIter(cyGraph, order);
   }
 
   for (let i = 0; i < cyGraph.orders.length; i++) {
-    assignCourierIter(cyGraph, cyGraph.orders[i], i);
+    assignCourier(cyGraph, cyGraph.orders[i], i);
   }
-  cyGraph.sortOrders();
-
-
-  //console.log(cyGraph.orders.length);
-  //console.log("Time: " + printTime(timeMinutes));
 }
 
 /**
@@ -95,16 +87,16 @@ function getRandomInt(min, max) {
  * @param {Number} time The current minutes to the hour.
  * @returns The new order.
  */
-let ass = 0;
+let totalOrders = 0;
 function generateOrder(cyGraph, timeMinutes) {
   let orderWt = orderIntensity(timeToFloat(timeMinutes));
 
   if (orderWt) {
     let roll = orderWt + getRandomInt(0, 10);
-    if (roll > 9) {
+    if (roll > 8) {
       let i = getRandomInt(0, cyGraph.restaurants.length - 1),
         j = getRandomInt(0, cyGraph.customers.length - 1);
-      return new Order(++ass, cyGraph.restaurants[i], cyGraph.customers[j], timeMinutes); // return an order with a random origin and destination.
+      return new Order(++totalOrders, cyGraph.restaurants[i], cyGraph.customers[j], timeMinutes); // return an order with a random origin and destination.
     }
   }
 }
@@ -125,51 +117,76 @@ function Order(id, origin, destination, startTime) {
 }
 
 /**
- * Assigns the best courier to the new order. 
- * @param {Object} cyGraph The graph the simulation is contained within.
- * @param {Object} order The order to be assigned
+ * Assigns and dispatches a courier to the given order.
+ * @param {CyGraph} cyGraph The cyGraph to perform the assignment on.
+ * @param {Order} order The order to be assigned.
+ * @param {Number} index The index of the order in the CyGraph's order array.
  */
-function assignCourierIter(cyGraph, order, index) {
-  let radius = Infinity;
-  let closeCouriers = [];
-  let lowestDist = Infinity;
-  let bestCourier = null;
-
-  let n = cyGraph.couriers.length;
-  for (let i = 0; i < n; i++) {
-    let courier = cyGraph.couriers[i];
-    if (courier.data("currentOrder")) continue;
-    let distRest = Math.hypot(
-      order.restaurant.position().x - courier.position().x,
-      order.restaurant.position().y - courier.position().y
-    );
-    if (distRest < radius) {
-      closeCouriers.push(courier);
-    }
-  }
-
-  if (closeCouriers.length === 0) {
-    console.warn(`could not assign a courier to order ${order.id}`);
-  }
-
-  n = closeCouriers.length;
-  for (let i = 0; i < n; i++) {
-    let courier = closeCouriers[i];
-    dijkstra(cyGraph.graph, cyGraph.graph.$id(courier.data("currentNode")));
-    let length = order.restaurant.data("distanceOrigin");
-    if (length < lowestDist && !courier.data("currentOrder")) {
-      lowestDist = length;
-      bestCourier = courier;
-    }
-  }
-
-  if (bestCourier) {
-    console.log(`[${printTime(timeMinutes)}] assigned order ${order.id} to ${bestCourier.id()}`);
-    bestCourier.data("currentOrder", order);
-    cyGraph.traversePath(bestCourier.id(), order.restaurant.id());
-    cyGraph.orders.splice(index);
+function assignCourier(cyGraph, order, index) {
+  let courier = findCourier(cyGraph, order);
+  if (courier) {
+    console.log(`[${order.id}] : [${courier.id()}] -> [${order.restaurant.id()}] -> [${order.customer.id()}]`);
+    courier.data("currentOrder", order);
+    cyGraph.traversePath(courier.id(), order.restaurant.id());
+    cyGraph.orders.splice(index, 1);
   }
 }
 
-//startSimulation();
-export { startSimulation };
+/**
+ * Searches the given graph for a courier that is closest to the origin of a given order.
+ * @param {CyGraph} cyGraph The cyGraph to perform the search on.
+ * @param {Order} order The order to find a courier for.
+ * @returns The best courier of all candidates, or null no none are found.
+ */
+function findCourier(cyGraph, order) {
+  let connectedNodes = order.restaurant.openNeighborhood((elem) => elem.isNode());
+  let visitedNodes = new Array();
+  let closeCouriers = new Array();
+  let nodeSet = new Set(connectedNodes);
+  let attempts = 0;
+  let shortestLength = Infinity;
+  let bestCourier = null;
+
+  // If the order restaurant already has an available courier, return it
+  for (const courier of order.restaurant.couriers) {
+    if (!courier.data("currentOrder") === null)
+      return courier;
+  }
+
+  // Otherwise search through connected nodes, starting at the order restaurant, and search for couriers
+  while (closeCouriers.length < 3 && attempts < 10) {
+    for (const node of connectedNodes) {
+      nodeSet.add(node);
+    }
+
+    // Remove any nodes that were previously examined
+    for (const node of visitedNodes) {
+      nodeSet.delete(node);
+    }
+
+    // If there is an available courier at any node in the set (so far), add it to the closeCouriers array
+    for (const item of nodeSet) {
+      if (item.couriers.length && item.couriers[0].data("currentOrder") == null) {
+        closeCouriers.push(item.couriers[0]);
+      }
+    }
+
+    // Note completion of attempt, update visitedNodes and connectedNodes
+    attempts++;
+    visitedNodes = [...visitedNodes, ...connectedNodes];
+    connectedNodes = connectedNodes.openNeighborhood((elem) => elem.isNode());
+  }
+
+  // As a final step, find and return the courier with the shortest distance to the restaurant (using dijkstra's algorithm)
+  for (const courier of closeCouriers) {
+    dijkstra(cyGraph, cyGraph.graph.$id(courier.data("currentNode")));
+    let length = order.restaurant.data("distanceOrigin");
+    if (length < shortestLength) {
+      shortestLength = length;
+      bestCourier = courier;
+    }
+  }
+  return bestCourier;
+}
+
+export { startSimulation }

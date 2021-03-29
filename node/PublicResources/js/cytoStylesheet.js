@@ -52,7 +52,7 @@ function CytoStyle(containerId) {
         width: 20,
         height: 20,
         "background-color": "#B22222",
-        content: "",
+        content: "data(id)",
       })
       .selector(`.${eleType.customer}`)
       .style({

@@ -1,5 +1,6 @@
 import { dijkstra } from "../js/dijkstra.js";
 import { traceback } from "../js/pathModules.js";
+import { aStar } from "./aStar.js";
 
 let eleType = {
   default: "default",
@@ -19,10 +20,10 @@ class CyGraph {
   }
 
   // Arrays that keep track of all the elements in the graph
-  couriers = [];
-  restaurants = [];
-  customers = [];
-  orders = [];
+  couriers = new Array();
+  restaurants = new Array();
+  customers = new Array();
+  orders = new Array();
 
   sortOrders() {
     this.orders.sort((a, b) => a.startTime - b.startTime);
@@ -43,7 +44,7 @@ class CyGraph {
         id: nodeId,
         _parent: null,
         distanceOrigin: 0,
-        couriers: [],
+        couriers: new Array(),
       },
       position: {
         x: xCoord,
@@ -87,6 +88,7 @@ class CyGraph {
     });
     node.addClass(eleType.courier);
     this.couriers.push(node); // add the courier to the list of couriers
+    this.graph.$id(rootNodeId).couriers.push(node);
   }
 
   /**
@@ -126,6 +128,7 @@ class CyGraph {
     let nodes = this.graph.nodes(),
       n = nodes.length;
     for (let i = 0; i < n; i++) {
+      nodes[i].couriers = new Array();
       let type = nodes[i].data("type");
       try {
         if (type !== eleType.default) {
@@ -200,12 +203,13 @@ class CyGraph {
    * @param {String} courierId The ID of the courier.
    * @param {String} EndId The ID of the destination.
    */
-  traversePath(courierId, endId) {
+  traversePath(courierId, endId, pathFunc = dijkstra) {
     let graph = this.graph.elements(),
       courier = this.graph.$id(courierId),
       startNode = this.graph.$id(courier.data("currentNode")),
       endNode = this.graph.$id(endId);
-    dijkstra(graph, startNode);
+
+    pathFunc(this, startNode, endNode);
     let path = traceback(graph, endNode);
     this.animateCourier(path, courier);
     //#region DEBUG
@@ -213,7 +217,6 @@ class CyGraph {
     for (let k of path) {
       if (k !== startNode) pathStr += `->${k}`;
     }
-    // console.log(pathStr);
     //#endregion
   }
 
@@ -224,15 +227,23 @@ class CyGraph {
    * @param {Number} index The index to start from (default: 0)
    */
   animateCourier(path, courier, index = 0) {
+    if (path.length === 1) {
+      let order = courier.data("currentOrder");
+      if (order && courier.data("currentNode") === order.restaurant.id()) {
+        return this.traversePath(courier.id(), order.customer.id());
+      }
+    }
+
     let nextPos = this.getPos(path[index + 1]),
       currentPos = this.getPos(path[index]),
       diff1 = nextPos.x - currentPos.x,
       diff2 = nextPos.y - currentPos.y,
       edgeId = this.getEdgeId(path[index], path[index + 1]),
       edge = this.graph.$id(edgeId),
-      steps = this.getLength(path[index], path[index + 1]) / 2,
+      steps = ~~(this.getLength(path[index], path[index + 1]) / 10),
       i = 0,
-      perTick = ~~(this.tickSpeed / 200);
+      perTick = ~~(this.tickSpeed / 20);
+
     edge.addClass(eleType.route);
     let anim = setInterval(() => {
       courier.shift({ x: diff1 / steps, y: diff2 / steps });
@@ -240,30 +251,26 @@ class CyGraph {
       if (i >= steps) {
         clearInterval(anim);
         edge.addClass(eleType.routeDone);
-        setTimeout(() => {
-          edge.removeClass(eleType.route + " " + eleType.routeDone);
-          courier.data("currentNode", path[index + 1]);
-          if (index < path.length - 2) { // on traversing a node
-            //  console.log(`[${this.name}] ${courier.id()} went through ${courier.data("currentNode")}`);
-            return this.animateCourier(path, courier, index + 1);
+
+        edge.removeClass(eleType.route + " " + eleType.routeDone);
+        courier.data("currentNode", path[index + 1]);
+        if (index < path.length - 2) { // on traversing a node
+          //  console.log(`[${this.name}] ${courier.id()} went through ${courier.data("currentNode")}`);
+          return this.animateCourier(path, courier, index + 1);
+        }
+        else { // on arrival
+          // check if the current node is the restaurant node of a given order, then send the courier to its destination
+          let order = courier.data("currentOrder");
+          if (order && courier.data("currentNode") === order.restaurant.id()) {
+            return this.traversePath(courier.id(), order.customer.id());
           }
-          else { // on arrival
-            // check if the current node is the restaurant node of a given order, then send the courier to its destination
-            let order = courier.data("currentOrder");
-            if (order && courier.data("currentNode") === order.restaurant.id()) {
-              return this.traversePath(courier.id(), order.customer.id());
-            }
 
-
-            // otherwise the order has been delivered at its destination, and we can reset the courier
-            courier.data("currentOrder", null);
-            this.moveNode(courier.id(), nextPos.x, nextPos.y);
-            return;
-
-            //if (courier.data("currentNode"))
-            // console.log(`(${this.name}) ${courier.id()} arrived at ${courier.data("currentNode")}`);
-          }
-        }, 250);
+          this.graph.$id(path[index + 1]).couriers.push(courier);
+          // otherwise the order has been delivered at its destination, and we can reset the courier
+          courier.data("currentOrder", null);
+          this.moveNode(courier.id(), nextPos.x, nextPos.y);
+          return;
+        }
       }
     }, perTick);
   }
