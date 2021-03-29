@@ -12,9 +12,10 @@ let eleType = {
 };
 
 class CyGraph {
-  constructor(name, graph, tickSpeed = 1000) {
+  constructor(name, graph, pathFunc, tickSpeed = 1000) {
     this.name = name;
     this.graph = graph;
+    this.pathFunc = pathFunc;
     this.tickSpeed = tickSpeed;
     this.courierCount = 0;
   }
@@ -204,13 +205,13 @@ class CyGraph {
    * @param {String} courierId The ID of the courier.
    * @param {String} EndId The ID of the destination.
    */
-  traversePath(courierId, endId, pathFunc = dijkstra) {
+  traversePath(courierId, endId) {
     let graph = this.graph.elements(),
       courier = this.graph.$id(courierId),
       startNode = this.graph.$id(courier.data("currentNode")),
       endNode = this.graph.$id(endId);
 
-    pathFunc(this, startNode, endNode);
+    this.pathFunc(this, startNode, endNode);
     let path = traceback(graph, endNode);
     console.log(path);
     this.animateCourier(path, courier);

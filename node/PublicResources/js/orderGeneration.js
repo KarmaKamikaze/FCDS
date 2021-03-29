@@ -1,4 +1,5 @@
 import { dijkstra } from "./dijkstra.js";
+import { aStar } from "./aStar.js";
 
 let timeMinutes = 480; // start at 8:00
 

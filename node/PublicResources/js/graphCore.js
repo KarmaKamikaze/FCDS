@@ -2,6 +2,7 @@ import { CyGraph, eleType } from "./graphHelper.js";
 import { CytoStyle } from "./cytoStylesheet.js";
 import { dijkstra } from "./dijkstra.js";
 import { aStar } from "./aStar.js";
+import { traceback } from "./pathModules.js";
 import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 import { startSimulation } from "./orderGeneration.js";
 
@@ -38,10 +39,13 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
  *  @param {CyGraph} cyGraph The graph to perform the simulation on
  */
 function simulationTest1(cyGraph) {
+  cyGraph.addCourier("C1");
+  cyGraph.addCourier("N4");
+
   startSimulation(cyGraph, DEFAULT_TICKSPEED);
 }
 
 /// MAIN ///
 
-let graph1 = new CyGraph("Cy1", cy1, DEFAULT_TICKSPEED);
+let graph1 = new CyGraph("Cy1", cy1, dijkstra, DEFAULT_TICKSPEED);
 SetupGraph(graph1, GRAPH_PRESET_FILE, simulationTest1);
