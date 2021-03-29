@@ -19,10 +19,10 @@ function greedyBestFirstSearch(cyGraph, startNode, endNode) {
   // Initialization
   startNode.data("_parent", null);
   startNode.data(
-    "heuristicValue",
+    "distanceorigin",
     heuristicApprox(cyGraph, startNode.id(), endNode.id())
   );
-  pending.enqueue(startNode, "heuristicValue");
+  pending.enqueue(startNode);
 
   // While-loop runs until the queue is empty OR until we have reached the endNode.
   while (!pending.isEmpty()) {
@@ -52,19 +52,19 @@ function greedyBestFirstSearch(cyGraph, startNode, endNode) {
         // If adjacent node is end node set it's parent node to this node, stop searching adjacent nodes and add it to top of queue to stop search.
         if (adjacentNode === endNode) {
           adjacentNode.data("_parent", currentShortest.id());
-          adjacentNode.data("heuristicValue", 0);
-          pending.enqueue(adjacentNode, "heuristicValue");
+          adjacentNode.data("distanceorigin", 0);
+          pending.enqueue(adjacentNode);
           return;
         }
 
         // Calculate SLD for adjacent node.
         adjacentNode.data(
-          "heuristicValue",
+          "distanceorigin",
           heuristicApprox(cyGraph, adjacentNode.id(), endNode.id())
         );
 
         // Add adjacent node to the open queue and set parent node to current node.
-        pending.enqueue(adjacentNode, "heuristicValue");
+        pending.enqueue(adjacentNode);
         adjacentNode.data("_parent", currentShortest.id());
       }
     });

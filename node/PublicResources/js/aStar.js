@@ -22,7 +22,7 @@ function aStar(cyGraph, startNode, endNode) {
     heuristicApprox(cyGraph, startNode.id(), endNode.id())
   );
   startNode.data("_parent", null);
-  pending.enqueue(startNode, "distanceOrigin");
+  pending.enqueue(startNode);
 
   // While-loop runs until the queue is empty OR until we have reached the endNode.
   while (!pending.isEmpty()) {
@@ -60,12 +60,12 @@ function aStar(cyGraph, startNode, endNode) {
           if (successor.data("distanceOrigin") <= possibleImprovedCost) {
             return;
           }
-          pending.enqueue(successor, "distanceOrigin");
+          pending.enqueue(successor);
           fullyExpanded.delete(successor);
         }
         // Otherwise the successor has not yet been enqueued; enqueue it:
         else {
-          pending.enqueue(successor, "distanceOrigin");
+          pending.enqueue(successor);
         }
         /** This code only runs if possibleImprovedCost is larger than the current cost.
          * Updates the successor's cost using possibleImprovedCost and the heuristic
