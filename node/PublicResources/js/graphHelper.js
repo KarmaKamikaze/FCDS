@@ -98,14 +98,14 @@ class CyGraph {
    * @param {String} targetNode The target node of the edge
    * @param {Boolean} isOneWay Whether the edge is only traversible one way (default: false)
    */
-  addEdge(_id, _source, _target, _isOneWay = false) {
+  addEdge(_id, _source, _target) {
     this.graph.add({
       group: "edges",
       data: {
         source: _source,
         target: _target,
         id: _id,
-        isOneWay: _isOneWay, //! check if this option is already set (when designing the network)
+        // isOneWay: _isOneWay, //! check if this option is already set (when designing the network)
       },
     });
     this.calcLength(_id);
@@ -118,8 +118,11 @@ class CyGraph {
     for (let i = 0; i < n; i++) {
       let source = edges[i].data("source"),
         target = edges[i].data("target"),
-        newId = this.getEdgeId(source, target);
-      this.addEdge(newId, source, target, false);
+        newId = this.getEdgeId(source, target),
+        newIdRev = this.getEdgeId(target, source);
+
+      this.addEdge(newId, source, target);
+      this.addEdge(newIdRev, target, source);
       this.delNode(edges[i].id());
     }
   }
@@ -152,7 +155,7 @@ class CyGraph {
       pos2 = this.getPos(edge.data("target")),
       length = Math.sqrt(
         (pos2.x - pos1.x) * (pos2.x - pos1.x) +
-        (pos2.y - pos1.y) * (pos2.y - pos1.y)
+          (pos2.y - pos1.y) * (pos2.y - pos1.y)
       );
     edge.data("length", length);
     return length;
@@ -170,15 +173,20 @@ class CyGraph {
   }
 
   /**
-   * Returns the ID of the edge connecting the two nodes.
+   * Returns the ID of the edge connecting the two nodes. (Lexicographically)
    * @param {String} node1Id The ID of the first node
    * @param {String} node2Id The ID of the second node
    * @returns A concatenated string of the two nodes sorted lexicographically
    */
-  getEdgeId(node1Id, node2Id) {
+
+  /*   getEdgeIdOld(node1Id, node2Id) {
     return node1Id.localeCompare(node2Id) === -1
       ? node1Id + node2Id
       : node2Id + node1Id;
+  } */
+
+  getEdgeId(node1Id, node2Id) {
+    return node1Id + node2Id;
   }
 
   /**
@@ -257,11 +265,12 @@ class CyGraph {
 
         edge.removeClass(eleType.route + " " + eleType.routeDone);
         courier.data("currentNode", path[index + 1]);
-        if (index < path.length - 2) { // on traversing a node
+        if (index < path.length - 2) {
+          // on traversing a node
           //  console.log(`[${this.name}] ${courier.id()} went through ${courier.data("currentNode")}`);
           return this.animateCourier(path, courier, index + 1);
-        }
-        else { // on arrival
+        } else {
+          // on arrival
           // check if the current node is the restaurant node of a given order, then send the courier to its destination
           let order = courier.data("currentOrder");
           if (order && courier.data("currentNode") === order.restaurant.id()) {

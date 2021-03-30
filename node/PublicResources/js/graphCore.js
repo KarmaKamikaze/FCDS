@@ -39,7 +39,7 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
  *  @param {CyGraph} cyGraph The graph to perform the simulation on
  */
 function simulationTest1(cyGraph) {
-  cyGraph.addCourier("C1");
+  cyGraph.addCourier("R1");
   cyGraph.addCourier("N4");
 
   startSimulation(cyGraph, DEFAULT_TICKSPEED);
@@ -47,5 +47,5 @@ function simulationTest1(cyGraph) {
 
 /// MAIN ///
 
-let graph1 = new CyGraph("Cy1", cy1, dijkstra, DEFAULT_TICKSPEED);
+let graph1 = new CyGraph("Cy1", cy1, aStar, DEFAULT_TICKSPEED);
 SetupGraph(graph1, GRAPH_PRESET_FILE, simulationTest1);
