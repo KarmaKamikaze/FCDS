@@ -7,7 +7,7 @@ import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 import { startSimulation } from "./orderGeneration.js";
 
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
-const DEFAULT_TICKSPEED = 100;
+const DEFAULT_TICKSPEED = 50;
 
 let cy1 = new CytoStyle("cy1");
 

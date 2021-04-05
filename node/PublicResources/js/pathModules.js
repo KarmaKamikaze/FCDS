@@ -96,7 +96,7 @@ function traceback(graph, endNode) {
   shortestPath = jump.id() + " -> " + shortestPath;
   path.unshift(jump.id());
 
-  console.log(`Shortest path: ${shortestPath}`); // Test print
+  //console.log(`Shortest path: ${shortestPath}`); // Test print
   return path;
 }
 
