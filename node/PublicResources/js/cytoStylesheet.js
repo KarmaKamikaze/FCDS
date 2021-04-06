@@ -9,7 +9,7 @@ function CytoStyle(containerId) {
     boxSelectionEnabled: false,
     autounselectify: true,
     autoungrabify: true,
-    minZoom: 1,
+    minZoom: 0.12,
     maxZoom: 1.5,
 
     // Stylesheet

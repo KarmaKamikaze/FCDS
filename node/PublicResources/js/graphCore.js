@@ -2,8 +2,10 @@ import { CyGraph, eleType } from "./graphHelper.js";
 import { CytoStyle } from "./cytoStylesheet.js";
 import { dijkstra } from "./dijkstra.js";
 import { aStar } from "./aStar.js";
+import { addDarkBtn } from "./darkMode.js";
 
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
+let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
 
 let Viewport = {
   // get width and height of the graph container class from the stylesheet
@@ -59,5 +61,8 @@ function simulationTest2(cyGraph) {
 
 let graph1 = new CyGraph("Cy1", cy1);
 let graph2 = new CyGraph("Cy2", cy2);
-SetupGraph(graph1, GRAPH_PRESET_FILE, simulationTest1);
+SetupGraph(graph1, BIG_GRAPH_PRESET_FILE, simulationTest1);
 SetupGraph(graph2, GRAPH_PRESET_FILE, simulationTest2);
+
+let graphArr = [graph1, graph2];
+addDarkBtn(graphArr);
