@@ -3,6 +3,7 @@ import { CytoStyle } from "./cytoStylesheet.js";
 import { dijkstra } from "./dijkstra.js";
 import { aStar } from "./aStar.js";
 import { addDarkBtn } from "./darkMode.js";
+import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
 let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
@@ -19,6 +20,7 @@ let Viewport = {
 
 let cy1 = new CytoStyle("cy1");
 let cy2 = new CytoStyle("cy2");
+let cy3 = new CytoStyle("cy3");
 
 /**
  * Performs setup and initialization of the input Cytoscape graph
@@ -57,12 +59,18 @@ function simulationTest2(cyGraph) {
   cyGraph.traversePath("courier1", "R1", aStar);
 }
 
-/// MAIN ///
+function simulationTest3(cyGraph) {
+  cyGraph.addCourier("C2");
+  cyGraph.traversePath("courier1", "R1", greedyBestFirstSearch);
+}
 
+/// MAIN ///
 let graph1 = new CyGraph("Cy1", cy1);
 let graph2 = new CyGraph("Cy2", cy2);
+let graph3 = new CyGraph("Cy3", cy3);
 SetupGraph(graph1, BIG_GRAPH_PRESET_FILE, simulationTest1);
 SetupGraph(graph2, GRAPH_PRESET_FILE, simulationTest2);
+SetupGraph(graph3, GRAPH_PRESET_FILE, simulationTest3);
 
-let graphArr = [graph1, graph2];
+let graphArr = [graph1, graph2, graph3];
 addDarkBtn(graphArr);
