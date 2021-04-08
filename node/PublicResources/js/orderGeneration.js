@@ -10,6 +10,7 @@ let timeMinutes = 480; // start at 8:00
  * @returns The update interval.
  */
 function startSimulation(cyGraph, tickSpeed) {
+  generateHeat(cyGraph.graph.$id("C2"), cyGraph);
   return setInterval(() => perTick(cyGraph), tickSpeed);
 }
 
@@ -25,7 +26,7 @@ function perTick(cyGraph) {
   }
 
   if (!(timeMinutes % 5)) {
-    generateOrders(cyGraph, timeMinutes);
+    //generateOrders(cyGraph, timeMinutes);
   }
 
   for (let i = 0; i < cyGraph.orders.length; i++) {
@@ -232,6 +233,40 @@ function findCourier(cyGraph, order) {
     }
   }
   return bestCourier;
+}
+
+function generateHeat(node, cyGraph) {
+  let connectedNodes = node.openNeighborhood((elem) => elem.isNode());
+  let visitedNodes = new Array();
+  let nodeSet = new Set(connectedNodes);
+  let attempts = 0;
+
+  // Otherwise search through connected nodes, starting at the order restaurant, and search for couriers
+  while (
+    visitedNodes.length <
+    cyGraph.graph.nodes().length - cyGraph.couriers.length
+  ) {
+    for (const node of connectedNodes) {
+      nodeSet.add(node);
+    }
+
+    // Remove any nodes that were previously examined
+    for (const node of visitedNodes) {
+      nodeSet.delete(node);
+    }
+
+    // If there is an available courier at any node in the set (so far), add it to the closeCouriers array
+    for (const item of nodeSet) {
+      console.log(`Visited ${item.id()}..`);
+      item.heat++; //DO SOMETHING HERE
+    }
+
+    // Note completion of attempt, update visitedNodes and connectedNodes
+    attempts++;
+    visitedNodes = [...visitedNodes, ...connectedNodes];
+    connectedNodes = connectedNodes.openNeighborhood((elem) => elem.isNode());
+  }
+  console.log(attempts);
 }
 
 export { startSimulation };
