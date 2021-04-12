@@ -13,7 +13,7 @@ let options = {
   etag: true,
   extensions: ["htm", "html", "js", "css", "ico", "cyjs", "png", "jpg"],
   index: false, // Disables directory indexing - won't serve a whole folder
-  maxAge: "7d", // Expires after 7 days
+  // maxAge: "7d", // Expires after 7 days
   redirect: false,
   setHeaders: function (res, path, stat) {
     // Add this to header of all static responses
@@ -33,8 +33,8 @@ app.use(
 );
 
 // Apply a rate limiter to all requests to prevent DDOS attacks
-let limiter = new RateLimit({ windowMs: 1 * 60 * 1000, max: 5 });
-app.use(limiter);
+// let limiter = new RateLimit({ windowMs: 1 * 60 * 1000, max: 5 });
+// app.use(limiter);
 
 // Routes
 app.get("/", (req, res) => {
@@ -56,6 +56,18 @@ app.post("/visualization", (req, res) => {
     "PublicResources",
     "html",
     "visualization.html"
+  );
+  res.sendFile(fileName);
+  console.log("Sent:", fileName);
+});
+
+app.get("/visualization-options", (req, res) => {
+  const fileName = path.join(
+    __dirname,
+    "node",
+    "PublicResources",
+    "html",
+    "visualization-options.html"
   );
   res.sendFile(fileName);
   console.log("Sent:", fileName);

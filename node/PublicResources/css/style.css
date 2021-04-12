@@ -70,7 +70,8 @@ body {
   width: 100%;
 }
 
-.content {
+.content,
+.options-container {
   width: 100%;
   position: absolute;
   top: 50%;
@@ -81,6 +82,12 @@ body {
 
 .content h1 {
   margin-top: 80px;
+  font-size: 50px;
+  text-transform: uppercase;
+}
+
+.options-container h1 {
+  margin-top: 240px;
   font-size: 50px;
   text-transform: uppercase;
 }
@@ -126,4 +133,41 @@ button:hover span {
 
 button:hover {
   border: none;
+}
+
+.options-container .set {
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.radio-container label {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  display: inline-block;
+  height: 26px;
+  line-height: 26px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  transition: 0.3s all ease-in-out;
+  width: 80px;
+  overflow: hidden;
+}
+
+.radio-container input[type="radio"] {
+  display: none;
+}
+
+.radio-container input[type="radio"]:checked + label {
+  background: #003169;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.disable-select {
+  user-select: none; /* supported by Chrome and Opera */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
 }
