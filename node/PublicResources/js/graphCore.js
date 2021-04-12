@@ -18,9 +18,9 @@ let Viewport = {
   ),
 };
 
-let cy1 = new CytoStyle("cy1");
-let cy2 = new CytoStyle("cy2");
-let cy3 = new CytoStyle("cy3");
+let cy1 = new CytoStyle("cy0");
+let cy2 = new CytoStyle("cy1");
+let cy3 = new CytoStyle("cy2");
 
 /**
  * Performs setup and initialization of the input Cytoscape graph

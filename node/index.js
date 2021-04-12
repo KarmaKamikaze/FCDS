@@ -21,6 +21,9 @@ let options = {
   },
 };
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.use(
   express.static(path.join(__dirname, "node", "PublicResources"), options)
 );
@@ -49,16 +52,35 @@ app.get("/", (req, res) => {
   console.log("Sent:", fileName);
 });
 
+// app.post("/visualization", (req, res) => {
+//   const fileName = path.join(
+//     __dirname,
+//     "node",
+//     "PublicResources",
+//     "html",
+//     "visualization.html"
+//   );
+//   res.sendFile(fileName);
+//   console.log("Sent:", fileName);
+// });
+
 app.post("/visualization", (req, res) => {
-  const fileName = path.join(
-    __dirname,
-    "node",
-    "PublicResources",
-    "html",
-    "visualization.html"
+  const graphAmount = req.body["number-of-graphs"];
+  const graphSize = req.body["graph-size"];
+  const simulationSPAs = [
+    req.body["simulation-1-spa"],
+    req.body["simulation-2-spa"],
+    req.body["simulation-3-spa"],
+  ];
+
+  res.send(
+    generateVisualizationHTML(
+      generateGraphDivs(graphAmount, graphSize, simulationSPAs)
+    )
   );
-  res.sendFile(fileName);
-  console.log("Sent:", fileName);
+  console.log(
+    `Sent: Visualization with params: Graph amount: ${graphAmount}, graph size: ${graphSize}, simulation SPAs: ${simulationSPAs}`
+  );
 });
 
 app.get("/visualization-options", (req, res) => {
@@ -78,3 +100,36 @@ app.listen(port, (error) => {
   if (error) console.error(error);
   console.log(`Server listening on port ${port}!`);
 });
+
+const generateVisualizationHTML = (graphs) => {
+  return `<!DOCTYPE html>
+    <html>
+      <head>
+        <link href="../css/style.css" rel="stylesheet" />
+        <meta charset="utf-8" />
+        <meta
+          name="viewport"
+          content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui"
+        />
+        <title>Graph Visualization - FCDS</title>
+        <link rel="icon" type="image/x-icon" href="../html/favicon.ico" />
+      </head>
+      <body>
+        ${graphs}
+    
+        <!-- Load application code at the end to ensure DOM is loaded -->
+        <script src="../js/graphCore.js" type="module"></script>
+        <script src="../js/darkMode.js" type="module"></script>
+      </body>
+    </html>
+    `;
+};
+
+const generateGraphDivs = (graphAmount, graphSize, algorithms) => {
+  let graphs = `<div style="text-align: center">`;
+  for (let i = 0; i < graphAmount; i++) {
+    graphs += `<div id="cy${i}" class="cy ${graphSize} ${algorithms[i]}"></div>`;
+  }
+  graphs += `</div>`;
+  return graphs;
+};
