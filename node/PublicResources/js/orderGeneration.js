@@ -1,8 +1,7 @@
 import { dijkstra } from "./dijkstra.js";
-import { aStar } from "./aStar.js";
-import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 
 let timeMinutes = 480; // start at 8:00
+let totalOrders = 0; // may be used for statistics
 
 /**
  * Starts the order generation simulation
@@ -10,7 +9,6 @@ let timeMinutes = 480; // start at 8:00
  * @returns The update interval.
  */
 function startSimulation(cyGraph, tickSpeed) {
-  generateHeat(cyGraph.graph.$id("C2"), cyGraph);
   return setInterval(() => perTick(cyGraph), tickSpeed);
 }
 
@@ -26,7 +24,8 @@ function perTick(cyGraph) {
   }
 
   if (!(timeMinutes % 5)) {
-    //generateOrders(cyGraph, timeMinutes);
+    console.log(printTime(timeMinutes));
+    generateOrders(cyGraph, timeMinutes);
   }
 
   for (let i = 0; i < cyGraph.orders.length; i++) {
@@ -89,37 +88,13 @@ function getRandomInt(min, max) {
  * @param {Number} time The current minutes to the hour.
  * @returns The new order.
  */
-let totalOrders = 0;
-function generateOrderOld(cyGraph, timeMinutes) {
-  let orderWt = orderIntensity(timeToFloat(timeMinutes));
-
-  if (orderWt) {
-    let roll = orderWt + getRandomInt(0, 10);
-    if (roll > 8) {
-      let i = getRandomInt(0, cyGraph.restaurants.length - 1),
-        j = getRandomInt(0, cyGraph.customers.length - 1);
-      return new Order(
-        ++totalOrders,
-        cyGraph.restaurants[i],
-        cyGraph.customers[j],
-        timeMinutes
-      ); // return an order with a random origin and destination.
-    }
-  }
-}
 
 function generateOrders(cyGraph, timeMinutes) {
-  let orderWt = orderIntensity(timeToFloat(timeMinutes));
+  let intensity = orderIntensity(timeToFloat(timeMinutes));
 
   for (const restaurant of cyGraph.restaurants) {
     let roll = Math.random();
-    // console.log(
-    //   `[${printTime(timeMinutes)}] roll: ${roll.toFixed(2)}, adjusted: ${(
-    //     roll * orderWt
-    //   ).toFixed(2)}`
-    // );
-    //roll *= orderWt;
-    if (roll <= restaurant.data("probability") * orderWt) {
+    if (roll <= restaurant.data("orderRate") * intensity) {
       let i = getRandomInt(0, cyGraph.restaurants.length - 1),
         j = getRandomInt(0, cyGraph.customers.length - 1);
       let order = new Order(
@@ -129,14 +104,8 @@ function generateOrders(cyGraph, timeMinutes) {
         timeMinutes
       );
       cyGraph.orders.push(order);
-      console.log(
-        `[${printTime(timeMinutes)}]: Created order (remaining: ${
-          cyGraph.orders.length
-        })`
-      );
     }
   }
-  return "pizazz";
 }
 
 /**
@@ -233,40 +202,6 @@ function findCourier(cyGraph, order) {
     }
   }
   return bestCourier;
-}
-
-function generateHeat(node, cyGraph) {
-  let connectedNodes = node.openNeighborhood((elem) => elem.isNode());
-  let visitedNodes = new Array();
-  let nodeSet = new Set(connectedNodes);
-  let attempts = 0;
-
-  // Otherwise search through connected nodes, starting at the order restaurant, and search for couriers
-  while (
-    visitedNodes.length <
-    cyGraph.graph.nodes().length - cyGraph.couriers.length
-  ) {
-    for (const node of connectedNodes) {
-      nodeSet.add(node);
-    }
-
-    // Remove any nodes that were previously examined
-    for (const node of visitedNodes) {
-      nodeSet.delete(node);
-    }
-
-    // If there is an available courier at any node in the set (so far), add it to the closeCouriers array
-    for (const item of nodeSet) {
-      console.log(`Visited ${item.id()}..`);
-      item.heat++; //DO SOMETHING HERE
-    }
-
-    // Note completion of attempt, update visitedNodes and connectedNodes
-    attempts++;
-    visitedNodes = [...visitedNodes, ...connectedNodes];
-    connectedNodes = connectedNodes.openNeighborhood((elem) => elem.isNode());
-  }
-  console.log(attempts);
 }
 
 export { startSimulation };

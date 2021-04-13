@@ -141,7 +141,7 @@ class CyGraph {
       let type = nodes[i].id().charAt(0);
       switch (type.toUpperCase()) {
         case "R":
-          nodes[i].data("probability", 0.75); // assign individual order probability
+          nodes[i].data("orderRate", 0.25); // assign individual order probability
           this.restaurants.push(nodes[i]);
           break;
         case "C":
