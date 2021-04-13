@@ -1,5 +1,6 @@
 import express from "express";
 import RateLimit from "express-rate-limit";
+import { body, sanitizeBody, validationResult } from "express-validator";
 import path from "path";
 const __dirname = path.resolve();
 
@@ -40,7 +41,7 @@ const generateVisualizationHTML = (graphs) => {
 
 /**
  * This function generates an amount of divs to contain graph networks on the html page.
- * @param {String} graphAmount The number of graph divs to generate. This value is usually
+ * @param {Number} graphAmount The number of graph divs to generate. This value is usually
  * requested by the user.
  * @param {String} graphSize The size of the graphs which will be contained in the divs.
  * @param {String} algorithms The different types of algorithms associated with each graph div.
@@ -102,24 +103,41 @@ app.get("/", (req, res) => {
   console.log("Sent:", fileName);
 });
 
-app.post("/visualization", (req, res) => {
-  const graphAmount = req.body["number-of-graphs"];
-  const graphSize = req.body["graph-size"];
-  const simulationSPAs = [
-    req.body["simulation-1-spa"],
-    req.body["simulation-2-spa"],
-    req.body["simulation-3-spa"],
-  ];
+app.post(
+  "/visualization",
+  [
+    body("number-of-graphs").escape().toInt(),
+    body("graph-size").escape().isString().toLowerCase(),
+    body("simulation-1-spa").escape().isString().toLowerCase(),
+    body("simulation-2-spa").escape().isString().toLowerCase(),
+    body("simulation-3-spa").escape().isString().toLowerCase(),
+  ],
+  (req, res) => {
+    // Validate request and check for an empty body
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.error(errors);
+      return res.status(422).json({ errors: errors.array() });
+    }
 
-  res.send(
-    generateVisualizationHTML(
-      generateGraphDivs(graphAmount, graphSize, simulationSPAs)
-    )
-  );
-  console.log(
-    `Sent: Visualization with params: Graph amount: ${graphAmount}, graph size: ${graphSize}, simulation SPAs: ${simulationSPAs}`
-  );
-});
+    const graphAmount = req.body["number-of-graphs"];
+    const graphSize = req.body["graph-size"];
+    const simulationSPAs = [
+      req.body["simulation-1-spa"],
+      req.body["simulation-2-spa"],
+      req.body["simulation-3-spa"],
+    ];
+
+    res.send(
+      generateVisualizationHTML(
+        generateGraphDivs(graphAmount, graphSize, simulationSPAs)
+      )
+    );
+    console.log(
+      `Sent: Visualization with params: Graph amount: ${graphAmount}, graph size: ${graphSize}, simulation SPAs: ${simulationSPAs}`
+    );
+  }
+);
 
 app.get("/visualization-options", (req, res) => {
   const fileName = path.join(
