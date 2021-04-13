@@ -93,7 +93,7 @@ app.use(limiter);
 // Validation rules
 let visualizationValidate = [
   body("number-of-graphs").isLength({ max: 1 }).isNumeric().toInt().escape(),
-  body("graph-size").isLength({ max: 5 }).trim().toLowerCase().escape(),
+  body("graph-size").isLength({ min: 5, max: 5 }).trim().toLowerCase().escape(),
   body("simulation-1-spa").trim().toLowerCase().escape(),
   body("simulation-2-spa").trim().toLowerCase().escape(),
   body("simulation-3-spa").trim().toLowerCase().escape(),
