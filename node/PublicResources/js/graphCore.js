@@ -8,16 +8,6 @@ import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
 let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
 
-let Viewport = {
-  // get width and height of the graph container class from the stylesheet
-  width: parseInt(
-    getComputedStyle(document.getElementsByClassName("cy")[0]).width
-  ),
-  height: parseInt(
-    getComputedStyle(document.getElementsByClassName("cy")[0]).height
-  ),
-};
-
 let cy1 = new CytoStyle("cy0");
 let cy2 = new CytoStyle("cy1");
 let cy3 = new CytoStyle("cy2");
