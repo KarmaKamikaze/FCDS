@@ -37,23 +37,13 @@ function CytoStyle(containerId) {
         "target-arrow-color": "#B22222",
         "transition-property":
           "background-color, line-color, target-arrow-color",
-        "transition-duration": "0.25s",
-      })
-      .selector(`.${eleType.routeDone}`)
-      .style({
-        "background-color": "white",
-        "line-color": "white",
-        "target-arrow-color": "white",
-        "transition-property":
-          "background-color, line-color, target-arrow-color",
-        "transition-duration": "0.25s",
       })
       .selector(`.${eleType.courier}`)
       .style({
         width: 20,
         height: 20,
         "background-color": "#B22222",
-        content: "",
+        content: "data(id)",
       })
       .selector(`.${eleType.customer}`)
       .style({

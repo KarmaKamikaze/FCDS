@@ -15,7 +15,6 @@ function aStar(cyGraph, startNode, endNode) {
   let pending = new PriorityQueue(); // Open list
   let fullyExpanded = new Set(); // Close list
   let currentShortest = {}; // The minimum distance element from the priority queue.
-
   // Initialization
   startNode.data(
     "distanceOrigin",
@@ -35,10 +34,7 @@ function aStar(cyGraph, startNode, endNode) {
 
     // forEach loop that manages the queue for the successors of the currently observed node.
     cyGraph.graph.edges().forEach((edge) => {
-      if (edge.target().id === currentShortest.id() && !edge.data("isOneWay")) {
-        console.warn(`Traversing one-way edge!`);
-        return;
-      } else if (edge.source().id() === currentShortest.id()) {
+      if (edge.source().id() === currentShortest.id()) {
         let successor = edge.target();
         let weight = edge.data("length");
         /** possibleImprovedCost is a variable used to describe the possible improvement
