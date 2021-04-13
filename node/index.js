@@ -1,6 +1,6 @@
 import express from "express";
 import RateLimit from "express-rate-limit";
-import { body, sanitizeBody, validationResult } from "express-validator";
+import { body, validationResult } from "express-validator";
 import path from "path";
 const __dirname = path.resolve();
 
@@ -90,6 +90,15 @@ app.use(
 let limiter = new RateLimit({ windowMs: 1 * 60 * 1000, max: 5 });
 app.use(limiter);
 
+// Validation rules
+let visualizationValidate = [
+  body("number-of-graphs").isLength({ max: 1 }).isNumeric().toInt().escape(),
+  body("graph-size").isLength({ max: 5 }).trim().toLowerCase().escape(),
+  body("simulation-1-spa").trim().toLowerCase().escape(),
+  body("simulation-2-spa").trim().toLowerCase().escape(),
+  body("simulation-3-spa").trim().toLowerCase().escape(),
+];
+
 // Routes
 app.get("/", (req, res) => {
   const fileName = path.join(
@@ -103,41 +112,31 @@ app.get("/", (req, res) => {
   console.log("Sent:", fileName);
 });
 
-app.post(
-  "/visualization",
-  [
-    body("number-of-graphs").escape().toInt(),
-    body("graph-size").escape().isString().toLowerCase(),
-    body("simulation-1-spa").escape().isString().toLowerCase(),
-    body("simulation-2-spa").escape().isString().toLowerCase(),
-    body("simulation-3-spa").escape().isString().toLowerCase(),
-  ],
-  (req, res) => {
-    // Validate request and check for an empty body
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      console.error(errors);
-      return res.status(422).json({ errors: errors.array() });
-    }
-
-    const graphAmount = req.body["number-of-graphs"];
-    const graphSize = req.body["graph-size"];
-    const simulationSPAs = [
-      req.body["simulation-1-spa"],
-      req.body["simulation-2-spa"],
-      req.body["simulation-3-spa"],
-    ];
-
-    res.send(
-      generateVisualizationHTML(
-        generateGraphDivs(graphAmount, graphSize, simulationSPAs)
-      )
-    );
-    console.log(
-      `Sent: Visualization with params: Graph amount: ${graphAmount}, graph size: ${graphSize}, simulation SPAs: ${simulationSPAs}`
-    );
+app.post("/visualization", visualizationValidate, (req, res) => {
+  // Validate request and check for an empty body
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.error(errors);
+    return res.status(422).json({ errors: errors.array() });
   }
-);
+
+  const graphAmount = req.body["number-of-graphs"];
+  const graphSize = req.body["graph-size"];
+  const simulationSPAs = [
+    req.body["simulation-1-spa"],
+    req.body["simulation-2-spa"],
+    req.body["simulation-3-spa"],
+  ];
+
+  res.send(
+    generateVisualizationHTML(
+      generateGraphDivs(graphAmount, graphSize, simulationSPAs)
+    )
+  );
+  console.log(
+    `Sent: Visualization with params: Graph amount: ${graphAmount}, graph size: ${graphSize}, simulation SPAs: ${simulationSPAs}`
+  );
+});
 
 app.get("/visualization-options", (req, res) => {
   const fileName = path.join(
