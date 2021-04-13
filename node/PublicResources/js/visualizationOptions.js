@@ -3,9 +3,9 @@ const graphSizeDiv = document.querySelector("div.graph-size");
 const backButton = document.querySelector("#back");
 const doneButton = document.querySelector("#done");
 
-doneButton.addEventListener("click", () => {
-  document.getElementById("options-form").submit();
-});
+// doneButton.addEventListener("click", () => {
+//   document.getElementById("options-form").submit();
+// });
 
 backButton.addEventListener("click", () => {
   window.history.back();
@@ -88,6 +88,7 @@ const simElementGeneration = (value, insertionPoint) => {
   firstInput.setAttribute("name", `simulation-${value}-spa`);
   firstInput.setAttribute("type", `radio`);
   firstInput.setAttribute("value", `astar`);
+  firstInput.setAttribute("required", ``);
   radioContainer.appendChild(firstInput);
   // A* label
   let firstLabel = document.createElement("label");
@@ -101,6 +102,7 @@ const simElementGeneration = (value, insertionPoint) => {
   secondInput.setAttribute("name", `simulation-${value}-spa`);
   secondInput.setAttribute("type", `radio`);
   secondInput.setAttribute("value", `bfs`);
+  secondInput.setAttribute("required", ``);
   radioContainer.appendChild(secondInput);
   // BFS label
   let secondLabel = document.createElement("label");
@@ -114,6 +116,7 @@ const simElementGeneration = (value, insertionPoint) => {
   thirdInput.setAttribute("name", `simulation-${value}-spa`);
   thirdInput.setAttribute("type", `radio`);
   thirdInput.setAttribute("value", `dijkstra`);
+  thirdInput.setAttribute("required", ``);
   radioContainer.appendChild(thirdInput);
   // Dijkstra label
   let thirdLabel = document.createElement("label");

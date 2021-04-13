@@ -5,13 +5,6 @@ import { aStar } from "./aStar.js";
 import { addDarkBtn } from "./darkMode.js";
 import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 
-let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
-let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
-
-let cy1 = new CytoStyle("cy0");
-let cy2 = new CytoStyle("cy1");
-let cy3 = new CytoStyle("cy2");
-
 /**
  * Performs setup and initialization of the input Cytoscape graph
  * @param {CyGraph} cyGraph The CyGraph class to set up
@@ -54,13 +47,64 @@ function simulationTest3(cyGraph) {
   cyGraph.traversePath("courier1", "R1", greedyBestFirstSearch);
 }
 
-/// MAIN ///
-let graph1 = new CyGraph("Cy1", cy1);
-let graph2 = new CyGraph("Cy2", cy2);
-let graph3 = new CyGraph("Cy3", cy3);
-SetupGraph(graph1, BIG_GRAPH_PRESET_FILE, simulationTest1);
-SetupGraph(graph2, GRAPH_PRESET_FILE, simulationTest2);
-SetupGraph(graph3, GRAPH_PRESET_FILE, simulationTest3);
+const setGraphSize = (graph) => {
+  if (graph.className.includes("small")) return "small";
+  else return "large";
+};
 
-let graphArr = [graph1, graph2, graph3];
-addDarkBtn(graphArr);
+const setAlgorithm = (graph) => {
+  return graph.className.includes("astar")
+    ? "astar"
+    : graph.className.includes("bfs")
+    ? "bfs"
+    : "dijkstra";
+};
+
+const startSim = () => {
+  document.querySelectorAll("div").forEach((graph) => {
+    if (graph.id.includes("cy")) {
+      let cytoStyle = new CytoStyle(graph.id);
+      let network = new CyGraph(graph.id, cytoStyle);
+      graphArray.push(network);
+
+      switch (setAlgorithm(graph)) {
+        case "astar":
+          if (setGraphSize(graph) === "small") {
+            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest2);
+          } else {
+            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest2);
+          }
+          break;
+
+        case "bfs":
+          if (setGraphSize(graph) === "small") {
+            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest3);
+          } else {
+            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest3);
+          }
+          break;
+
+        case "dijkstra":
+          if (setGraphSize(graph) === "small") {
+            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest1);
+          } else {
+            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest1);
+          }
+          break;
+
+        default:
+          console.error("Graph generation failed.");
+          break;
+      }
+    }
+  });
+};
+
+/// MAIN ///
+let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
+let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
+
+let graphArray = [];
+startSim();
+
+addDarkBtn(graphArray);
