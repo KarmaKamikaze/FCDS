@@ -47,11 +47,26 @@ function simulationTest3(cyGraph) {
   cyGraph.traversePath("courier1", "R1", greedyBestFirstSearch);
 }
 
+/**
+ * This function determines the intended size of the graph, which should be
+ * placed in the div.
+ * @param {HTMLDivElement} graph A div element from the visualization html
+ * document, containing information about the intended graph properties.
+ * @returns A string, indicating if the graph is either small or large.
+ */
 const setGraphSize = (graph) => {
   if (graph.className.includes("small")) return "small";
   else return "large";
 };
 
+/**
+ * This function determines the intended algorithm that should run on the
+ * network in this div.
+ * @param {HTMLDivElement} graph A div element from the visualization html
+ * document, containing information about the intended graph properties.
+ * @returns A string, indicating if the graph algorithm that should run on
+ * the network is either astar, bfs or dijkstra.
+ */
 const setAlgorithm = (graph) => {
   return graph.className.includes("astar")
     ? "astar"
@@ -60,6 +75,10 @@ const setAlgorithm = (graph) => {
     : "dijkstra";
 };
 
+/**
+ * This function attaches a cytoscape network and SPA algorithm to each
+ * graph div and starts the visualization simulation.
+ */
 const startSim = () => {
   document.querySelectorAll("div").forEach((graph) => {
     if (graph.id.includes("cy")) {

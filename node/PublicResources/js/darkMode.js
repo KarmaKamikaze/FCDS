@@ -25,8 +25,15 @@ export function addDarkBtn(graphArr) {
       graphArr.forEach((cyGraph) => {
         cyGraph.graph.style().selector("node").style("color", "lightgreen");
         cyGraph.graph.style().selector("edge").style("line-color", "white");
-        cyGraph.graph.style().selector("edge").style("target-arrow-color", "white");
-        cyGraph.graph.style().selector("edge").style("color", "lightgreen").update();
+        cyGraph.graph
+          .style()
+          .selector("edge")
+          .style("target-arrow-color", "white");
+        cyGraph.graph
+          .style()
+          .selector("edge")
+          .style("color", "lightgreen")
+          .update();
       });
     } else {
       documentTheme = "Light mode";
@@ -41,11 +48,18 @@ export function addDarkBtn(graphArr) {
       graphArr.forEach((cyGraph) => {
         cyGraph.graph.style().selector("node").style("color", "darkgreen");
         cyGraph.graph.style().selector("edge").style("line-color", "black");
-        cyGraph.graph.style().selector("edge").style("target-arrow-color", "black");
-        cyGraph.graph.style().selector("edge").style("color", "darkgreen").update();
+        cyGraph.graph
+          .style()
+          .selector("edge")
+          .style("target-arrow-color", "black");
+        cyGraph.graph
+          .style()
+          .selector("edge")
+          .style("color", "darkgreen")
+          .update();
       });
     }
   });
-  document.getElementById("cy1").before(darkBtn);
+  document.getElementById("cy0").before(darkBtn);
   lineBreak(darkBtn.id);
 }

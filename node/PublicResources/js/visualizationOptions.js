@@ -1,21 +1,25 @@
 const numOfGraphsRadio = document.querySelector("#number-of-graphs");
 const graphSizeDiv = document.querySelector("div.graph-size");
 const backButton = document.querySelector("#back");
-const doneButton = document.querySelector("#done");
 
-// doneButton.addEventListener("click", () => {
-//   document.getElementById("options-form").submit();
-// });
-
+// This button will function as a regular back button.
 backButton.addEventListener("click", () => {
   window.history.back();
 });
 
+// Listen for changes on the html radio elements.
 numOfGraphsRadio.addEventListener("change", (event) => {
-  simulationAmountMenu(event);
+  simulationMenu(event);
 });
 
-const simulationAmountMenu = (event) => {
+/**
+ * This function generates and inserts algorithm options on the visualization
+ * options html menu depending on the amount graphs that the user wants to
+ * include in the simulation.
+ * @param {Object} event The event object associated with changes on the
+ * radio buttons in the html form.
+ */
+const simulationMenu = (event) => {
   let value = event.target.value;
 
   let optionOne = document.querySelector(`div.simulation-1-spa`);
@@ -68,6 +72,14 @@ const simulationAmountMenu = (event) => {
   }
 };
 
+/**
+ * This function generates a div, containing the algorithm options for
+ * the visualization menu.
+ * @param {String} value A string, representing the amount of chosen graphs
+ * to include. It will be used to determine how many algorithm divs already exist.
+ * @param {HTMLDivElement} insertionPoint The insertion point in the html file of
+ * the newly generated div.
+ */
 const simElementGeneration = (value, insertionPoint) => {
   let option = document.createElement("div");
   option.setAttribute("class", `simulation-${value}-spa`);
