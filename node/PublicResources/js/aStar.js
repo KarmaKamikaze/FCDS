@@ -15,6 +15,7 @@ function aStar(cyGraph, startNode, endNode) {
   let pending = new PriorityQueue(); // Open list
   let fullyExpanded = new Set(); // Close list
   let currentShortest = {}; // The minimum distance element from the priority queue.
+  
   // Initialization
   startNode.data(
     "distanceOrigin",
