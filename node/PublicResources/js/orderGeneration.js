@@ -6,6 +6,7 @@ let totalOrders = 0; // may be used for statistics
 /**
  * Starts the order generation simulation
  * @param {Object} cyGraph The graph the simulation is contained within.
+ * @param {integer} tickSpeed the time (in ms) per tick.
  * @returns The update interval.
  */
 function startSimulation(cyGraph, tickSpeed) {
@@ -24,7 +25,7 @@ function perTick(cyGraph) {
   }
 
   if (!(timeMinutes % 5)) {
-    console.log(printTime(timeMinutes));
+    console.log(formatTime(timeMinutes));
     generateOrders(cyGraph, timeMinutes);
   }
 
@@ -47,7 +48,7 @@ function timeToFloat(currentMinute) {
  * @param {Number} timeMinutes The current total amount of minutes.
  * @returns The time as a string.
  */
-function printTime(timeMinutes) {
+function formatTime(timeMinutes) {
   let string = Math.floor(timeMinutes / 60);
   let minute = timeMinutes % 60;
   string += ":";
