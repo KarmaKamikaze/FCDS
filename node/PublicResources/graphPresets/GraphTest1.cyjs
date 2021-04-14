@@ -176,7 +176,8 @@
         "interaction" : "interacts with",
         "SUID" : 167,
         "shared_interaction" : "interacts with",
-        "selected" : false
+        "selected" : false,
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -203,7 +204,8 @@
         "interaction" : "interacts with",
         "SUID" : 173,
         "shared_interaction" : "interacts with",
-        "selected" : false
+        "selected" : false,
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -230,7 +232,8 @@
         "interaction" : "interacts with",
         "SUID" : 183,
         "shared_interaction" : "interacts with",
-        "selected" : false
+        "selected" : false,
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -243,7 +246,8 @@
         "interaction" : "interacts with",
         "SUID" : 175,
         "shared_interaction" : "interacts with",
-        "selected" : false
+        "selected" : false,
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -256,7 +260,8 @@
         "interaction" : "",
         "SUID" : 105,
         "shared_interaction" : "",
-        "selected" : false
+        "selected" : false,
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -325,7 +330,8 @@
         "interaction" : "interacts with",
         "SUID" : 177,
         "shared_interaction" : "interacts with",
-        "selected" : false
+        "selected" : false,
+        "obstructions" : ""
       },
       "selected" : false
     }, {
