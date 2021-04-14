@@ -144,10 +144,4 @@ let edge = {
   }
   */
 
-export {
-  initializeSingleSource,
-  relax,
-  heuristicApprox,
-  //calculateWeight,
-  traceback,
-};
+export { initializeSingleSource, relax, heuristicApprox, traceback };

@@ -1,4 +1,4 @@
-import { /*calculateWeight,*/ traceback } from "../js/pathModules.js";
+import { traceback } from "../js/pathModules.js";
 const maxSpeedLimit = 130;
 
 let eleType = {
