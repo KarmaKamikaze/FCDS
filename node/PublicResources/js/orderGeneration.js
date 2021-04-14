@@ -99,7 +99,7 @@ function generateOrders(cyGraph, timeMinutes) {
       let i = getRandomInt(0, cyGraph.customers.length - 1);
       let order = new Order(
         ++totalOrders,
-        restaurant.id(),
+        restaurant,
         cyGraph.customers[i],
         timeMinutes
       );

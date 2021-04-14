@@ -7,14 +7,6 @@ import { addDarkBtn } from "./darkMode.js";
 import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 import { startSimulation } from "./orderGeneration.js";
 
-let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
-const DEFAULT_TICKSPEED = 50;
-let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
-
-let cy1 = new CytoStyle("cy1");
-let cy2 = new CytoStyle("cy2");
-let cy3 = new CytoStyle("cy3");
-
 /**
  * Performs setup and initialization of the input Cytoscape graph
  * @param {CyGraph} cyGraph The CyGraph class to set up
@@ -42,20 +34,106 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
 /** Callback function which starts the simulation once the graph is initialized
  *  @param {CyGraph} cyGraph The graph to perform the simulation on
  */
-function simulationTest1(cyGraph) {
+function simulationTest(cyGraph) {
   cyGraph.addCourier("R1");
   cyGraph.addCourier("N4");
 
   startSimulation(cyGraph, DEFAULT_TICKSPEED);
 }
 
-/// MAIN ///
-let graph1 = new CyGraph("Cy1", cy1, dijkstra, DEFAULT_TICKSPEED);
-let graph2 = new CyGraph("Cy2", cy2, aStar, DEFAULT_TICKSPEED);
-let graph3 = new CyGraph("Cy3", cy3, greedyBestFirstSearch, DEFAULT_TICKSPEED);
-SetupGraph(graph1, BIG_GRAPH_PRESET_FILE, simulationTest1);
-SetupGraph(graph2, GRAPH_PRESET_FILE, simulationTest2);
-SetupGraph(graph3, GRAPH_PRESET_FILE, simulationTest3);
+/**
+ * This function determines the intended size of the graph, which should be
+ * placed in the div.
+ * @param {HTMLDivElement} graph A div element from the visualization html
+ * document, containing information about the intended graph properties.
+ * @returns A string, indicating if the graph is either small or large.
+ */
+const setGraphSize = (graph) => {
+  if (graph.className.includes("small")) return "small";
+  else return "large";
+};
 
-let graphArr = [graph1, graph2, graph3];
-addDarkBtn(graphArr);
+/**
+ * This function determines the intended algorithm that should run on the
+ * network in this div.
+ * @param {HTMLDivElement} graph A div element from the visualization html
+ * document, containing information about the intended graph properties.
+ * @returns A string, indicating if the graph algorithm that should run on
+ * the network is either astar, bfs or dijkstra.
+ */
+const setAlgorithm = (graph) => {
+  return graph.className.includes("astar")
+    ? "astar"
+    : graph.className.includes("bfs")
+    ? "bfs"
+    : "dijkstra";
+};
+
+/**
+ * This function attaches a cytoscape network and SPA algorithm to each
+ * graph div and starts the visualization simulation.
+ */
+const startSim = () => {
+  document.querySelectorAll("div").forEach((graph) => {
+    if (graph.id.includes("cy")) {
+      let cytoStyle = new CytoStyle(graph.id);
+      let network = {};
+
+      switch (setAlgorithm(graph)) {
+        case "astar":
+          network = new CyGraph(graph.id, cytoStyle, aStar, DEFAULT_TICKSPEED);
+          graphArray.push(network);
+          if (setGraphSize(graph) === "small") {
+            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
+          } else {
+            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
+          }
+          break;
+
+        case "bfs":
+          network = new CyGraph(
+            graph.id,
+            cytoStyle,
+            greedyBestFirstSearch,
+            DEFAULT_TICKSPEED
+          );
+          graphArray.push(network);
+          if (setGraphSize(graph) === "small") {
+            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
+          } else {
+            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
+          }
+          break;
+
+        case "dijkstra":
+          network = new CyGraph(
+            graph.id,
+            cytoStyle,
+            dijkstra,
+            DEFAULT_TICKSPEED
+          );
+          graphArray.push(network);
+          if (setGraphSize(graph) === "small") {
+            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
+          } else {
+            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
+          }
+          break;
+
+        default:
+          console.error("Graph generation failed.");
+          break;
+      }
+    }
+  });
+};
+
+/// MAIN ///
+let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
+let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
+const DEFAULT_TICKSPEED = 50;
+
+let graphArray = [];
+startSim();
+
+addDarkBtn(graphArray);
