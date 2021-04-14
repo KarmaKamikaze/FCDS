@@ -15,7 +15,7 @@ function aStar(cyGraph, startNode, endNode) {
   let pending = new PriorityQueue(); // Open list
   let fullyExpanded = new Set(); // Close list
   let currentShortest = {}; // The minimum distance element from the priority queue.
-  
+
   // Initialization
   startNode.data(
     "distanceOrigin",
@@ -37,7 +37,7 @@ function aStar(cyGraph, startNode, endNode) {
     cyGraph.graph.edges().forEach((edge) => {
       if (edge.source().id() === currentShortest.id()) {
         let successor = edge.target();
-        let weight = edge.data("length");
+        let weight = edge.data("weight");
         /** possibleImprovedCost is a variable used to describe the possible improvement
          * on the value residing in successor.data("distanceOrigin"), which is based on
          * earlier iterations of the forEach loop */
