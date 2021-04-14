@@ -12,6 +12,8 @@ const DEFAULT_TICKSPEED = 50;
 let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
 
 let cy1 = new CytoStyle("cy1");
+let cy2 = new CytoStyle("cy2");
+let cy3 = new CytoStyle("cy3");
 
 /**
  * Performs setup and initialization of the input Cytoscape graph
@@ -49,8 +51,8 @@ function simulationTest1(cyGraph) {
 
 /// MAIN ///
 let graph1 = new CyGraph("Cy1", cy1, dijkstra, DEFAULT_TICKSPEED);
-let graph2 = new CyGraph("Cy2", cy2);
-let graph3 = new CyGraph("Cy3", cy3);
+let graph2 = new CyGraph("Cy2", cy2, aStar, DEFAULT_TICKSPEED);
+let graph3 = new CyGraph("Cy3", cy3, greedyBestFirstSearch, DEFAULT_TICKSPEED);
 SetupGraph(graph1, BIG_GRAPH_PRESET_FILE, simulationTest1);
 SetupGraph(graph2, GRAPH_PRESET_FILE, simulationTest2);
 SetupGraph(graph3, GRAPH_PRESET_FILE, simulationTest3);
