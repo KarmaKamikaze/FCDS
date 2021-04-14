@@ -17,24 +17,17 @@ function dijkstra(cyGraph, startNode) {
 
   while (!queue.isEmpty()) {
     let shortestDistance = queue.dequeue();
-    let nodes = shortestDistance.openNeighborhood((ele) => ele.isNode()),
-      n = nodes.length;
+    let nodes = shortestDistance.openNeighborhood((ele) => ele.isNode());
 
     // For loop that checks if node can traverse each edge
-    for (let i = 0; i < n; i++) {
-      let edge =
-        shortestDistance.id().localeCompare(nodes[i].id()) == -1
-          ? graph.$id(shortestDistance.id() + nodes[i].id())
-          : graph.$id(nodes[i].id() + shortestDistance.id());
-
-      /** Checks if the edge runs from node to target node, or if it is bidirectional
-       * and can ignore going "against" the edge */
-      if (edge.data("source") === nodes[i].id() || !edge.data("isOneWay")) {
-        let weight = edge.data("length");
-        let adjusted = relax(shortestDistance, nodes[i], weight);
-        if (adjusted) {
-          queue.enqueue(nodes[i]);
-        }
+    for (let i = 0; i < nodes.length; i++) {
+      let edge = graph.getElementById(
+        `${shortestDistance.id()}${nodes[i].id()}`
+      );
+      let weight = edge.data("length");
+      let adjusted = relax(shortestDistance, nodes[i], weight);
+      if (adjusted) {
+        queue.enqueue(nodes[i]);
       }
     }
   }

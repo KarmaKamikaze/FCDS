@@ -2,8 +2,10 @@ import { CyGraph, eleType } from "./graphHelper.js";
 import { CytoStyle } from "./cytoStylesheet.js";
 import { dijkstra } from "./dijkstra.js";
 import { aStar } from "./aStar.js";
+import { traceback } from "./pathModules.js";
 import { addDarkBtn } from "./darkMode.js";
 import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
+import { startSimulation } from "./orderGeneration.js";
 
 /**
  * Performs setup and initialization of the input Cytoscape graph
@@ -33,18 +35,10 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
  *  @param {CyGraph} cyGraph The graph to perform the simulation on
  */
 function simulationTest1(cyGraph) {
-  cyGraph.addCourier("C2");
-  cyGraph.traversePath("courier1", "R1", dijkstra);
-}
+  cyGraph.addCourier("R1");
+  cyGraph.addCourier("N4");
 
-function simulationTest2(cyGraph) {
-  cyGraph.addCourier("C2");
-  cyGraph.traversePath("courier1", "R1", aStar);
-}
-
-function simulationTest3(cyGraph) {
-  cyGraph.addCourier("C2");
-  cyGraph.traversePath("courier1", "R1", greedyBestFirstSearch);
+  startSimulation(cyGraph, DEFAULT_TICKSPEED);
 }
 
 /**
@@ -83,11 +77,11 @@ const startSim = () => {
   document.querySelectorAll("div").forEach((graph) => {
     if (graph.id.includes("cy")) {
       let cytoStyle = new CytoStyle(graph.id);
-      let network = new CyGraph(graph.id, cytoStyle);
-      graphArray.push(network);
 
       switch (setAlgorithm(graph)) {
         case "astar":
+          let network = new CyGraph(graph.id, cytoStyle, aStar, DEFAULT_TICKSPEED);
+          graphArray.push(network);
           if (setGraphSize(graph) === "small") {
             SetupGraph(network, GRAPH_PRESET_FILE, simulationTest2);
           } else {
@@ -96,6 +90,8 @@ const startSim = () => {
           break;
 
         case "bfs":
+          let network = new CyGraph(graph.id, cytoStyle, greedyBestFirstSearch, DEFAULT_TICKSPEED);
+          graphArray.push(network);
           if (setGraphSize(graph) === "small") {
             SetupGraph(network, GRAPH_PRESET_FILE, simulationTest3);
           } else {
@@ -104,6 +100,8 @@ const startSim = () => {
           break;
 
         case "dijkstra":
+          let network = new CyGraph(graph.id, cytoStyle, dijkstra, DEFAULT_TICKSPEED);
+          graphArray.push(network);
           if (setGraphSize(graph) === "small") {
             SetupGraph(network, GRAPH_PRESET_FILE, simulationTest1);
           } else {
