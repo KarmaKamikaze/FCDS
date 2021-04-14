@@ -45,7 +45,7 @@ function timeToFloat(currentMinute) {
 
 /**
  * Prints the current time.
- * @param {Number} timeMinutes The current total amount of minutes.
+ * @param {Number} timeMinutes The current simulation time in minutes.
  * @returns The time as a string.
  */
 function formatTime(timeMinutes) {
@@ -96,12 +96,11 @@ function generateOrders(cyGraph, timeMinutes) {
   for (const restaurant of cyGraph.restaurants) {
     let roll = Math.random();
     if (roll <= restaurant.data("orderRate") * intensity) {
-      let i = getRandomInt(0, cyGraph.restaurants.length - 1),
-        j = getRandomInt(0, cyGraph.customers.length - 1);
+      let i = getRandomInt(0, cyGraph.customers.length - 1);
       let order = new Order(
         ++totalOrders,
-        cyGraph.restaurants[i],
-        cyGraph.customers[j],
+        restaurant.id(),
+        cyGraph.customers[i],
         timeMinutes
       );
       cyGraph.orders.push(order);
@@ -111,6 +110,7 @@ function generateOrders(cyGraph, timeMinutes) {
 
 /**
  * The Order object.
+ * @param {Number} id The order number.
  * @param {Number} origin The restaurant the order is placed at.
  * @param {Number} destination The customer the order is to be delivered to.
  * @param {Number} startTime The time at which the order was placed.
@@ -126,7 +126,7 @@ function Order(id, origin, destination, startTime) {
 /**
  * Assigns and dispatches a courier to the given order.
  * @param {CyGraph} cyGraph The cyGraph to perform the assignment on.
- * @param {Order} order The order to be assigned.
+ * @param {Object} order The order to be assigned.
  * @param {Number} index The index of the order in the CyGraph's order array.
  */
 function assignCourier(cyGraph, order, index) {
@@ -146,7 +146,7 @@ function assignCourier(cyGraph, order, index) {
 /**
  * Searches the given graph for a courier that is closest to the origin of a given order.
  * @param {CyGraph} cyGraph The cyGraph to perform the search on.
- * @param {Order} order The order to find a courier for.
+ * @param {Object} order The order to find a courier for.
  * @returns The best courier of all candidates, or null no none are found.
  */
 function findCourier(cyGraph, order) {
