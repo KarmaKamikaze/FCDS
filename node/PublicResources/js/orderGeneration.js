@@ -119,7 +119,6 @@ function Order(id, origin, destination, startTime) {
   this.restaurant = origin;
   this.customer = destination;
   this.maxDuration = 60;
-  this.hasAllergens = Math.random() > 0.95;
   this.startTime = startTime;
 }
 
