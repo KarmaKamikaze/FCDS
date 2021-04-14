@@ -309,7 +309,7 @@ class CyGraph {
 
   getRoute(path) {
     let edges = this.graph.collection();
-    for (let i = 0; i <= path.length - 2; i++) {
+    for (let i = 0; i < path.length - 1; i++) {
       edges.push(this.graph.$id(path[i] + path[i + 1]));
       edges.push(this.graph.$id(path[i + 1] + path[i]));
     }
