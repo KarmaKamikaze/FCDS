@@ -2,25 +2,16 @@ import { CyGraph, eleType } from "./graphHelper.js";
 import { CytoStyle } from "./cytoStylesheet.js";
 import { dijkstra } from "./dijkstra.js";
 import { aStar } from "./aStar.js";
+import { traceback } from "./pathModules.js";
 import { addDarkBtn } from "./darkMode.js";
 import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
+import { startSimulation } from "./orderGeneration.js";
 
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
+const DEFAULT_TICKSPEED = 50;
 let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
 
-let Viewport = {
-  // get width and height of the graph container class from the stylesheet
-  width: parseInt(
-    getComputedStyle(document.getElementsByClassName("cy")[0]).width
-  ),
-  height: parseInt(
-    getComputedStyle(document.getElementsByClassName("cy")[0]).height
-  ),
-};
-
 let cy1 = new CytoStyle("cy1");
-let cy2 = new CytoStyle("cy2");
-let cy3 = new CytoStyle("cy3");
 
 /**
  * Performs setup and initialization of the input Cytoscape graph
@@ -50,22 +41,14 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
  *  @param {CyGraph} cyGraph The graph to perform the simulation on
  */
 function simulationTest1(cyGraph) {
-  cyGraph.addCourier("C2");
-  cyGraph.traversePath("courier1", "R1", dijkstra);
-}
+  cyGraph.addCourier("R1");
+  cyGraph.addCourier("N4");
 
-function simulationTest2(cyGraph) {
-  cyGraph.addCourier("C2");
-  cyGraph.traversePath("courier1", "R1", aStar);
-}
-
-function simulationTest3(cyGraph) {
-  cyGraph.addCourier("C2");
-  cyGraph.traversePath("courier1", "R1", greedyBestFirstSearch);
+  startSimulation(cyGraph, DEFAULT_TICKSPEED);
 }
 
 /// MAIN ///
-let graph1 = new CyGraph("Cy1", cy1);
+let graph1 = new CyGraph("Cy1", cy1, dijkstra, DEFAULT_TICKSPEED);
 let graph2 = new CyGraph("Cy2", cy2);
 let graph3 = new CyGraph("Cy3", cy3);
 SetupGraph(graph1, BIG_GRAPH_PRESET_FILE, simulationTest1);

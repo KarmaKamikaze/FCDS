@@ -1,6 +1,4 @@
-import { dijkstra } from "../js/dijkstra.js";
 import { traceback } from "../js/pathModules.js";
-import { aStar } from "../js/aStar.js";
 
 let eleType = {
   default: "default",
@@ -12,17 +10,23 @@ let eleType = {
 };
 
 class CyGraph {
-  constructor(name, graph, courierCount = 0) {
+  constructor(name, graph, pathFunc, tickSpeed = 1000) {
     this.name = name;
     this.graph = graph;
-    this.courierCount = courierCount;
+    this.pathFunc = pathFunc;
+    this.tickSpeed = tickSpeed;
+    this.courierCount = 0;
   }
 
-  // Arrays that keep track of all the elements in the graph
-  couriers = [];
-  restaurants = [];
-  customers = [];
-  orders = [];
+  // Arrays that keep track of all elements in the graph
+  couriers = new Array();
+  restaurants = new Array();
+  customers = new Array();
+  orders = new Array();
+
+  sortOrders() {
+    this.orders.sort((a, b) => a.startTime - b.startTime);
+  }
 
   /**
    * Adds a node at specified location with potential weight
@@ -39,6 +43,7 @@ class CyGraph {
         id: nodeId,
         _parent: null,
         distanceOrigin: 0,
+        couriers: new Array(),
       },
       position: {
         x: xCoord,
@@ -66,37 +71,37 @@ class CyGraph {
    * @param {String} rootNode The node for the courier to be placed on
    * @param {Boolean} _hasCar Whether the courier drives a car or not
    */
-  addCourier(rootNode, _hasCar = false) {
+  addCourier(rootNodeId, _hasCar = false) {
     let node = this.graph.add({
       group: "nodes",
       data: {
         id: `courier${++this.courierCount}`,
         hasCar: _hasCar,
-        currentNode: rootNode,
+        currentNode: rootNodeId,
+        currentOrder: null,
       },
       position: {
-        x: this.getPos(rootNode).x,
-        y: this.getPos(rootNode).y,
+        x: this.getPos(rootNodeId).x,
+        y: this.getPos(rootNodeId).y,
       },
     });
     node.addClass(eleType.courier);
     this.couriers.push(node); // add the courier to the list of couriers
+    this.graph.$id(rootNodeId).couriers.push(node);
   }
 
   /**
    * Adds an edge between two nodes in the network
    * @param {String} sourceNode The source node of the edge
    * @param {String} targetNode The target node of the edge
-   * @param {Boolean} isOneWay Whether the edge is only traversible one way (default: false)
    */
-  addEdge(_id, _source, _target, _isOneWay = false) {
+  addEdge(_id, _source, _target) {
     this.graph.add({
       group: "edges",
       data: {
         source: _source,
         target: _target,
         id: _id,
-        isOneWay: _isOneWay, //! check if this option is already set (when designing the network)
       },
     });
     this.calcLength(_id);
@@ -109,9 +114,15 @@ class CyGraph {
     for (let i = 0; i < n; i++) {
       let source = edges[i].data("source"),
         target = edges[i].data("target"),
-        newId = this.getEdgeId(source, target);
-      this.addEdge(newId, source, target, false);
+        newId = this.getEdgeId(source, target),
+        newIdRev = this.getEdgeId(target, source);
+
+      this.addEdge(newId, source, target);
+      this.addEdge(newIdRev, target, source);
       this.delNode(edges[i].id());
+
+      this.graph.$id(newId).inRoute = new Array();
+      this.graph.$id(newIdRev).inRoute = new Array();
     }
   }
 
@@ -120,13 +131,24 @@ class CyGraph {
     let nodes = this.graph.nodes(),
       n = nodes.length;
     for (let i = 0; i < n; i++) {
-      let type = nodes[i].data("type");
-      try {
-        if (type !== eleType.default) {
-          this[type + "s"].push(nodes[i]);
-        }
-      } catch (e) {
-        console.warn(`[${this.name}] type: ${type} is invalid. (Error:${e})`);
+      nodes[i].couriers = new Array();
+
+      // Get only the first character of the ID
+      // Then push the node into the corresponding list
+      let type = nodes[i].id().charAt(0);
+      switch (type.toUpperCase()) {
+        case "R":
+          nodes[i].data("orderRate", 0.25); // assign individual order probability
+          this.restaurants.push(nodes[i]);
+          break;
+        case "C":
+          this.customers.push(nodes[i]);
+          break;
+        case "N":
+          // The node is a regular node (road junctions, etc.)
+          break;
+        default:
+          console.warn(`Did not recognize the type of node: ${nodes[i].id()}`);
       }
     }
   }
@@ -160,15 +182,20 @@ class CyGraph {
   }
 
   /**
-   * Returns the ID of the edge connecting the two nodes.
+   * Returns the ID of the edge connecting the two nodes. (Lexicographically)
    * @param {String} node1Id The ID of the first node
    * @param {String} node2Id The ID of the second node
    * @returns A concatenated string of the two nodes sorted lexicographically
    */
-  getEdgeId(node1Id, node2Id) {
+
+  /*   getEdgeIdOld(node1Id, node2Id) {
     return node1Id.localeCompare(node2Id) === -1
       ? node1Id + node2Id
       : node2Id + node1Id;
+  } */
+
+  getEdgeId(node1Id, node2Id) {
+    return node1Id + node2Id;
   }
 
   /**
@@ -177,7 +204,7 @@ class CyGraph {
    * @returns The position (x, y) of the element
    */
   getPos(nodeId) {
-    return this.graph.$id(nodeId)["_private"].position;
+    return this.graph.$id(nodeId).position();
   }
 
   /**
@@ -195,22 +222,25 @@ class CyGraph {
    * @param {String} courierId The ID of the courier.
    * @param {String} EndId The ID of the destination.
    */
-  traversePath(courierId, endId, pathFunc) {
+  traversePath(courierId, endId) {
     let graph = this.graph.elements(),
       courier = this.graph.$id(courierId),
       startNode = this.graph.$id(courier.data("currentNode")),
       endNode = this.graph.$id(endId);
 
-    pathFunc(this, startNode, endNode);
+    this.pathFunc(this, startNode, endNode);
     let path = traceback(graph, endNode);
-    console.log(path);
-    this.animateCourier(path, courier);
+    let edges = this.getRoute(path);
+    for (const edge of edges) {
+      edge.inRoute.push(courierId);
+    }
+    edges.addClass(eleType.route);
+    this.animateCourier(path, courier, edges);
     //#region DEBUG
     let pathStr = `[${this.name}] ${courierId} ${startNode}`;
     for (let k of path) {
       if (k !== startNode) pathStr += `->${k}`;
     }
-    console.log(pathStr);
     //#endregion
   }
 
@@ -220,43 +250,67 @@ class CyGraph {
    * @param {String} courierId The ID of the courier to animate
    * @param {Number} index The index to start from (default: 0)
    */
-  animateCourier(path, courier, index = 0) {
+
+  animateCourier(path, courier, edges, index = 0) {
+    if (path.length === 1) {
+      let order = courier.data("currentOrder");
+      if (order && courier.data("currentNode") === order.restaurant.id()) {
+        return this.traversePath(courier.id(), order.customer.id());
+      }
+    }
+
     let nextPos = this.getPos(path[index + 1]),
       currentPos = this.getPos(path[index]),
       diff1 = nextPos.x - currentPos.x,
       diff2 = nextPos.y - currentPos.y,
-      edgeId = this.getEdgeId(path[index], path[index + 1]),
-      edge = this.graph.$id(edgeId),
-      steps = this.getLength(path[index], path[index + 1]),
-      i = 0;
-    edge.addClass(eleType.route);
+      steps = ~~(this.getLength(path[index], path[index + 1]) / 10),
+      i = 0,
+      perTick = ~~(this.tickSpeed / 20);
+
     let anim = setInterval(() => {
       courier.shift({ x: diff1 / steps, y: diff2 / steps });
       i++;
       if (i >= steps) {
         clearInterval(anim);
-        edge.addClass(eleType.routeDone);
-        setTimeout(() => {
-          edge.removeClass(eleType.route + " " + eleType.routeDone);
-          courier.data("currentNode", path[index + 1]);
-          if (index < path.length - 2) {
-            console.log(
-              `[${this.name}] ${courier.id()} went through ${courier.data(
-                "currentNode"
-              )}`
-            );
-            return this.animateCourier(path, courier, index + 1);
-          } else {
-            console.log(
-              `(${this.name}) ${courier.id()} arrived at ${courier.data(
-                "currentNode"
-              )}`
-            );
-            return;
+        courier.data("currentNode", path[index + 1]);
+        if (index < path.length - 2) {
+          // on traversing a node
+          //  console.log(`[${this.name}] ${courier.id()} went through ${courier.data("currentNode")}`);
+          return this.animateCourier(path, courier, edges, index + 1);
+        } else {
+          for (const edge of edges) {
+            let index = edge.inRoute.indexOf(courier.id());
+            edge.inRoute.splice(index, 1);
+            if (!edge.inRoute.length) {
+              edge.removeClass(eleType.route);
+            } else {
+              edge.addClass(eleType.route);
+            }
           }
-        }, 250);
+          // on arrival
+          // check if the current node is the restaurant node of a given order, then send the courier to its destination
+          let order = courier.data("currentOrder");
+          if (order && courier.data("currentNode") === order.restaurant.id()) {
+            return this.traversePath(courier.id(), order.customer.id());
+          }
+
+          this.graph.$id(path[index + 1]).couriers.push(courier);
+          // otherwise the order has been delivered at its destination, and we can reset the courier
+          courier.data("currentOrder", null);
+          this.moveNode(courier.id(), nextPos.x, nextPos.y);
+          return;
+        }
       }
-    }, 10);
+    }, perTick);
+  }
+
+  getRoute(path) {
+    let edges = this.graph.collection();
+    for (let i = 0; i < path.length - 1; i++) {
+      edges.push(this.graph.$id(path[i] + path[i + 1]));
+      edges.push(this.graph.$id(path[i + 1] + path[i]));
+    }
+    return edges;
   }
 
   /** Prints the nodes of the network as well as their connected edges */
@@ -277,6 +331,19 @@ class CyGraph {
     }
     console.log(netStr);
   }
+
+  /**
+   * Moves a node to a new point in the network
+   * @param {String} nodeID The ID of node to be moved
+   * @param {Number} xCoord The X coordinate of the new position
+   * @param {Number} yCoord The Y coordinate of the new position
+   */
+  moveNode(nodeId, xCoord, yCoord) {
+    this.graph.$id(nodeId).relativePosition({
+      x: xCoord,
+      y: yCoord,
+    });
+  }
 }
 
 // Unused functions
@@ -291,19 +358,6 @@ function getRandomPos() {
     y: getRandomInt(Viewport.height) - Viewport.height / 2,
   };
   return pos;
-}
-
-/**
- * Moves a node to a new point in the network
- * @param {String} nodeID The ID of node to be moved
- * @param {Number} xCoord The X coordinate of the new position
- * @param {Number} yCoord The Y coordinate of the new position
- */
-function moveNode(nodeId, xCoord, yCoord) {
-  this.graph.$id(nodeId).relativePosition({
-    x: xCoord,
-    y: yCoord,
-  });
 }
 
 /* WIP: Generate random customers in the network
