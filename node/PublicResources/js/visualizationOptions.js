@@ -93,53 +93,36 @@ const simElementGeneration = (value, insertionPoint) => {
 
   let radioContainer = document.createElement("div");
   radioContainer.setAttribute("class", `radio-container`);
-  // A* option
-  let firstInput = document.createElement("input");
-  firstInput.setAttribute("checked", "");
-  firstInput.setAttribute("id", `simulation-${value}-spa-astar`);
-  firstInput.setAttribute("name", `simulation-${value}-spa`);
-  firstInput.setAttribute("type", `radio`);
-  firstInput.setAttribute("value", `astar`);
-  firstInput.setAttribute("required", ``);
-  radioContainer.appendChild(firstInput);
-  // A* label
-  let firstLabel = document.createElement("label");
-  firstLabel.setAttribute("for", `simulation-${value}-spa-astar`);
-  firstLabel.setAttribute("class", `disable-select`);
-  firstLabel.appendChild(document.createTextNode(`A*`));
-  radioContainer.appendChild(firstLabel);
-  // BFS option
-  let secondInput = document.createElement("input");
-  secondInput.setAttribute("id", `simulation-${value}-spa-bfs`);
-  secondInput.setAttribute("name", `simulation-${value}-spa`);
-  secondInput.setAttribute("type", `radio`);
-  secondInput.setAttribute("value", `bfs`);
-  secondInput.setAttribute("required", ``);
-  radioContainer.appendChild(secondInput);
-  // BFS label
-  let secondLabel = document.createElement("label");
-  secondLabel.setAttribute("for", `simulation-${value}-spa-bfs`);
-  secondLabel.setAttribute("class", `disable-select`);
-  secondLabel.appendChild(document.createTextNode(`BFS`));
-  radioContainer.appendChild(secondLabel);
-  // Dijkstra option
-  let thirdInput = document.createElement("input");
-  thirdInput.setAttribute("id", `simulation-${value}-spa-dijkstra`);
-  thirdInput.setAttribute("name", `simulation-${value}-spa`);
-  thirdInput.setAttribute("type", `radio`);
-  thirdInput.setAttribute("value", `dijkstra`);
-  thirdInput.setAttribute("required", ``);
-  radioContainer.appendChild(thirdInput);
-  // Dijkstra label
-  let thirdLabel = document.createElement("label");
-  thirdLabel.setAttribute("for", `simulation-${value}-spa-dijkstra`);
-  thirdLabel.setAttribute("class", `disable-select`);
-  thirdLabel.appendChild(document.createTextNode(`Dijkstra`));
-  radioContainer.appendChild(thirdLabel);
+
+  let algorithms = [
+    { name: "astar", description: "A*" },
+    { name: "bfs", description: "BFS" },
+    { name: "dijkstra", description: "Dijkstra" },
+  ];
+
+  for (let i = 0; i < 3; i++) {
+    createInputAndLabels(radioContainer, value, algorithms[i]);
+  }
 
   option.appendChild(radioContainer);
 
   if (document.querySelector(`div.simulation-${value}-spa`) === null) {
     insertionPoint.after(option);
   }
+};
+
+const createInputAndLabels = (appendPoint, value, algorithm) => {
+  let input = document.createElement("input");
+  input.setAttribute("id", `simulation-${value}-spa-${algorithm.name}`);
+  input.setAttribute("name", `simulation-${value}-spa`);
+  input.setAttribute("type", `radio`);
+  input.setAttribute("value", `${algorithm.name}`);
+  input.setAttribute("required", ``);
+  appendPoint.appendChild(input);
+
+  let label = document.createElement("label");
+  label.setAttribute("for", `simulation-${value}-spa-${algorithm.name}`);
+  label.setAttribute("class", `disable-select`);
+  label.appendChild(document.createTextNode(`${algorithm.description}`));
+  appendPoint.appendChild(label);
 };

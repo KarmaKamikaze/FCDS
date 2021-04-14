@@ -34,7 +34,7 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
 /** Callback function which starts the simulation once the graph is initialized
  *  @param {CyGraph} cyGraph The graph to perform the simulation on
  */
-function simulationTest1(cyGraph) {
+function simulationTest(cyGraph) {
   cyGraph.addCourier("R1");
   cyGraph.addCourier("N4");
 
@@ -77,35 +77,46 @@ const startSim = () => {
   document.querySelectorAll("div").forEach((graph) => {
     if (graph.id.includes("cy")) {
       let cytoStyle = new CytoStyle(graph.id);
+      let network = {};
 
       switch (setAlgorithm(graph)) {
         case "astar":
-          let network = new CyGraph(graph.id, cytoStyle, aStar, DEFAULT_TICKSPEED);
+          network = new CyGraph(graph.id, cytoStyle, aStar, DEFAULT_TICKSPEED);
           graphArray.push(network);
           if (setGraphSize(graph) === "small") {
-            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest2);
+            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
           } else {
-            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest2);
+            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
           }
           break;
 
         case "bfs":
-          let network = new CyGraph(graph.id, cytoStyle, greedyBestFirstSearch, DEFAULT_TICKSPEED);
+          network = new CyGraph(
+            graph.id,
+            cytoStyle,
+            greedyBestFirstSearch,
+            DEFAULT_TICKSPEED
+          );
           graphArray.push(network);
           if (setGraphSize(graph) === "small") {
-            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest3);
+            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
           } else {
-            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest3);
+            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
           }
           break;
 
         case "dijkstra":
-          let network = new CyGraph(graph.id, cytoStyle, dijkstra, DEFAULT_TICKSPEED);
+          network = new CyGraph(
+            graph.id,
+            cytoStyle,
+            dijkstra,
+            DEFAULT_TICKSPEED
+          );
           graphArray.push(network);
           if (setGraphSize(graph) === "small") {
-            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest1);
+            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
           } else {
-            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest1);
+            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
           }
           break;
 
@@ -120,6 +131,7 @@ const startSim = () => {
 /// MAIN ///
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
 let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
+const DEFAULT_TICKSPEED = 50;
 
 let graphArray = [];
 startSim();
