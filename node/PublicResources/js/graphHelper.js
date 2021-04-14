@@ -94,7 +94,6 @@ class CyGraph {
    * Adds an edge between two nodes in the network
    * @param {String} sourceNode The source node of the edge
    * @param {String} targetNode The target node of the edge
-   * @param {Boolean} isOneWay Whether the edge is only traversible one way (default: false)
    */
   addEdge(_id, _source, _target) {
     this.graph.add({
@@ -103,8 +102,6 @@ class CyGraph {
         source: _source,
         target: _target,
         id: _id,
-        // isOneWay: _isOneWay,
-        //inRoute: new Array(),
       },
     });
     this.calcLength(_id);
