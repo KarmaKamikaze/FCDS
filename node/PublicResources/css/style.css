@@ -171,3 +171,7 @@ button:hover {
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
 }
+
+div .cy .headless {
+  display: none;
+}

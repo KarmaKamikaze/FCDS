@@ -99,7 +99,7 @@ app.post("/visualization", visualizationValidate, (req, res) => {
 
   res.send(
     generateVisualizationHTML(
-      generateGraphDivs(graphAmount, graphSize, simulationSPAs)
+      generateGraphDivs(graphAmount, graphSize, simulationSPAs, "visualization")
     )
   );
   console.log(

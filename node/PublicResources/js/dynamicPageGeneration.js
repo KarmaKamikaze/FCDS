@@ -39,13 +39,25 @@ const generateVisualizationHTML = (graphs) => {
  * have an id and three classes associated with it: The cy tag, the size of the graph which will
  * be placed in the div and the algorithm that should be used.
  */
-const generateGraphDivs = (graphAmount, graphSize, algorithms) => {
-  let graphs = `<div style="text-align: center">`;
-  for (let i = 0; i < graphAmount; i++) {
-    graphs += `<div id="cy${i}" class="cy ${graphSize} ${algorithms[i]}"></div>`;
+const generateGraphDivs = (graphAmount, graphSize, algorithms, pageName) => {
+  switch (pageName) {
+    case "visualization":
+      let graphs = `<div style="text-align: center">`;
+      for (let i = 0; i < graphAmount; i++) {
+        graphs += `<div id="cy${i}" class="cy ${graphSize} ${algorithms[i]}"></div>`;
+      }
+      graphs += `</div>`;
+      return graphs;
+
+    case "headless-simulation":
+      let graph = `<div id="cy${graphAmount - 1}" class="cy ${graphSize} ${
+        algorithms[0]
+      } headless"></div>`;
+      return graph;
+
+    default:
+      break;
   }
-  graphs += `</div>`;
-  return graphs;
 };
 
 /**
@@ -91,6 +103,14 @@ const generateOptionsHTML = (pageObject) => {
           >
         </div>
       </div>`;
+
+  const oneGraphOption = `<input
+    id="number-of-graphs-1"
+    name="number-of-graphs"
+    type="hidden"
+    value="1"
+    checked
+    />`;
 
   const algorithmOption = `<div class="simulation-1-spa">
     <label for="simulation-1-spa">Algorithm</label>
@@ -161,7 +181,13 @@ const generateOptionsHTML = (pageObject) => {
             <header>
               <h1>Choose your options for the FCDP ${pageObject.h1}</h1>
               <div class="set">`;
-  body += pageObject.formaction === "visualization" ? numberOfGraphOption : ``;
+  body +=
+    pageObject.formaction === "visualization"
+      ? numberOfGraphOption
+      : pageObject.formaction === "headless-simulation"
+      ? oneGraphOption
+      : ``;
+
   body += `<div class="graph-size">
                   <label for="graph-size">Size of graphs</label>
                   <div class="radio-container">
@@ -207,4 +233,92 @@ const generateOptionsHTML = (pageObject) => {
     </html>
     `;
   return body;
+};
+
+const generateHeadlessHTML = (graphSize, algorithm, graph) => {
+  let algorithmName = {
+    astar: "A*",
+    bfs: "BFS",
+    dijkstra: "Dijkstra",
+  };
+  let sizeName = {
+    small: "Small",
+    large: "Large",
+  };
+
+  return `<!DOCTYPE html>
+  <html>
+    <head>
+      <link href="../css/style.css" rel="stylesheet" />
+      <meta charset="utf-8" />
+      <meta
+        name="viewport"
+        content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui"
+      />
+      <title>Headless Simulation - FCDS</title>
+      <link rel="icon" type="image/x-icon" href="../html/favicon.ico" />
+    </head>
+    <body>
+    ${graph}
+      <div class="control-center">
+        <h1>Headless simulation</h1>
+        <p>Graph size: <span id="graph-size" class="control-center">${
+          sizeName[`${graphSize}`]
+        }</span></p>
+        <p>Current algorithm: <span id="SPA" class="control-center">${
+          algorithmName[`${algorithm}`]
+        }</span></p>
+        <p>Time: <span id="time" class="control-center"></span></p>
+        <p>
+          Total orders: <span id="total-orders" class="control-center"></span>
+        </p>
+        <p>
+          Active orders: <span id="active-orders" class="control-center"></span>
+        </p>
+        <p>
+          Average delivery time:
+          <span id="avg-delivery-time" class="control-center"></span>
+        </p>
+        <p>
+          Failed orders: <span id="failed-orders" class="control-center"></span>
+        </p>
+        <div class="slider-container">
+          <p>Order frequency:</p>
+          <input
+            type="range"
+            value="0.5"
+            id="order-frequency"
+            min="0"
+            max="1"
+            step="0.01"
+          />
+          <p>Tick rate:</p>
+          <input
+            type="range"
+            value="500"
+            id="tick-rate"
+            min="0"
+            max="1000"
+            step="10"
+          />
+          <p>Couriers:</p>
+          <input
+            type="range"
+            value="25"
+            id="couriers"
+            min="1"
+            max="50"
+            step="1"
+          />
+        </div>
+      </div>
+      <div id="orders">
+        <textarea name="orders-textarea" id="order-textarea"></textarea>
+      </div>
+      <!-- Load application code at the end to ensure DOM is loaded -->
+      <script src="../js/graphCore.js" type="module"></script>
+      <script src="../js/darkMode.js" type="module"></script>
+    </body>
+  </html>
+  `;
 };
