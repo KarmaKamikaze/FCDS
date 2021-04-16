@@ -1,6 +1,11 @@
 import express from "express";
 import RateLimit from "express-rate-limit";
 import { body, validationResult } from "express-validator";
+import {
+  generateVisualizationHTML,
+  generateGraphDivs,
+  generateOptionsHTML,
+} from "./PublicResources/js/dynamicPageGeneration.js";
 import path from "path";
 const __dirname = path.resolve();
 
@@ -8,54 +13,18 @@ const __dirname = path.resolve();
 const app = express();
 const port = 3190;
 
-// Dynamic site generation
-
-/**
- * This function generates the visualization html page, which can then be sent as a response to a GET request.
- * @param {String} graphs A deposited div html element in string form, representing the graph container
- * @returns A string, which contains the generated visualization.html site.
- */
-const generateVisualizationHTML = (graphs) => {
-  return `<!DOCTYPE html>
-    <html>
-      <head>
-        <link href="../css/style.css" rel="stylesheet" />
-        <meta charset="utf-8" />
-        <meta
-          name="viewport"
-          content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui"
-        />
-        <title>Graph Visualization - FCDS</title>
-        <link rel="icon" type="image/x-icon" href="../html/favicon.ico" />
-      </head>
-      <body>
-        ${graphs}
-    
-        <!-- Load application code at the end to ensure DOM is loaded -->
-        <script src="../js/graphCore.js" type="module"></script>
-        <script src="../js/darkMode.js" type="module"></script>
-      </body>
-    </html>
-    `;
-};
-
-/**
- * This function generates an amount of divs to contain graph networks on the html page.
- * @param {Number} graphAmount The number of graph divs to generate. This value is usually
- * requested by the user.
- * @param {String} graphSize The size of the graphs which will be contained in the divs.
- * @param {String} algorithms The different types of algorithms associated with each graph div.
- * @returns A string, which contains the specified amount of graph divs in series. The graph will
- * have an id and three classes associated with it: The cy tag, the size of the graph which will
- * be placed in the div and the algorithm that should be used.
- */
-const generateGraphDivs = (graphAmount, graphSize, algorithms) => {
-  let graphs = `<div style="text-align: center">`;
-  for (let i = 0; i < graphAmount; i++) {
-    graphs += `<div id="cy${i}" class="cy ${graphSize} ${algorithms[i]}"></div>`;
-  }
-  graphs += `</div>`;
-  return graphs;
+// Object that holds information about the two end points
+const pageObject = {
+  visualization: {
+    title: "Graph Visualization Options",
+    formaction: "visualization",
+    h1: "Visualization",
+  },
+  headless: {
+    title: "Headless Simulation Options",
+    formaction: "headless-simulation",
+    h1: "Simulation",
+  },
 };
 
 // Middleware
@@ -139,15 +108,13 @@ app.post("/visualization", visualizationValidate, (req, res) => {
 });
 
 app.get("/visualization-options", (req, res) => {
-  const fileName = path.join(
-    __dirname,
-    "node",
-    "PublicResources",
-    "html",
-    "visualization-options.html"
-  );
-  res.sendFile(fileName);
-  console.log("Sent:", fileName);
+  res.send(generateOptionsHTML(pageObject.visualization));
+  console.log("Sent: Simulations visualization options page");
+});
+
+app.get("/headless-options", (req, res) => {
+  res.send(generateOptionsHTML(pageObject.headless));
+  console.log("Sent: Headless simulations options page");
 });
 
 // Start the server app
