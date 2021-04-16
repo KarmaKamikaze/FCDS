@@ -22,7 +22,19 @@ function perTick(cyGraph) {
 
   if (timeMinutes == 1440) {
     timeMinutes = 0;
+    cyGraph.simulationStats.simDays++;
   }
+
+  /* Can be placed within the if-statement underneath incase 
+     it takes too much computational time. */
+
+  /*Disse to kommandoer can placeres i nedenstående if-statement, 
+    hvis det ikke ønskes at bruge for meget computational time. 
+    De er dog placeret her, da couriersne er så fucking hurtige at 
+    de når det under 5 min. Derfor så tror koden at start- og endtime 
+    er det samme. Altså at courieren bruger 0 min på at hente ordren og deliver.*/
+  cyGraph.simulationStats.simTimeMinutes = timeMinutes;
+  cyGraph.simulationStats.simTime = formatTime(timeMinutes);
 
   if (!(timeMinutes % 5)) {
     console.log(formatTime(timeMinutes));
@@ -103,7 +115,13 @@ function generateOrders(cyGraph, timeMinutes) {
         cyGraph.customers[i],
         timeMinutes
       );
+      cyGraph.simulationStats.totalOrders++;
       cyGraph.orders.push(order);
+      cyGraph.simulationStats.pendingOrders = cyGraph.orders.length;
+      cyGraph.simulationStats.activeOrders =
+        cyGraph.simulationStats.totalOrders -
+        cyGraph.simulationStats.finishedOrders;
+      console.log("total orders:" + cyGraph.simulationStats.totalOrders);
     }
   }
 }
@@ -140,6 +158,7 @@ function assignCourier(cyGraph, order, index) {
     courier.data("currentOrder", order);
     cyGraph.traversePath(courier.id(), order.restaurant.id());
     cyGraph.orders.splice(index, 1);
+    cyGraph.simulationStats.pendingOrders = cyGraph.orders.length;
   }
 }
 

@@ -1,4 +1,5 @@
 import { traceback } from "../js/pathModules.js";
+import { avgDeliveryTime } from "./stats.js";
 
 let eleType = {
   default: "default",
@@ -313,6 +314,15 @@ class CyGraph {
           this.graph.$id(path[index + 1]).couriers.push(courier);
           // otherwise the order has been delivered at its destination, and we can reset the courier
           courier.data("currentOrder", null);
+          this.simulationStats.finishedOrders++;
+          order.endTime = this.simulationStats.simTimeMinutes;
+          this.simulationStats.finishedOrdersArr.push(order);
+          this.simulationStats.averageDeliveryTime = avgDeliveryTime(
+            this.simulationStats.finishedOrdersArr
+          );
+          console.log(
+            "avg del time:" + this.simulationStats.averageDeliveryTime
+          );
           this.moveNode(courier.id(), nextPos.x, nextPos.y);
           return;
         }

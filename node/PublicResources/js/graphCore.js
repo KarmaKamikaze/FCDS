@@ -6,6 +6,7 @@ import { traceback } from "./pathModules.js";
 import { addDarkBtn } from "./darkMode.js";
 import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 import { startSimulation } from "./orderGeneration.js";
+import { simStats } from "./stats.js";
 
 /**
  * Performs setup and initialization of the input Cytoscape graph
@@ -82,6 +83,7 @@ const startSim = () => {
       switch (setAlgorithm(graph)) {
         case "astar":
           network = new CyGraph(graph.id, cytoStyle, aStar, DEFAULT_TICKSPEED);
+          network.simulationStats = new simStats();
           graphArray.push(network);
           if (setGraphSize(graph) === "small") {
             SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
@@ -97,6 +99,7 @@ const startSim = () => {
             greedyBestFirstSearch,
             DEFAULT_TICKSPEED
           );
+          network.simulationStats = new simStats();
           graphArray.push(network);
           if (setGraphSize(graph) === "small") {
             SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
@@ -112,6 +115,7 @@ const startSim = () => {
             dijkstra,
             DEFAULT_TICKSPEED
           );
+          network.simulationStats = new simStats();
           graphArray.push(network);
           if (setGraphSize(graph) === "small") {
             SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
