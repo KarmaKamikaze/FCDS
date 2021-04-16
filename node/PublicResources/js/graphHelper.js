@@ -7,6 +7,11 @@ let eleType = {
   customer: "customer",
   route: "route",
   routeDone: "routeDone",
+  idlezone_yellow: "idlezone-yellow",
+  idlezone_orange: "idlezone-orange",
+  idlezone_red: "idlezone-red",
+  lunch: "lunch",
+  dinner: "dinner",
 };
 
 class CyGraph {
@@ -136,13 +141,17 @@ class CyGraph {
       // Get only the first character of the ID
       // Then push the node into the corresponding list
       let type = nodes[i].id().charAt(0);
+      nodes[i].data("heat", 0);
+      nodes[i].data("sumDist", 0);
       switch (type.toUpperCase()) {
         case "R":
           nodes[i].data("orderRate", 0.25); // assign individual order probability
+          nodes[i].addClass(eleType.restaurant);
           this.restaurants.push(nodes[i]);
           break;
         case "C":
           this.customers.push(nodes[i]);
+          nodes[i].addClass(eleType.customer);
           break;
         case "N":
           // The node is a regular node (road junctions, etc.)
@@ -263,7 +272,7 @@ class CyGraph {
       currentPos = this.getPos(path[index]),
       diff1 = nextPos.x - currentPos.x,
       diff2 = nextPos.y - currentPos.y,
-      steps = ~~(this.getLength(path[index], path[index + 1]) / 10),
+      steps = ~~(this.getLength(path[index], path[index + 1]) / 100),
       i = 0,
       perTick = ~~(this.tickSpeed / 20);
 
