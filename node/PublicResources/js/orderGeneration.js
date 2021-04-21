@@ -26,12 +26,6 @@ function perTick(cyGraph) {
 
   /* Can be placed within the if-statement underneath incase 
      it takes too much computational time. */
-
-  /*Disse to kommandoer can placeres i nedenstående if-statement, 
-    hvis det ikke ønskes at bruge for meget computational time. 
-    De er dog placeret her, da couriersne er så fucking hurtige at 
-    de når det under 5 min. Derfor så tror koden nogle gange at start- og endtime 
-    er det samme. Altså at courieren bruger 0 min på at hente ordren og deliver.*/
   cyGraph.simulationStats.simTimeMinutes = timeMinutes;
   cyGraph.simulationStats.simTime = formatTime(timeMinutes);
 
