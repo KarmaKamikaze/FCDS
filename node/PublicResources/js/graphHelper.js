@@ -1,6 +1,5 @@
 import { traceback } from "../js/pathModules.js";
-import { avgDeliveryTime } from "./stats.js";
-import { simStats } from "./stats.js";
+import { simStats, avgDeliveryTime } from "./stats.js";
 
 let eleType = {
   default: "default",
