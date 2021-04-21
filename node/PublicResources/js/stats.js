@@ -7,7 +7,7 @@ function simStats() {
   this.finishedOrdersArr = new Array();
   this.pendingOrders = 0;
   this.activeOrders = 0;
-  this.failedOrders = 0;
+  this.failedOrders = 0; /* Not implemented yet due to missing delivery time constraint! */
   this.averageDeliveryTime = 0;
 }
 
