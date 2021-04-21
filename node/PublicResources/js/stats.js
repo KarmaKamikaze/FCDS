@@ -1,3 +1,6 @@
+/**
+ * Constructor for the simulation statistics object
+ */
 function simStats() {
   this.simDays = 0;
   this.simTimeMinutes = 0;
@@ -11,6 +14,11 @@ function simStats() {
   this.averageDeliveryTime = 0;
 }
 
+/**
+ * Calculates the average delivery time of all finished orders
+ * @param {Array} orders The finished orders array
+ * @returns the average delivery time for the finished orders
+ */
 function avgDeliveryTime(orders) {
   let avgTime = 0;
 
