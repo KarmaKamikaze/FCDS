@@ -1,7 +1,6 @@
 import { dijkstra } from "./dijkstra.js";
 
 let timeMinutes = 480; // start at 8:00
-let totalOrders = 0; // may be used for statistics
 
 /**
  * Starts the order generation simulation
@@ -31,7 +30,7 @@ function perTick(cyGraph) {
   /*Disse to kommandoer can placeres i nedenstående if-statement, 
     hvis det ikke ønskes at bruge for meget computational time. 
     De er dog placeret her, da couriersne er så fucking hurtige at 
-    de når det under 5 min. Derfor så tror koden at start- og endtime 
+    de når det under 5 min. Derfor så tror koden nogle gange at start- og endtime 
     er det samme. Altså at courieren bruger 0 min på at hente ordren og deliver.*/
   cyGraph.simulationStats.simTimeMinutes = timeMinutes;
   cyGraph.simulationStats.simTime = formatTime(timeMinutes);
@@ -110,18 +109,16 @@ function generateOrders(cyGraph, timeMinutes) {
     if (roll <= restaurant.data("orderRate") * intensity) {
       let i = getRandomInt(0, cyGraph.customers.length - 1);
       let order = new Order(
-        ++totalOrders,
+        ++cyGraph.simulationStats.totalOrders,
         restaurant,
         cyGraph.customers[i],
         timeMinutes
       );
-      cyGraph.simulationStats.totalOrders++;
       cyGraph.orders.push(order);
       cyGraph.simulationStats.pendingOrders = cyGraph.orders.length;
       cyGraph.simulationStats.activeOrders =
         cyGraph.simulationStats.totalOrders -
         cyGraph.simulationStats.finishedOrders;
-      console.log("total orders:" + cyGraph.simulationStats.totalOrders);
     }
   }
 }
@@ -151,9 +148,9 @@ function assignCourier(cyGraph, order, index) {
   let courier = findCourier(cyGraph, order);
   if (courier) {
     console.log(
-      `[${
+      `Graph: [${cyGraph.name}] - Order: [${
         order.id
-      }] : [${courier.id()}] -> [${order.restaurant.id()}] -> [${order.customer.id()}]`
+      }] - Route: [${courier.id()}] -> [${order.restaurant.id()}] -> [${order.customer.id()}]`
     );
     courier.data("currentOrder", order);
     cyGraph.traversePath(courier.id(), order.restaurant.id());

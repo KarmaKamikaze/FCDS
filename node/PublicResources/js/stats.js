@@ -18,7 +18,6 @@ function avgDeliveryTime(orders) {
     avgTime += orders[i].endTime - orders[i].startTime;
   }
   avgTime /= orders.length;
-  console.log("Average: " + avgTime);
   return avgTime;
 }
 

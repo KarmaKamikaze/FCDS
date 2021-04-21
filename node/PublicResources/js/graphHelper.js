@@ -1,5 +1,6 @@
 import { traceback } from "../js/pathModules.js";
 import { avgDeliveryTime } from "./stats.js";
+import { simStats } from "./stats.js";
 
 let eleType = {
   default: "default",
@@ -17,6 +18,7 @@ class CyGraph {
     this.pathFunc = pathFunc;
     this.tickSpeed = tickSpeed;
     this.courierCount = 0;
+    this.simulationStats = new simStats();
   }
 
   // Arrays that keep track of all elements in the graph
@@ -319,9 +321,6 @@ class CyGraph {
           this.simulationStats.finishedOrdersArr.push(order);
           this.simulationStats.averageDeliveryTime = avgDeliveryTime(
             this.simulationStats.finishedOrdersArr
-          );
-          console.log(
-            "avg del time:" + this.simulationStats.averageDeliveryTime
           );
           this.moveNode(courier.id(), nextPos.x, nextPos.y);
           return;
