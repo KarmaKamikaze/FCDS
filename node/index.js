@@ -5,6 +5,7 @@ import {
   generateVisualizationHTML,
   generateGraphDivs,
   generateOptionsHTML,
+  generateHeadlessHTML,
 } from "./PublicResources/js/dynamicPageGeneration.js";
 import path from "path";
 const __dirname = path.resolve();
@@ -60,7 +61,7 @@ let limiter = new RateLimit({ windowMs: 1 * 60 * 1000, max: 5 });
 app.use(limiter);
 
 // Validation rules
-let visualizationValidate = [
+let validateParameters = [
   body("number-of-graphs").isLength({ max: 1 }).isNumeric().toInt().escape(),
   body("graph-size").isLength({ min: 5, max: 5 }).trim().toLowerCase().escape(),
   body("simulation-1-spa").trim().toLowerCase().escape(),
@@ -81,7 +82,7 @@ app.get("/", (req, res) => {
   console.log("Sent:", fileName);
 });
 
-app.post("/visualization", visualizationValidate, (req, res) => {
+app.post("/visualization", validateParameters, (req, res) => {
   // Validate request and check for an empty body
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -114,7 +115,33 @@ app.get("/visualization-options", (req, res) => {
 
 app.get("/headless-options", (req, res) => {
   res.send(generateOptionsHTML(pageObject.headless));
-  console.log("Sent: Headless simulations options page");
+  console.log("Sent: Headless simulation options page");
+});
+
+app.post("/headless-simulation", validateParameters, (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.error(errors);
+    return res.status(422).json({ errors: errors.array() });
+  }
+
+  const graphAmount = req.body["number-of-graphs"];
+  const graphSize = req.body["graph-size"];
+  const simulationSPAs = [req.body["simulation-1-spa"]];
+
+  res.send(
+    generateHeadlessHTML(
+      graphSize,
+      simulationSPAs,
+      generateGraphDivs(
+        graphAmount,
+        graphSize,
+        simulationSPAs,
+        "headless-simulation"
+      )
+    )
+  );
+  console.log("Sent: Headless simulation page");
 });
 
 // Start the server app

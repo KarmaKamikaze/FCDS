@@ -1,4 +1,9 @@
-export { generateVisualizationHTML, generateGraphDivs, generateOptionsHTML };
+export {
+  generateVisualizationHTML,
+  generateGraphDivs,
+  generateOptionsHTML,
+  generateHeadlessHTML,
+};
 
 /**
  * This function generates the visualization html page, which can then be sent as a response to a GET request.
@@ -260,27 +265,27 @@ const generateHeadlessHTML = (graphSize, algorithm, graph) => {
     </head>
     <body>
     ${graph}
-      <div class="control-center">
+      <div class="control-center disable-select">
         <h1>Headless simulation</h1>
-        <p>Graph size: <span id="graph-size" class="control-center">${
+        <p>Graph size: <span id="graph-size" class="control-value">${
           sizeName[`${graphSize}`]
         }</span></p>
-        <p>Current algorithm: <span id="SPA" class="control-center">${
+        <p>Current algorithm: <span id="SPA" class="control-value">${
           algorithmName[`${algorithm}`]
         }</span></p>
-        <p>Time: <span id="time" class="control-center"></span></p>
+        <p>Time: <span id="time" class="control-value"></span></p>
         <p>
-          Total orders: <span id="total-orders" class="control-center"></span>
+          Total orders: <span id="total-orders" class="control-value"></span>
         </p>
         <p>
-          Active orders: <span id="active-orders" class="control-center"></span>
+          Active orders: <span id="active-orders" class="control-value"></span>
         </p>
         <p>
           Average delivery time:
-          <span id="avg-delivery-time" class="control-center"></span>
+          <span id="avg-delivery-time" class="control-value"></span>
         </p>
         <p>
-          Failed orders: <span id="failed-orders" class="control-center"></span>
+          Failed orders: <span id="failed-orders" class="control-value"></span>
         </p>
         <div class="slider-container">
           <p>Order frequency:</p>
@@ -291,7 +296,9 @@ const generateHeadlessHTML = (graphSize, algorithm, graph) => {
             min="0"
             max="1"
             step="0.01"
+            oninput="this.nextElementSibling.value = this.value"
           />
+          <output>0.5</output>
           <p>Tick rate:</p>
           <input
             type="range"
@@ -300,7 +307,9 @@ const generateHeadlessHTML = (graphSize, algorithm, graph) => {
             min="0"
             max="1000"
             step="10"
+            oninput="this.nextElementSibling.value = this.value"
           />
+          <output>500</output>
           <p>Couriers:</p>
           <input
             type="range"
@@ -309,11 +318,13 @@ const generateHeadlessHTML = (graphSize, algorithm, graph) => {
             min="1"
             max="50"
             step="1"
+            oninput="this.nextElementSibling.value = this.value"
           />
+          <output>25</output>
         </div>
-      </div>
-      <div id="orders">
-        <textarea name="orders-textarea" id="order-textarea"></textarea>
+        <div id="orders">
+        <textarea readonly name="orders-textarea" id="order-textarea"></textarea>
+        </div>
       </div>
       <!-- Load application code at the end to ensure DOM is loaded -->
       <script src="../js/graphCore.js" type="module"></script>
