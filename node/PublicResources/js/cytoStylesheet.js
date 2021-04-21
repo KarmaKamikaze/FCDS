@@ -17,7 +17,7 @@ function CytoStyle(containerId) {
       .stylesheet()
       .selector("node")
       .style({
-        content: "data(sumDist)",
+        content: "data(id)",
         color: "lightgreen",
       })
       .selector("edge")
@@ -41,6 +41,7 @@ function CytoStyle(containerId) {
       .selector(`.${eleType.restaurant}`)
       .style({
         "background-color": "#d100ff",
+        content: "data(id)",
       })
       .selector(`.${eleType.courier}`)
       .style({

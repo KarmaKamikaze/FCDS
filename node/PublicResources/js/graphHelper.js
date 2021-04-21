@@ -142,7 +142,6 @@ class CyGraph {
       // Then push the node into the corresponding list
       let type = nodes[i].id().charAt(0);
       nodes[i].data("heat", 0);
-      nodes[i].data("sumDist", 0);
       switch (type.toUpperCase()) {
         case "R":
           nodes[i].data("orderRate", 0.25); // assign individual order probability

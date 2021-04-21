@@ -4,113 +4,174 @@ import { orderIntensity, timeToFloat } from "./orderGeneration.js";
 
 let idleZones = [];
 
-/** Returns a number of idle zones to create, based on the no. of couriers */
-function getIdleZoneCount() {
-  return 2;
-}
-
-function BIGGUS_DICKUS(cyGraph, timeMinutes) {
-  let regNodes = cyGraph.graph.nodes().filter((n) => isRegularNode(n));
+/**
+ * Generates a heat map based on restaurant order activity, and finds/assigns appropriate idle-zones
+ * @param {Object} cyGraph The graph the simulation is contained within.
+ * @param {Number} timeMinutes The current time in minutes since the simulation began.
+ */
+function generateHeatmap(cyGraph, timeMinutes) {
+  resetHeat(cyGraph);
   idleZones = [];
-  resetHeat(regNodes);
-  generateHeat(cyGraph, timeMinutes); // runs dijkstra for each restaurant
-  for (let i = 0; i < getIdleZoneCount(); i++) {
-    // First sort the array of regular nodes by their sumDist property (increasing order)
-    regNodes = regNodes.sort((a, b) => b.data("sumDist") - a.data("sumDist"));
-    // Then push the i'th idle zone into the idle zone array
-    idleZones.push(regNodes[0]);
-    regNodes.splice(0, 1); // and remove the idle zone from the regNodes array
-    // Finally, update the heat around the idle zone
-    UpdateHeat(cyGraph, regNodes, i); // runs dijkstra for each idle zone
+
+  //Assign appropriate heat values to all regular nodes
+  assignHeat(cyGraph, timeMinutes);
+
+  //Find n waiting zones
+  let n = getZoneCount(cyGraph);
+  for (let i = 0; i < n; i++) {
+    let zone = findIdleZone(cyGraph);
+    idleZones.push(zone);
+    // Update the heat of surrounding nodes
+    updateHeat(cyGraph, zone);
   }
-  // Now we can update the graph nodes visually
-  setNodeColors(cyGraph.graph.nodes());
+  //Color the nodes in the graph
+  updateColors(cyGraph);
 }
 
-function resetHeat(regNodes) {
-  for (let node of regNodes) {
-    node.data("sumDist", 0.0);
+/** //TODO: should probably put more thought into the formula
+ * Calculates a number of idle zones based on the number of restaurants and couriers
+ * @param {Object} cyGraph The graph the simulation is contained within.
+ * @returns The amount of idle zones to assign (based on restaurants pr courier).
+ */
+function getZoneCount(cyGraph) {
+  return Math.floor(cyGraph.restaurants.length / cyGraph.couriers.length);
+}
+
+/**
+ * Sets the heat of all nodes in the graph to 0
+ * @param {Object} cyGraph The graph the simulation is contained within.
+ */
+function resetHeat(cyGraph) {
+  for (let node of cyGraph.graph.nodes()) {
+    node.data("heat", 0);
   }
 }
 
-function generateHeat(cyGraph, timeMinutes) {
-  let R = cyGraph.restaurants,
-    Rn = R.length;
-  let N = cyGraph.graph.nodes().filter((n) => isRegularNode(n)),
-    Nn = N.length;
-  for (let i = 0; i < Rn; i++) {
-    let Pr = 100 * R[i].data("orderRate");
-    dijkstra(cyGraph, R[i]);
-    // Apply the sum formula
-    for (let j = 0; j < Nn; j++) {
-      let prevVal = N[j].data("sumDist"),
-        T = Pr / N[j].data("distanceOrigin");
-      N[j].data("sumDist", prevVal + T);
+/**
+ * Calculates a heat property for all nodes in a specific radius of each restaurant
+ * @param {Object} cyGraph The graph the simulation is contained within.
+ * @param {Number} timeMinutes The current time in minutes since the simulation began.
+ */
+function assignHeat(cyGraph, timeMinutes) {
+  let radius = 1000; //TODO: make a formula for the radius (i.e., based on avg edge length?)
+  for (const restaurant of cyGraph.restaurants) {
+    dijkstra(cyGraph, restaurant);
+    let closeNodes = findNodesInRadius(cyGraph, restaurant, radius);
+    for (const node of closeNodes) {
+      let oldVal = node.data("heat");
+      let intensity = orderIntensity(
+        timeToFloat(timeMinutes),
+        restaurant.intensityFunc
+      );
+      node.data("heat", oldVal + restaurant.data("orderRate") * intensity);
     }
   }
 }
 
-function UpdateHeat(cyGraph, regNodes, i) {
-  // get distance from idleZone[i] to all other nodes
-  dijkstra(cyGraph, idleZones[i]);
-  let radius = getIdleZoneRadius(regNodes);
+/**
+ * Finds the current best idle zone in the graph
+ * @param {Object} cyGraph
+ * @returns The 'warmest' node (read: best idle zone)
+ */
+function findIdleZone(cyGraph) {
+  let sortedNodes = cyGraph.graph
+    .nodes()
+    .filter((n) => isRegNode(n))
+    .sort((a, b) => {
+      let heatA = a.data("heat");
+      let heatB = b.data("heat");
 
-  // save only the directly connected nodes
-  /*   let closeNodes = idleZones[i]
-    .openNeighborhood()
-    .filter((n) => isRegularNode(n));
+      return heatB - heatA;
+    });
+  let i = 0;
+  while (isIdleZone(sortedNodes[i])) {
+    i++;
+  }
+  return sortedNodes[i];
+}
+
+/**
+ * Reduces heat around a node
+ * @param {Object} cyGraph The graph the simulation is contained within.
+ * @param {Object} zone The node around which heat should be updated.
+ */
+function updateHeat(cyGraph, zone) {
+  let closeNodes = findNodesInRadius(cyGraph, zone, 500);
   for (let node of closeNodes) {
-    if (node.data("distanceOrigin") < radius) {
-      let newVal = node.data("sumDist") - radius;
-      node.data("sumDist", newVal);
-      console.log(
-        `[${idleZones[i].id()}]: Updated the heat of node ${node.id()}`
-      );
-    }
-  } */
+    let oldVal = node.data("heat");
+    node.data("heat", oldVal * 0.6); //? reduce the heat of each closely connected node by 40%
+  }
+}
 
-  for (const node of regNodes) {
-    if (node.data("distanceOrigin") < radius) {
-      let newVal = node.data("sumDist") - radius / 10000;
-      node.data("sumDist", newVal);
-      console.log(
-        `[${idleZones[i].id()}]: Updated the heat of node ${node.id()}`
-      );
+/**
+ * Colors the graph based on heat values.
+ * @param {Object} cyGraph The graph the simulation is contained within.
+ */
+function updateColors(cyGraph) {
+  let warmNodes = cyGraph.graph
+    .nodes()
+    .filter((n) => isRegNode(n) && n.data("heat") > 0); //? only color regular nodes with a heat value above 0
+  // Find the maximum heat in the graph
+  let max = 0;
+  for (const node of warmNodes) {
+    let heat = node.data("heat");
+    if (heat > max) {
+      max = heat;
     }
   }
 
-  // The heat should now be updated
+  // Set color based on the max heat. Idle-zones are red per default
+  for (let node of warmNodes) {
+    node.removeClass(
+      `${eleType.idlezone_red} ${eleType.idlezone_orange} ${eleType.idlezone_yellow}`
+    );
+
+    if (isIdleZone(node)) {
+      node.addClass(eleType.idlezone_red);
+    } else if (node.data("heat") > max * 0.33) {
+      node.addClass(eleType.idlezone_orange);
+    } else {
+      node.addClass(eleType.idlezone_yellow);
+    }
+  }
 }
 
-function getIdleZoneRadius(nodes) {
-  let sum = 0;
+/**
+ * Determines whether a given node is currently an idle-zone
+ * @param {Object} node the node to check
+ * @returns True if the node in question is an idle-zone, false if not
+ */
+function isIdleZone(node) {
+  return idleZones.indexOf(node) > -1 ? true : false;
+}
+
+/**
+ * Determines whether a node is regular (read: not a restaurant or courier)
+ * @param {Object} n The node to check
+ * @returns True or false, depending on if node is regular or not
+ */
+function isRegNode(n) {
+  let firstChar = n.id().charAt(0);
+  return firstChar !== "c" && firstChar !== "R";
+}
+
+/**
+ *
+ * @param {Object} cyGraph The graph the simulation is contained within.
+ * @param {Object} startNode The center of the selection circle
+ * @param {Number} radius The radius of the circle.
+ * @returns An array of nodes in circle centered on 'startNode' with the radius 'radius'.
+ */
+function findNodesInRadius(cyGraph, startNode, radius) {
+  let nodes = cyGraph.graph.nodes().filter((n) => isRegNode(n));
+  let nodesInRadius = [];
+  dijkstra(cyGraph, startNode);
   for (const node of nodes) {
-    sum += node.data("distanceOrigin");
+    if (node !== startNode && node.data("distanceOrigin") <= radius) {
+      nodesInRadius.push(node);
+    }
   }
-  let avg = sum / nodes.length;
-  return avg / 4; // the radius is 1/4 of the avg distance
+  return nodesInRadius;
 }
 
-/** Returns true if the input node is a regular node (i.e., not a restaurant or courier node) */
-function isRegularNode(node) {
-  let firstChar = node.id().charAt(0);
-  return firstChar !== "R" && firstChar !== "c";
-}
-
-function setNodeColors(nodes) {
-  // Reset all colors and make them yellow!
-  for (let node of nodes) {
-    node.toggleClass(eleType.idlezone_red, false);
-    node.toggleClass(eleType.idlezone_orange, false);
-    node.toggleClass(eleType.idlezone_yellow, true);
-  }
-
-  // Apply red to idle zones
-  for (let idleZone of idleZones) {
-    idleZone.toggleClass(eleType.idlezone_red, true);
-    idleZone.toggleClass(eleType.idlezone_orange, false);
-    idleZone.toggleClass(eleType.idlezone_yellow, false);
-  }
-}
-
-export { BIGGUS_DICKUS };
+export { generateHeatmap, idleZones };

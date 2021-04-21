@@ -1,5 +1,5 @@
 import { dijkstra } from "./dijkstra.js";
-import { BIGGUS_DICKUS } from "./heatGeneration.js";
+import { generateHeatmap, idleZones } from "./heatGeneration.js";
 import { eleType } from "./graphHelper.js";
 
 let timeMinutes = 479; // start at 8:00
@@ -40,7 +40,7 @@ function perTick(cyGraph) {
     generateOrders(cyGraph, timeMinutes);
   }
   if (!(timeMinutes % 60) && timeMinutes >= 480 && timeMinutes < 1260) {
-    BIGGUS_DICKUS(cyGraph, timeMinutes);
+    generateHeatmap(cyGraph, timeMinutes);
   }
 
   for (let i = 0; i < cyGraph.orders.length; i++) {
@@ -117,7 +117,6 @@ function getRandomInt(min, max) {
  * @param {Number} time The current minutes to the hour.
  * @returns The new order.
  */
-
 function generateOrders(cyGraph, timeMinutes) {
   for (const restaurant of cyGraph.restaurants) {
     let intensity = orderIntensity(
@@ -196,7 +195,7 @@ function findCourier(cyGraph, order) {
   }
 
   // Otherwise search through connected nodes, starting at the order restaurant, and search for couriers
-  while (closeCouriers.length < 2 && attempts < 10) {
+  while (attempts < 5) {
     for (const node of connectedNodes) {
       nodeSet.add(node);
     }
