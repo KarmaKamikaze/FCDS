@@ -112,7 +112,7 @@ function generateOrders(cyGraph, timeMinutes) {
       cyGraph.simulationStats.pendingOrders = cyGraph.orders.length;
       cyGraph.simulationStats.activeOrders =
         cyGraph.simulationStats.totalOrders -
-        cyGraph.simulationStats.finishedOrders;
+        cyGraph.simulationStats.deliveredOrders;
     }
   }
 }

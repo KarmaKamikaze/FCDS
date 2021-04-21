@@ -6,8 +6,8 @@ function simStats() {
   this.simTimeMinutes = 0;
   this.simTime = "";
   this.totalOrders = 0;
-  this.finishedOrders = 0;
-  this.finishedOrdersArr = new Array();
+  this.deliveredOrders = 0;
+  this.deliveredOrdersArr = new Array();
   this.pendingOrders = 0;
   this.activeOrders = 0;
   this.failedOrders = 0; /* Not implemented yet due to missing delivery time constraint! */
@@ -15,9 +15,9 @@ function simStats() {
 }
 
 /**
- * Calculates the average delivery time of all finished orders
- * @param {Array} orders The finished orders array
- * @returns the average delivery time for the finished orders
+ * Calculates the average delivery time of all delivered orders
+ * @param {Array} orders The delivered orders array
+ * @returns the average delivery time for the delivered orders
  */
 function avgDeliveryTime(orders) {
   let avgTime = 0;
