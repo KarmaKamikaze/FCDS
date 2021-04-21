@@ -315,7 +315,6 @@ class CyGraph {
           this.graph.$id(path[index + 1]).couriers.push(courier);
           // otherwise the order has been delivered at its destination, and we can reset the courier
           courier.data("currentOrder", null);
-          this.simulationStats.deliveredOrders++;
           order.endTime = this.simulationStats.simTimeMinutes;
           this.simulationStats.deliveredOrdersArr.push(order);
           this.simulationStats.averageDeliveryTime = avgDeliveryTime(

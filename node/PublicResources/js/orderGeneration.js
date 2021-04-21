@@ -103,16 +103,17 @@ function generateOrders(cyGraph, timeMinutes) {
     if (roll <= restaurant.data("orderRate") * intensity) {
       let i = getRandomInt(0, cyGraph.customers.length - 1);
       let order = new Order(
-        ++cyGraph.simulationStats.totalOrders,
+        cyGraph.simulationStats.totalOrdersArr.length + 1,
         restaurant,
         cyGraph.customers[i],
         timeMinutes
       );
       cyGraph.orders.push(order);
+      cyGraph.simulationStats.totalOrdersArr.push(order);
       cyGraph.simulationStats.pendingOrders = cyGraph.orders.length;
       cyGraph.simulationStats.activeOrders =
-        cyGraph.simulationStats.totalOrders -
-        cyGraph.simulationStats.deliveredOrders;
+        cyGraph.simulationStats.totalOrdersArr.length -
+        cyGraph.simulationStats.deliveredOrdersArr.length;
     }
   }
 }

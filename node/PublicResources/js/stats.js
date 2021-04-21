@@ -5,8 +5,7 @@ function simStats() {
   this.simDays = 0;
   this.simTimeMinutes = 0;
   this.simTime = "";
-  this.totalOrders = 0;
-  this.deliveredOrders = 0;
+  this.totalOrdersArr = new Array();
   this.deliveredOrdersArr = new Array();
   this.pendingOrders = 0;
   this.activeOrders = 0;
