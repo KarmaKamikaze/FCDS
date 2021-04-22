@@ -32,7 +32,9 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
  *  @param {CyGraph} cyGraph The graph to perform the simulation on
  */
 function simulationTest(cyGraph) {
-  cyGraph.addCourier("R1");
+  cyGraph.addCourier("N1");
+  cyGraph.addCourier("N2");
+  cyGraph.addCourier("N3");
   cyGraph.addCourier("N4");
 
   startSimulation(cyGraph, DEFAULT_TICKSPEED);
@@ -78,7 +80,7 @@ const startSim = () => {
 
       switch (setAlgorithm(graph)) {
         case "astar":
-          network = new CyGraph(graph.id, cytoStyle, aStar, DEFAULT_TICKSPEED);
+          network = new CyGraph(graph.id, cytoStyle, aStar, DISTANCE_PER_TICK, true, DEFAULT_TICKSPEED);
           graphArray.push(network);
           if (setGraphSize(graph) === "small") {
             SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
@@ -92,6 +94,8 @@ const startSim = () => {
             graph.id,
             cytoStyle,
             greedyBestFirstSearch,
+            DISTANCE_PER_TICK,
+            true,
             DEFAULT_TICKSPEED
           );
           graphArray.push(network);
@@ -107,6 +111,8 @@ const startSim = () => {
             graph.id,
             cytoStyle,
             dijkstra,
+            DISTANCE_PER_TICK,
+            true,
             DEFAULT_TICKSPEED
           );
           graphArray.push(network);
@@ -129,6 +135,7 @@ const startSim = () => {
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
 let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
 const DEFAULT_TICKSPEED = 100;
+const DISTANCE_PER_TICK = 200;
 
 let graphArray = [];
 startSim();

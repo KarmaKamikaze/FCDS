@@ -33,6 +33,8 @@ function perTick(cyGraph) {
   timeMinutes++;
 
   if (timeMinutes == 1440) {
+    console.log(`Day ${cyGraph.simulationStats.simDays}: Delivered ${cyGraph.simulationStats.deliveredOrdersArr.length}/${cyGraph.simulationStats.totalOrdersArr.length}`)
+
     timeMinutes = 0;
     cyGraph.simulationStats.simDays++;
   }
@@ -43,15 +45,20 @@ function perTick(cyGraph) {
   cyGraph.simulationStats.simTime = formatTime(timeMinutes);
 
   if (!(timeMinutes % 5)) {
-    console.log(formatTime(timeMinutes));
     generateOrders(cyGraph, timeMinutes);
-  }
-  if (!(timeMinutes % 60) && timeMinutes >= 480 && timeMinutes < 1260) {
-    generateHeatmap(cyGraph, timeMinutes);
+    console.log(formatTime(timeMinutes));
   }
 
-  for (let i = 0; i < cyGraph.orders.length; i++) {
-    assignCourier(cyGraph, cyGraph.orders[i], i);
+  if (!(timeMinutes % 60)) {
+    if (timeMinutes >= 480 && timeMinutes < 1260) {
+      generateHeatmap(cyGraph, timeMinutes);
+    }
+  }
+
+  for (let i = 0; i < cyGraph.couriers.length; i++) {
+    if (cyGraph.orders[i]) {
+      assignCourier(cyGraph, cyGraph.orders[i], i);
+    }
   }
 }
 
@@ -173,13 +180,14 @@ function Order(id, origin, destination, startTime) {
 function assignCourier(cyGraph, order, index) {
   let courier = findCourier(cyGraph, order);
   if (courier) {
-    console.log(
-      `Graph: [${cyGraph.name}] - Order: [${
-        order.id
-      }] - Route: [${courier.id()}] -> [${order.restaurant.id()}] -> [${order.customer.id()}]`
-    );
     courier.data("currentOrder", order);
-    cyGraph.traversePath(courier.id(), order.restaurant.id());
+    if (courier.data("moving")) {
+      courier.data("pendingOrder", true);
+    }
+    else {
+      cyGraph.traversePath(courier.id(), order.restaurant.id());
+    }
+    console.log(`[${courier.id()}] ${order.restaurant.id()} -> ${order.customer.id()}`)
     cyGraph.orders.splice(index, 1);
     cyGraph.simulationStats.pendingOrders = cyGraph.orders.length;
   }
@@ -192,54 +200,20 @@ function assignCourier(cyGraph, order, index) {
  * @returns The best courier of all candidates, or null no none are found.
  */
 function findCourier(cyGraph, order) {
-  let connectedNodes = order.restaurant.openNeighborhood((elem) =>
-    elem.isNode()
-  );
-  let visitedNodes = new Array();
-  let closeCouriers = new Array();
-  let nodeSet = new Set(connectedNodes);
-  let attempts = 0;
-  let shortestLength = Infinity;
+  let availableCouriers = new Array();
+  let lowestDistance = Infinity;
   let bestCourier = null;
-
-  // If the order restaurant already has an available courier, return it
-  for (const courier of order.restaurant.couriers) {
-    if (!courier.data("currentOrder") === null) return courier;
+  dijkstra(cyGraph, order.restaurant);
+  for (const courier of cyGraph.couriers) {
+    if (!courier.data("currentOrder")) {
+      availableCouriers.push(courier);
+    }
   }
-
-  // Otherwise search through connected nodes, starting at the order restaurant, and search for couriers
-  while (attempts < 5) {
-    for (const node of connectedNodes) {
-      nodeSet.add(node);
-    }
-
-    // Remove any nodes that were previously examined
-    for (const node of visitedNodes) {
-      nodeSet.delete(node);
-    }
-
-    // If there is an available courier at any node in the set (so far), add it to the closeCouriers array
-    for (const item of nodeSet) {
-      if (
-        item.couriers.length &&
-        item.couriers[0].data("currentOrder") == null
-      ) {
-        closeCouriers.push(item.couriers[0]);
-      }
-    }
-
-    // Note completion of attempt, update visitedNodes and connectedNodes
-    attempts++;
-    visitedNodes = [...visitedNodes, ...connectedNodes];
-    connectedNodes = connectedNodes.openNeighborhood((elem) => elem.isNode());
-  }
-
-  // As a final step, find and return the courier with the shortest distance to the restaurant (using dijkstra's algorithm)
-  for (const courier of closeCouriers) {
-    dijkstra(cyGraph, cyGraph.graph.$id(courier.data("currentNode")));
-    let length = order.restaurant.data("distanceOrigin");
-    if (length < shortestLength) {
-      shortestLength = length;
+  for (const courier of availableCouriers) {
+      let curNode = courier.data("currentNode"),
+          curDistOrigin = curNode.data("distanceOrigin");
+      if (curDistOrigin < lowestDistance) {
+      lowestDistance = curDistOrigin;
       bestCourier = courier;
     }
   }
