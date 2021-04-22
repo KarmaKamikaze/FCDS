@@ -40,6 +40,8 @@ const generateVisualizationHTML = (graphs) => {
  * requested by the user.
  * @param {String} graphSize The size of the graphs which will be contained in the divs.
  * @param {String} algorithms The different types of algorithms associated with each graph div.
+ * @param {String} pageName This value determines the appropriate switch case, since the two end
+ * points will need different properties for css reasons.
  * @returns A string, which contains the specified amount of graph divs in series. The graph will
  * have an id and three classes associated with it: The cy tag, the size of the graph which will
  * be placed in the div and the algorithm that should be used.
