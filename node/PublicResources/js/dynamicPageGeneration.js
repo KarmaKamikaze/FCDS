@@ -6,7 +6,7 @@ export {
 };
 
 /**
- * This function generates the visualization html page, which can then be sent as a response to a GET request.
+ * This function generates the visualization html page, which can then be sent as a response to a POST request.
  * @param {String} graphs A deposited div html element in string form, representing the graph container
  * @returns A string, which contains the generated visualization.html site.
  */
@@ -242,6 +242,14 @@ const generateOptionsHTML = (pageObject) => {
   return body;
 };
 
+/**
+ * This function generates the headless-simulation html page, which can then be sent as
+ * a response to a POST request.
+ * @param {Number} graphSize The size of the graphs which will be contained in the divs.
+ * @param {String} algorithm The different types of algorithms associated with each graph div.
+ * @param {String} graph A deposited div html element in string form, representing the graph container.
+ * @returns A string, which contains the generated headless-simulation.html site.
+ */
 const generateHeadlessHTML = (graphSize, algorithm, graph) => {
   let algorithmName = {
     astar: "A*",
