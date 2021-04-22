@@ -1,6 +1,9 @@
 import { dijkstra } from "./dijkstra.js";
+import { generateHeatmap } from "./heatGeneration.js";
+import { eleType } from "./graphHelper.js";
 
-let timeMinutes = 480; // start at 8:00
+
+let timeMinutes = 479; // start at 8:00
 let totalOrders = 0; // may be used for statistics
 
 /**
@@ -10,6 +13,15 @@ let totalOrders = 0; // may be used for statistics
  * @returns The update interval.
  */
 function startSimulation(cyGraph, tickSpeed) {
+  for (const restaurant of cyGraph.restaurants) {
+    let intensityFunc = Math.random() > 0.5 ? lunchRate : dinnerRate;
+    restaurant.intensityFunc = intensityFunc;
+    if (intensityFunc == lunchRate) {
+      restaurant.addClass(eleType.lunch);
+    } else {
+      restaurant.addClass(eleType.dinner);
+    }
+  }
   return setInterval(() => perTick(cyGraph), tickSpeed);
 }
 
@@ -22,11 +34,20 @@ function perTick(cyGraph) {
 
   if (timeMinutes == 1440) {
     timeMinutes = 0;
+    cyGraph.simulationStats.simDays++;
   }
+
+  /* Can be placed within the if-statement underneath incase 
+     it takes too much computational time. */
+  cyGraph.simulationStats.simTimeMinutes = timeMinutes;
+  cyGraph.simulationStats.simTime = formatTime(timeMinutes);
 
   if (!(timeMinutes % 5)) {
     console.log(formatTime(timeMinutes));
     generateOrders(cyGraph, timeMinutes);
+  }
+  if (!(timeMinutes % 60) && timeMinutes >= 480 && timeMinutes < 1260) {
+    generateHeatmap(cyGraph, timeMinutes);
   }
 
   for (let i = 0; i < cyGraph.orders.length; i++) {
@@ -61,11 +82,25 @@ function formatTime(timeMinutes) {
  * @param {Number} x The current minutes to the hour as a float.
  * @returns The order intensity based on predefined restaurant rush-hour spikes (piecewise equations).
  */
-function orderIntensity(x) {
+function orderIntensity(x, func) {
+  return func(x);
+}
+
+function lunchRate(x) {
   if (x >= 8 && x < 15) {
     return (Math.sin(0.86 * x - 2.3) + 1) / 2;
   } else if (x >= 15 && x < 21) {
-    return Math.abs(Math.sin(0.5 * x + 2.07)) / 2;
+    return Math.sin(0.5 * x + 5.2) / 2;
+  } else {
+    return 0;
+  }
+}
+
+function dinnerRate(x) {
+  if (x >= 8 && x < 15) {
+    return Math.sin(0.43 * x + 2.9) / 2;
+  } else if (x >= 15 && x < 21) {
+    return (Math.sin(0.95 * x - 3.5) + 1) / 2;
   } else {
     return 0;
   }
@@ -89,21 +124,27 @@ function getRandomInt(min, max) {
  * @param {Number} time The current minutes to the hour.
  * @returns The new order.
  */
-
 function generateOrders(cyGraph, timeMinutes) {
-  let intensity = orderIntensity(timeToFloat(timeMinutes));
-
   for (const restaurant of cyGraph.restaurants) {
+    let intensity = orderIntensity(
+      timeToFloat(timeMinutes),
+      restaurant.intensityFunc
+    );
     let roll = Math.random();
     if (roll <= restaurant.data("orderRate") * intensity) {
       let i = getRandomInt(0, cyGraph.customers.length - 1);
       let order = new Order(
-        ++totalOrders,
+        cyGraph.simulationStats.totalOrdersArr.length + 1,
         restaurant,
         cyGraph.customers[i],
         timeMinutes
       );
       cyGraph.orders.push(order);
+      cyGraph.simulationStats.totalOrdersArr.push(order);
+      cyGraph.simulationStats.pendingOrders = cyGraph.orders.length;
+      cyGraph.simulationStats.activeOrders =
+        cyGraph.simulationStats.totalOrdersArr.length -
+        cyGraph.simulationStats.deliveredOrdersArr.length;
     }
   }
 }
@@ -133,13 +174,14 @@ function assignCourier(cyGraph, order, index) {
   let courier = findCourier(cyGraph, order);
   if (courier) {
     console.log(
-      `[${
+      `Graph: [${cyGraph.name}] - Order: [${
         order.id
-      }] : [${courier.id()}] -> [${order.restaurant.id()}] -> [${order.customer.id()}]`
+      }] - Route: [${courier.id()}] -> [${order.restaurant.id()}] -> [${order.customer.id()}]`
     );
     courier.data("currentOrder", order);
     cyGraph.traversePath(courier.id(), order.restaurant.id());
     cyGraph.orders.splice(index, 1);
+    cyGraph.simulationStats.pendingOrders = cyGraph.orders.length;
   }
 }
 
@@ -166,7 +208,7 @@ function findCourier(cyGraph, order) {
   }
 
   // Otherwise search through connected nodes, starting at the order restaurant, and search for couriers
-  while (closeCouriers.length < 3 && attempts < 10) {
+  while (attempts < 5) {
     for (const node of connectedNodes) {
       nodeSet.add(node);
     }
@@ -204,4 +246,4 @@ function findCourier(cyGraph, order) {
   return bestCourier;
 }
 
-export { startSimulation };
+export { startSimulation, timeToFloat, orderIntensity };

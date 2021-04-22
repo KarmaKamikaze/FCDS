@@ -1,4 +1,5 @@
 import { traceback } from "../js/pathModules.js";
+import { simStats, avgDeliveryTime } from "./stats.js";
 
 let eleType = {
   default: "default",
@@ -7,6 +8,11 @@ let eleType = {
   customer: "customer",
   route: "route",
   routeDone: "routeDone",
+  idlezone_yellow: "idlezone-yellow",
+  idlezone_orange: "idlezone-orange",
+  idlezone_red: "idlezone-red",
+  lunch: "lunch",
+  dinner: "dinner",
 };
 
 class CyGraph {
@@ -16,6 +22,7 @@ class CyGraph {
     this.pathFunc = pathFunc;
     this.tickSpeed = tickSpeed;
     this.courierCount = 0;
+    this.simulationStats = new simStats();
   }
 
   // Arrays that keep track of all elements in the graph
@@ -23,6 +30,7 @@ class CyGraph {
   restaurants = new Array();
   customers = new Array();
   orders = new Array();
+  idleZones = new Array();
 
   sortOrders() {
     this.orders.sort((a, b) => a.startTime - b.startTime);
@@ -140,13 +148,16 @@ class CyGraph {
       // Get only the first character of the ID
       // Then push the node into the corresponding list
       let type = nodes[i].id().charAt(0);
+      nodes[i].data("heat", 0);
       switch (type.toUpperCase()) {
         case "R":
           nodes[i].data("orderRate", 0.25); // assign individual order probability
+          nodes[i].addClass(eleType.restaurant);
           this.restaurants.push(nodes[i]);
           break;
         case "C":
           this.customers.push(nodes[i]);
+          nodes[i].addClass(eleType.customer);
           break;
         case "N":
           // The node is a regular node (road junctions, etc.)
@@ -279,7 +290,7 @@ class CyGraph {
       currentPos = this.getPos(path[index]),
       diff1 = nextPos.x - currentPos.x,
       diff2 = nextPos.y - currentPos.y,
-      steps = ~~(this.getLength(path[index], path[index + 1]) / 10),
+      steps = ~~(this.getLength(path[index], path[index + 1]) / 100),
       i = 0,
       perTick = ~~(this.tickSpeed / 20);
 
@@ -313,6 +324,11 @@ class CyGraph {
           this.graph.$id(path[index + 1]).couriers.push(courier);
           // otherwise the order has been delivered at its destination, and we can reset the courier
           courier.data("currentOrder", null);
+          order.endTime = this.simulationStats.simTimeMinutes;
+          this.simulationStats.deliveredOrdersArr.push(order);
+          this.simulationStats.averageDeliveryTime = avgDeliveryTime(
+            this.simulationStats.deliveredOrdersArr
+          );
           this.moveNode(courier.id(), nextPos.x, nextPos.y);
           return;
         }
