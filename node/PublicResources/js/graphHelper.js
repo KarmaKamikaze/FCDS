@@ -21,6 +21,7 @@ class CyGraph {
     this.pathFunc = pathFunc;
     this.tickSpeed = tickSpeed;
     this.courierCount = 0;
+    this.idleZones = [];
   }
 
   // Arrays that keep track of all elements in the graph
