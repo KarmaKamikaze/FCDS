@@ -38,19 +38,50 @@ function CytoStyle(containerId) {
         "transition-property":
           "background-color, line-color, target-arrow-color",
       })
+      .selector(`.${eleType.restaurant}`)
+      .style({
+        "background-color": "#d100ff",
+        content: "data(id)",
+      })
       .selector(`.${eleType.courier}`)
       .style({
-        width: 20,
-        height: 20,
+        width: 55,
+        height: 55,
         "background-color": "#B22222",
         content: "data(id)",
       })
       .selector(`.${eleType.customer}`)
       .style({
-        width: 20,
-        height: 20,
-        "background-color": "#00CED1",
-        content: "",
+        width: 60,
+        height: 60,
+        "background-color": "#89CFF0",
+        content: "data(id)",
+      })
+      .selector(`.${eleType.idlezone_yellow}`)
+      .style({
+        "background-color": "#FFFF00",
+      })
+      .selector(`.${eleType.idlezone_orange}`)
+      .style({
+        "background-color": "#FFA500",
+      })
+      .selector(`.${eleType.idlezone_red}`)
+      .style({
+        "background-color": "#DC143C",
+        width: 60,
+        height: 60,
+      })
+      .selector(`.${eleType.lunch}`)
+      .style({
+        "background-color": "#008000",
+        width: 80,
+        height: 80,
+      })
+      .selector(`.${eleType.dinner}`)
+      .style({
+        "background-color": "#4169E1",
+        width: 80,
+        height: 80,
       }),
   });
 }

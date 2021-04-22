@@ -25,9 +25,6 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
       cyGraph.graph.fit(cyGraph.graph.elements());
       // then call the given start simulation function for this graph
       startSimulationCallback(cyGraph);
-    })
-    .catch((e) => {
-      console.error(e);
     });
 }
 
@@ -131,7 +128,7 @@ const startSim = () => {
 /// MAIN ///
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
 let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
-const DEFAULT_TICKSPEED = 50;
+const DEFAULT_TICKSPEED = 100;
 
 let graphArray = [];
 startSim();
