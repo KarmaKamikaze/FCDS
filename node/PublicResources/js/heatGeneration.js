@@ -124,7 +124,7 @@ function updateColors(cyGraph) {
       `${eleType.idlezone_red} ${eleType.idlezone_orange} ${eleType.idlezone_yellow}`
     );
 
-    if (isIdleZone(node)) {
+    if (isIdleZone(node, cyGraph)) {
       node.addClass(eleType.idlezone_red);
     } else if (node.data("heat") > max * 0.33) {
       node.addClass(eleType.idlezone_orange);
