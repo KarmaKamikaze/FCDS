@@ -2122,7 +2122,8 @@
         "source" : "C8",
         "id" : "1772",
         "selected" : false,
-        "target" : "N23"
+        "target" : "N23",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2135,7 +2136,8 @@
         "source" : "C7",
         "id" : "1947",
         "selected" : false,
-        "target" : "N10"
+        "target" : "N10",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2148,7 +2150,8 @@
         "source" : "C7",
         "id" : "1948",
         "selected" : false,
-        "target" : "N12"
+        "target" : "N12",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2161,7 +2164,8 @@
         "source" : "C7",
         "id" : "1949",
         "selected" : false,
-        "target" : "N9"
+        "target" : "N9",
+        "obstructions" : "1.2"
       },
       "selected" : false
     }, {
@@ -2174,7 +2178,8 @@
         "source" : "C7",
         "id" : "1950",
         "selected" : false,
-        "target" : "N72"
+        "target" : "N72",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2187,7 +2192,8 @@
         "source" : "C5",
         "id" : "1742",
         "selected" : false,
-        "target" : "N50"
+        "target" : "N50",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2200,7 +2206,8 @@
         "source" : "C5",
         "id" : "1743",
         "selected" : false,
-        "target" : "N93"
+        "target" : "N93",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2213,7 +2220,8 @@
         "source" : "C2",
         "id" : "1745",
         "selected" : false,
-        "target" : "N55"
+        "target" : "N55",
+        "obstructions" : "1.4"
       },
       "selected" : false
     }, {
@@ -2226,7 +2234,8 @@
         "source" : "C1",
         "id" : "1746",
         "selected" : false,
-        "target" : "N118"
+        "target" : "N118",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2239,7 +2248,8 @@
         "source" : "R6",
         "id" : "1747",
         "selected" : false,
-        "target" : "N59"
+        "target" : "N59",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2252,7 +2262,8 @@
         "source" : "R6",
         "id" : "1748",
         "selected" : false,
-        "target" : "N38"
+        "target" : "N38",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2265,7 +2276,8 @@
         "source" : "R5",
         "id" : "1749",
         "selected" : false,
-        "target" : "N124"
+        "target" : "N124",
+        "obstructions" : "1.6"
       },
       "selected" : false
     }, {
@@ -2278,7 +2290,8 @@
         "source" : "R5",
         "id" : "1751",
         "selected" : false,
-        "target" : "N42"
+        "target" : "N42",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2291,7 +2304,8 @@
         "source" : "R4",
         "id" : "1752",
         "selected" : false,
-        "target" : "N73"
+        "target" : "N73",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2304,7 +2318,8 @@
         "source" : "R4",
         "id" : "1753",
         "selected" : false,
-        "target" : "N56"
+        "target" : "N56",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2317,7 +2332,8 @@
         "source" : "R4",
         "id" : "1754",
         "selected" : false,
-        "target" : "N28"
+        "target" : "N28",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2330,7 +2346,8 @@
         "source" : "R4",
         "id" : "1755",
         "selected" : false,
-        "target" : "N16"
+        "target" : "N16",
+        "obstructions" : "1.2"
       },
       "selected" : false
     }, {
@@ -2343,7 +2360,8 @@
         "source" : "R3",
         "id" : "1756",
         "selected" : false,
-        "target" : "N60"
+        "target" : "N60",
+        "obstructions" : "1.5"
       },
       "selected" : false
     }, {
@@ -2356,7 +2374,8 @@
         "source" : "R2",
         "id" : "1757",
         "selected" : false,
-        "target" : "N102"
+        "target" : "N102",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2369,7 +2388,8 @@
         "source" : "R1",
         "id" : "1758",
         "selected" : false,
-        "target" : "N99"
+        "target" : "N99",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2382,7 +2402,8 @@
         "source" : "N140",
         "id" : "1759",
         "selected" : false,
-        "target" : "N31"
+        "target" : "N31",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2395,7 +2416,8 @@
         "source" : "N139",
         "id" : "1760",
         "selected" : false,
-        "target" : "N61"
+        "target" : "N61",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2408,7 +2430,8 @@
         "source" : "N139",
         "id" : "1761",
         "selected" : false,
-        "target" : "N140"
+        "target" : "N140",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -2421,7 +2444,8 @@
         "source" : "N139",
         "id" : "2340",
         "selected" : false,
-        "target" : "R3"
+        "target" : "R3",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2434,7 +2458,8 @@
         "source" : "N138",
         "id" : "1762",
         "selected" : false,
-        "target" : "N136"
+        "target" : "N136",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2447,7 +2472,8 @@
         "source" : "N138",
         "id" : "1763",
         "selected" : false,
-        "target" : "N125"
+        "target" : "N125",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2460,7 +2486,8 @@
         "source" : "N137",
         "id" : "1764",
         "selected" : false,
-        "target" : "N136"
+        "target" : "N136",
+        "obstructions" : "1.3"
       },
       "selected" : false
     }, {
@@ -2473,7 +2500,8 @@
         "source" : "N137",
         "id" : "1765",
         "selected" : false,
-        "target" : "N21"
+        "target" : "N21",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2486,7 +2514,8 @@
         "source" : "N136",
         "id" : "1766",
         "selected" : false,
-        "target" : "N126"
+        "target" : "N126",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2499,7 +2528,8 @@
         "source" : "N133",
         "id" : "1767",
         "selected" : false,
-        "target" : "N3"
+        "target" : "N3",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2512,7 +2542,8 @@
         "source" : "N133",
         "id" : "1768",
         "selected" : false,
-        "target" : "N20"
+        "target" : "N20",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2525,7 +2556,8 @@
         "source" : "N133",
         "id" : "1769",
         "selected" : false,
-        "target" : "N24"
+        "target" : "N24",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2538,7 +2570,8 @@
         "source" : "N132",
         "id" : "1770",
         "selected" : false,
-        "target" : "N131"
+        "target" : "N131",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2551,7 +2584,8 @@
         "source" : "N131",
         "id" : "1771",
         "selected" : false,
-        "target" : "N49"
+        "target" : "N49",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2564,7 +2598,8 @@
         "source" : "N129",
         "id" : "1773",
         "selected" : false,
-        "target" : "N40"
+        "target" : "N40",
+        "obstructions" : "1.5"
       },
       "selected" : false
     }, {
@@ -2577,7 +2612,8 @@
         "source" : "N128",
         "id" : "1774",
         "selected" : false,
-        "target" : "N127"
+        "target" : "N127",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2590,7 +2626,8 @@
         "source" : "N128",
         "id" : "1775",
         "selected" : false,
-        "target" : "N104"
+        "target" : "N104",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2603,7 +2640,8 @@
         "source" : "N127",
         "id" : "1777",
         "selected" : false,
-        "target" : "N38"
+        "target" : "N38",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2616,7 +2654,8 @@
         "source" : "N126",
         "id" : "1778",
         "selected" : false,
-        "target" : "N125"
+        "target" : "N125",
+        "obstructions" : "1.8"
       },
       "selected" : false
     }, {
@@ -2629,7 +2668,8 @@
         "source" : "N126",
         "id" : "2412",
         "selected" : false,
-        "target" : "N134"
+        "target" : "N134",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2642,7 +2682,8 @@
         "source" : "N126",
         "id" : "2420",
         "selected" : false,
-        "target" : "N135"
+        "target" : "N135",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2655,7 +2696,8 @@
         "source" : "N125",
         "id" : "1779",
         "selected" : false,
-        "target" : "N124"
+        "target" : "N124",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2668,7 +2710,8 @@
         "source" : "N125",
         "id" : "2424",
         "selected" : false,
-        "target" : "N135"
+        "target" : "N135",
+        "obstructions" : "1.2"
       },
       "selected" : false
     }, {
@@ -2681,7 +2724,8 @@
         "source" : "N124",
         "id" : "1781",
         "selected" : false,
-        "target" : "N48"
+        "target" : "N48",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2694,7 +2738,8 @@
         "source" : "N123",
         "id" : "1782",
         "selected" : false,
-        "target" : "N124"
+        "target" : "N124",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2707,7 +2752,8 @@
         "source" : "N123",
         "id" : "1783",
         "selected" : false,
-        "target" : "N47"
+        "target" : "N47",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2720,7 +2766,8 @@
         "source" : "N122",
         "id" : "2394",
         "selected" : false,
-        "target" : "N33"
+        "target" : "N33",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2733,7 +2780,8 @@
         "source" : "N121",
         "id" : "1785",
         "selected" : false,
-        "target" : "N35"
+        "target" : "N35",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2746,7 +2794,8 @@
         "source" : "N121",
         "id" : "2380",
         "selected" : false,
-        "target" : "N92"
+        "target" : "N92",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2759,7 +2808,8 @@
         "source" : "N120",
         "id" : "1786",
         "selected" : false,
-        "target" : "N119"
+        "target" : "N119",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2772,7 +2822,8 @@
         "source" : "N120",
         "id" : "1787",
         "selected" : false,
-        "target" : "N122"
+        "target" : "N122",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2785,7 +2836,8 @@
         "source" : "N118",
         "id" : "1790",
         "selected" : false,
-        "target" : "N43"
+        "target" : "N43",
+        "obstructions" : "1.2"
       },
       "selected" : false
     }, {
@@ -2798,7 +2850,8 @@
         "source" : "N117",
         "id" : "1791",
         "selected" : false,
-        "target" : "C1"
+        "target" : "C1",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2811,7 +2864,8 @@
         "source" : "N117",
         "id" : "1792",
         "selected" : false,
-        "target" : "N101"
+        "target" : "N101",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2824,7 +2878,8 @@
         "source" : "N115",
         "id" : "1793",
         "selected" : false,
-        "target" : "N114"
+        "target" : "N114",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2837,7 +2892,8 @@
         "source" : "N115",
         "id" : "1794",
         "selected" : false,
-        "target" : "N112"
+        "target" : "N112",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2850,7 +2906,8 @@
         "source" : "N114",
         "id" : "1795",
         "selected" : false,
-        "target" : "N118"
+        "target" : "N118",
+        "obstructions" : "1.3"
       },
       "selected" : false
     }, {
@@ -2863,7 +2920,8 @@
         "source" : "N114",
         "id" : "1796",
         "selected" : false,
-        "target" : "N113"
+        "target" : "N113",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2876,7 +2934,8 @@
         "source" : "N113",
         "id" : "1798",
         "selected" : false,
-        "target" : "N108"
+        "target" : "N108",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2889,7 +2948,8 @@
         "source" : "N112",
         "id" : "1799",
         "selected" : false,
-        "target" : "R1"
+        "target" : "R1",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2902,7 +2962,8 @@
         "source" : "N112",
         "id" : "1800",
         "selected" : false,
-        "target" : "N113"
+        "target" : "N113",
+        "obstructions" : "1.4"
       },
       "selected" : false
     }, {
@@ -2915,7 +2976,8 @@
         "source" : "N111",
         "id" : "1801",
         "selected" : false,
-        "target" : "N112"
+        "target" : "N112",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2928,7 +2990,8 @@
         "source" : "N111",
         "id" : "1802",
         "selected" : false,
-        "target" : "N44"
+        "target" : "N44",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2941,7 +3004,8 @@
         "source" : "N108",
         "id" : "1803",
         "selected" : false,
-        "target" : "N99"
+        "target" : "N99",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2954,7 +3018,8 @@
         "source" : "N106",
         "id" : "1808",
         "selected" : false,
-        "target" : "R2"
+        "target" : "R2",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2967,7 +3032,8 @@
         "source" : "N106",
         "id" : "1810",
         "selected" : false,
-        "target" : "N105"
+        "target" : "N105",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -2980,7 +3046,8 @@
         "source" : "N106",
         "id" : "1809",
         "selected" : false,
-        "target" : "N101"
+        "target" : "N101",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -2993,7 +3060,8 @@
         "source" : "N106",
         "id" : "2433",
         "selected" : false,
-        "target" : "N108"
+        "target" : "N108",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3006,7 +3074,8 @@
         "source" : "N105",
         "id" : "1811",
         "selected" : false,
-        "target" : "N103"
+        "target" : "N103",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3019,7 +3088,8 @@
         "source" : "N104",
         "id" : "1812",
         "selected" : false,
-        "target" : "N42"
+        "target" : "N42",
+        "obstructions" : "1.3"
       },
       "selected" : false
     }, {
@@ -3032,7 +3102,8 @@
         "source" : "N103",
         "id" : "2338",
         "selected" : false,
-        "target" : "N43"
+        "target" : "N43",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3045,7 +3116,8 @@
         "source" : "N103",
         "id" : "1813",
         "selected" : false,
-        "target" : "N101"
+        "target" : "N101",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3058,7 +3130,8 @@
         "source" : "N102",
         "id" : "1814",
         "selected" : false,
-        "target" : "N105"
+        "target" : "N105",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3071,7 +3144,8 @@
         "source" : "N102",
         "id" : "1815",
         "selected" : false,
-        "target" : "N104"
+        "target" : "N104",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -3084,7 +3158,8 @@
         "source" : "N98",
         "id" : "1818",
         "selected" : false,
-        "target" : "N45"
+        "target" : "N45",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3097,7 +3172,8 @@
         "source" : "N98",
         "id" : "1819",
         "selected" : false,
-        "target" : "N111"
+        "target" : "N111",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3110,7 +3186,8 @@
         "source" : "N98",
         "id" : "1821",
         "selected" : false,
-        "target" : "N99"
+        "target" : "N99",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3123,7 +3200,8 @@
         "source" : "N96",
         "id" : "1822",
         "selected" : false,
-        "target" : "C5"
+        "target" : "C5",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3136,7 +3214,8 @@
         "source" : "N96",
         "id" : "1823",
         "selected" : false,
-        "target" : "N95"
+        "target" : "N95",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -3149,7 +3228,8 @@
         "source" : "N95",
         "id" : "1824",
         "selected" : false,
-        "target" : "C5"
+        "target" : "C5",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3162,7 +3242,8 @@
         "source" : "N93",
         "id" : "1825",
         "selected" : false,
-        "target" : "N97"
+        "target" : "N97",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3175,7 +3256,8 @@
         "source" : "N93",
         "id" : "1826",
         "selected" : false,
-        "target" : "N95"
+        "target" : "N95",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3188,7 +3270,8 @@
         "source" : "N93",
         "id" : "1827",
         "selected" : false,
-        "target" : "N50"
+        "target" : "N50",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3201,7 +3284,8 @@
         "source" : "N91",
         "id" : "1828",
         "selected" : false,
-        "target" : "N53"
+        "target" : "N53",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -3214,7 +3298,8 @@
         "source" : "N91",
         "id" : "1829",
         "selected" : false,
-        "target" : "N95"
+        "target" : "N95",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3227,7 +3312,8 @@
         "source" : "N91",
         "id" : "1830",
         "selected" : false,
-        "target" : "N93"
+        "target" : "N93",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3240,7 +3326,8 @@
         "source" : "N90",
         "id" : "1831",
         "selected" : false,
-        "target" : "N89"
+        "target" : "N89",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3253,7 +3340,8 @@
         "source" : "N90",
         "id" : "1832",
         "selected" : false,
-        "target" : "N54"
+        "target" : "N54",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3266,7 +3354,8 @@
         "source" : "N89",
         "id" : "1833",
         "selected" : false,
-        "target" : "N91"
+        "target" : "N91",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -3279,7 +3368,8 @@
         "source" : "N88",
         "id" : "2350",
         "selected" : false,
-        "target" : "N2"
+        "target" : "N2",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3292,7 +3382,8 @@
         "source" : "N88",
         "id" : "2360",
         "selected" : false,
-        "target" : "N7"
+        "target" : "N7",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3305,7 +3396,8 @@
         "source" : "N86",
         "id" : "1835",
         "selected" : false,
-        "target" : "C3"
+        "target" : "C3",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3318,7 +3410,8 @@
         "source" : "N85",
         "id" : "1836",
         "selected" : false,
-        "target" : "N29"
+        "target" : "N29",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3331,7 +3424,8 @@
         "source" : "N84",
         "id" : "1837",
         "selected" : false,
-        "target" : "N83"
+        "target" : "N83",
+        "obstructions" : "1.2"
       },
       "selected" : false
     }, {
@@ -3344,7 +3438,8 @@
         "source" : "N84",
         "id" : "1838",
         "selected" : false,
-        "target" : "N19"
+        "target" : "N19",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3357,7 +3452,8 @@
         "source" : "N83",
         "id" : "1839",
         "selected" : false,
-        "target" : "N82"
+        "target" : "N82",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3370,7 +3466,8 @@
         "source" : "N83",
         "id" : "1840",
         "selected" : false,
-        "target" : "N10"
+        "target" : "N10",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3383,7 +3480,8 @@
         "source" : "N82",
         "id" : "1841",
         "selected" : false,
-        "target" : "N71"
+        "target" : "N71",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3396,7 +3494,8 @@
         "source" : "N81",
         "id" : "1842",
         "selected" : false,
-        "target" : "N84"
+        "target" : "N84",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -3409,7 +3508,8 @@
         "source" : "N81",
         "id" : "1843",
         "selected" : false,
-        "target" : "N69"
+        "target" : "N69",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3422,7 +3522,8 @@
         "source" : "N80",
         "id" : "1844",
         "selected" : false,
-        "target" : "N65"
+        "target" : "N65",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3435,7 +3536,8 @@
         "source" : "N80",
         "id" : "1845",
         "selected" : false,
-        "target" : "N77"
+        "target" : "N77",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3448,7 +3550,8 @@
         "source" : "N79",
         "id" : "1846",
         "selected" : false,
-        "target" : "N80"
+        "target" : "N80",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3461,7 +3564,8 @@
         "source" : "N78",
         "id" : "1847",
         "selected" : false,
-        "target" : "N79"
+        "target" : "N79",
+        "obstructions" : "1.2"
       },
       "selected" : false
     }, {
@@ -3474,7 +3578,8 @@
         "source" : "N78",
         "id" : "1848",
         "selected" : false,
-        "target" : "N66"
+        "target" : "N66",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3487,7 +3592,8 @@
         "source" : "N77",
         "id" : "1849",
         "selected" : false,
-        "target" : "N68"
+        "target" : "N68",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3500,7 +3606,8 @@
         "source" : "N76",
         "id" : "1850",
         "selected" : false,
-        "target" : "N33"
+        "target" : "N33",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3513,7 +3620,8 @@
         "source" : "N75",
         "id" : "1851",
         "selected" : false,
-        "target" : "N29"
+        "target" : "N29",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3526,7 +3634,8 @@
         "source" : "N75",
         "id" : "1852",
         "selected" : false,
-        "target" : "N60"
+        "target" : "N60",
+        "obstructions" : "1.4"
       },
       "selected" : false
     }, {
@@ -3539,7 +3648,8 @@
         "source" : "N75",
         "id" : "1853",
         "selected" : false,
-        "target" : "N63"
+        "target" : "N63",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3552,7 +3662,8 @@
         "source" : "N74",
         "id" : "1854",
         "selected" : false,
-        "target" : "N58"
+        "target" : "N58",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3565,7 +3676,8 @@
         "source" : "N73",
         "id" : "1855",
         "selected" : false,
-        "target" : "N28"
+        "target" : "N28",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3578,7 +3690,8 @@
         "source" : "N73",
         "id" : "1856",
         "selected" : false,
-        "target" : "N56"
+        "target" : "N56",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3591,7 +3704,8 @@
         "source" : "N71",
         "id" : "1857",
         "selected" : false,
-        "target" : "N57"
+        "target" : "N57",
+        "obstructions" : "1.3"
       },
       "selected" : false
     }, {
@@ -3604,7 +3718,8 @@
         "source" : "N70",
         "id" : "1858",
         "selected" : false,
-        "target" : "N84"
+        "target" : "N84",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3617,7 +3732,8 @@
         "source" : "N70",
         "id" : "1859",
         "selected" : false,
-        "target" : "N81"
+        "target" : "N81",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3630,7 +3746,8 @@
         "source" : "N70",
         "id" : "1860",
         "selected" : false,
-        "target" : "N59"
+        "target" : "N59",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3643,7 +3760,8 @@
         "source" : "N70",
         "id" : "1861",
         "selected" : false,
-        "target" : "N36"
+        "target" : "N36",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3656,7 +3774,8 @@
         "source" : "N69",
         "id" : "1862",
         "selected" : false,
-        "target" : "N77"
+        "target" : "N77",
+        "obstructions" : "1.2"
       },
       "selected" : false
     }, {
@@ -3669,7 +3788,8 @@
         "source" : "N68",
         "id" : "2372",
         "selected" : false,
-        "target" : "N87"
+        "target" : "N87",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3682,7 +3802,8 @@
         "source" : "N67",
         "id" : "1865",
         "selected" : false,
-        "target" : "N78"
+        "target" : "N78",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3695,7 +3816,8 @@
         "source" : "N67",
         "id" : "1866",
         "selected" : false,
-        "target" : "N34"
+        "target" : "N34",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3708,7 +3830,8 @@
         "source" : "N66",
         "id" : "1867",
         "selected" : false,
-        "target" : "N140"
+        "target" : "N140",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3721,7 +3844,8 @@
         "source" : "N66",
         "id" : "1868",
         "selected" : false,
-        "target" : "N65"
+        "target" : "N65",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -3734,7 +3858,8 @@
         "source" : "N65",
         "id" : "1869",
         "selected" : false,
-        "target" : "N64"
+        "target" : "N64",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3747,7 +3872,8 @@
         "source" : "N64",
         "id" : "1870",
         "selected" : false,
-        "target" : "N74"
+        "target" : "N74",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3760,7 +3886,8 @@
         "source" : "N63",
         "id" : "1871",
         "selected" : false,
-        "target" : "R3"
+        "target" : "R3",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3773,7 +3900,8 @@
         "source" : "N63",
         "id" : "1872",
         "selected" : false,
-        "target" : "N74"
+        "target" : "N74",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3786,7 +3914,8 @@
         "source" : "N63",
         "id" : "1873",
         "selected" : false,
-        "target" : "N62"
+        "target" : "N62",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -3799,7 +3928,8 @@
         "source" : "N62",
         "id" : "1874",
         "selected" : false,
-        "target" : "N139"
+        "target" : "N139",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3812,7 +3942,8 @@
         "source" : "N62",
         "id" : "1875",
         "selected" : false,
-        "target" : "N64"
+        "target" : "N64",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3825,7 +3956,8 @@
         "source" : "N62",
         "id" : "1876",
         "selected" : false,
-        "target" : "N66"
+        "target" : "N66",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3838,7 +3970,8 @@
         "source" : "N60",
         "id" : "1877",
         "selected" : false,
-        "target" : "N61"
+        "target" : "N61",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3851,7 +3984,8 @@
         "source" : "N59",
         "id" : "1878",
         "selected" : false,
-        "target" : "N18"
+        "target" : "N18",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3864,7 +3998,8 @@
         "source" : "N58",
         "id" : "1879",
         "selected" : false,
-        "target" : "N69"
+        "target" : "N69",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -3877,7 +4012,8 @@
         "source" : "N57",
         "id" : "1880",
         "selected" : false,
-        "target" : "N75"
+        "target" : "N75",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3890,7 +4026,8 @@
         "source" : "N55",
         "id" : "1881",
         "selected" : false,
-        "target" : "N56"
+        "target" : "N56",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3903,7 +4040,8 @@
         "source" : "N54",
         "id" : "1882",
         "selected" : false,
-        "target" : "N47"
+        "target" : "N47",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3916,7 +4054,8 @@
         "source" : "N53",
         "id" : "1883",
         "selected" : false,
-        "target" : "N90"
+        "target" : "N90",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3929,7 +4068,8 @@
         "source" : "N52",
         "id" : "1884",
         "selected" : false,
-        "target" : "N51"
+        "target" : "N51",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3942,7 +4082,8 @@
         "source" : "N51",
         "id" : "1885",
         "selected" : false,
-        "target" : "N54"
+        "target" : "N54",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -3955,7 +4096,8 @@
         "source" : "N50",
         "id" : "1886",
         "selected" : false,
-        "target" : "N97"
+        "target" : "N97",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3968,7 +4110,8 @@
         "source" : "N50",
         "id" : "1887",
         "selected" : false,
-        "target" : "N96"
+        "target" : "N96",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3981,7 +4124,8 @@
         "source" : "N50",
         "id" : "1888",
         "selected" : false,
-        "target" : "N52"
+        "target" : "N52",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -3994,7 +4138,8 @@
         "source" : "N49",
         "id" : "1889",
         "selected" : false,
-        "target" : "N53"
+        "target" : "N53",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4007,7 +4152,8 @@
         "source" : "N48",
         "id" : "1890",
         "selected" : false,
-        "target" : "N132"
+        "target" : "N132",
+        "obstructions" : "1.2"
       },
       "selected" : false
     }, {
@@ -4020,7 +4166,8 @@
         "source" : "N48",
         "id" : "1891",
         "selected" : false,
-        "target" : "N22"
+        "target" : "N22",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4033,7 +4180,8 @@
         "source" : "N47",
         "id" : "1892",
         "selected" : false,
-        "target" : "N131"
+        "target" : "N131",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4046,7 +4194,8 @@
         "source" : "N47",
         "id" : "1893",
         "selected" : false,
-        "target" : "N48"
+        "target" : "N48",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4059,7 +4208,8 @@
         "source" : "N46",
         "id" : "1894",
         "selected" : false,
-        "target" : "N51"
+        "target" : "N51",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4072,7 +4222,8 @@
         "source" : "N45",
         "id" : "1895",
         "selected" : false,
-        "target" : "N46"
+        "target" : "N46",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -4085,7 +4236,8 @@
         "source" : "N44",
         "id" : "1896",
         "selected" : false,
-        "target" : "N115"
+        "target" : "N115",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4098,7 +4250,8 @@
         "source" : "N44",
         "id" : "1897",
         "selected" : false,
-        "target" : "N45"
+        "target" : "N45",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4111,7 +4264,8 @@
         "source" : "N43",
         "id" : "1898",
         "selected" : false,
-        "target" : "N123"
+        "target" : "N123",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4124,7 +4278,8 @@
         "source" : "N42",
         "id" : "1899",
         "selected" : false,
-        "target" : "N126"
+        "target" : "N126",
+        "obstructions" : "1.4"
       },
       "selected" : false
     }, {
@@ -4137,7 +4292,8 @@
         "source" : "N42",
         "id" : "1900",
         "selected" : false,
-        "target" : "N43"
+        "target" : "N43",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4150,7 +4306,8 @@
         "source" : "N41",
         "id" : "1901",
         "selected" : false,
-        "target" : "N129"
+        "target" : "N129",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4163,7 +4320,8 @@
         "source" : "N41",
         "id" : "1902",
         "selected" : false,
-        "target" : "N104"
+        "target" : "N104",
+        "obstructions" : "1.3"
       },
       "selected" : false
     }, {
@@ -4176,7 +4334,8 @@
         "source" : "N39",
         "id" : "1903",
         "selected" : false,
-        "target" : "N40"
+        "target" : "N40",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4189,7 +4348,8 @@
         "source" : "N38",
         "id" : "1904",
         "selected" : false,
-        "target" : "N37"
+        "target" : "N37",
+        "obstructions" : "1.3"
       },
       "selected" : false
     }, {
@@ -4202,7 +4362,8 @@
         "source" : "N37",
         "id" : "1905",
         "selected" : false,
-        "target" : "N39"
+        "target" : "N39",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4215,7 +4376,8 @@
         "source" : "N36",
         "id" : "1906",
         "selected" : false,
-        "target" : "N37"
+        "target" : "N37",
+        "obstructions" : "1.2"
       },
       "selected" : false
     }, {
@@ -4228,7 +4390,8 @@
         "source" : "N35",
         "id" : "1907",
         "selected" : false,
-        "target" : "N68"
+        "target" : "N68",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4241,7 +4404,8 @@
         "source" : "N35",
         "id" : "1908",
         "selected" : false,
-        "target" : "N36"
+        "target" : "N36",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4254,7 +4418,8 @@
         "source" : "N35",
         "id" : "2388",
         "selected" : false,
-        "target" : "N100"
+        "target" : "N100",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -4267,7 +4432,8 @@
         "source" : "N34",
         "id" : "1909",
         "selected" : false,
-        "target" : "N121"
+        "target" : "N121",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4280,7 +4446,8 @@
         "source" : "N34",
         "id" : "2400",
         "selected" : false,
-        "target" : "N109"
+        "target" : "N109",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4293,7 +4460,8 @@
         "source" : "N31",
         "id" : "2406",
         "selected" : false,
-        "target" : "N110"
+        "target" : "N110",
+        "obstructions" : "1.3"
       },
       "selected" : false
     }, {
@@ -4306,7 +4474,8 @@
         "source" : "N30",
         "id" : "2366",
         "selected" : false,
-        "target" : "N32"
+        "target" : "N32",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4319,7 +4488,8 @@
         "source" : "N29",
         "id" : "1914",
         "selected" : false,
-        "target" : "N30"
+        "target" : "N30",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4332,7 +4502,8 @@
         "source" : "N28",
         "id" : "1915",
         "selected" : false,
-        "target" : "N86"
+        "target" : "N86",
+        "obstructions" : "1.2"
       },
       "selected" : false
     }, {
@@ -4345,7 +4516,8 @@
         "source" : "N28",
         "id" : "1916",
         "selected" : false,
-        "target" : "N85"
+        "target" : "N85",
+        "obstructions" : "1.5"
       },
       "selected" : false
     }, {
@@ -4358,7 +4530,8 @@
         "source" : "N27",
         "id" : "1917",
         "selected" : false,
-        "target" : "N73"
+        "target" : "N73",
+        "obstructions" : "1.5"
       },
       "selected" : false
     }, {
@@ -4371,7 +4544,8 @@
         "source" : "N26",
         "id" : "1918",
         "selected" : false,
-        "target" : "N55"
+        "target" : "N55",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4384,7 +4558,8 @@
         "source" : "N26",
         "id" : "1919",
         "selected" : false,
-        "target" : "N27"
+        "target" : "N27",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4397,7 +4572,8 @@
         "source" : "N25",
         "id" : "1920",
         "selected" : false,
-        "target" : "N26"
+        "target" : "N26",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4410,7 +4586,8 @@
         "source" : "N24",
         "id" : "1921",
         "selected" : false,
-        "target" : "N25"
+        "target" : "N25",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4423,7 +4600,8 @@
         "source" : "N22",
         "id" : "1922",
         "selected" : false,
-        "target" : "N24"
+        "target" : "N24",
+        "obstructions" : "1.4"
       },
       "selected" : false
     }, {
@@ -4436,7 +4614,8 @@
         "source" : "N22",
         "id" : "1923",
         "selected" : false,
-        "target" : "N23"
+        "target" : "N23",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4449,7 +4628,8 @@
         "source" : "N22",
         "id" : "1924",
         "selected" : false,
-        "target" : "N20"
+        "target" : "N20",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4462,7 +4642,8 @@
         "source" : "N21",
         "id" : "1925",
         "selected" : false,
-        "target" : "N138"
+        "target" : "N138",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -4475,7 +4656,8 @@
         "source" : "N21",
         "id" : "1926",
         "selected" : false,
-        "target" : "N48"
+        "target" : "N48",
+        "obstructions" : "1.2"
       },
       "selected" : false
     }, {
@@ -4488,7 +4670,8 @@
         "source" : "N20",
         "id" : "1927",
         "selected" : false,
-        "target" : "N21"
+        "target" : "N21",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4501,7 +4684,8 @@
         "source" : "N19",
         "id" : "1928",
         "selected" : false,
-        "target" : "N6"
+        "target" : "N6",
+        "obstructions" : "1.8"
       },
       "selected" : false
     }, {
@@ -4514,7 +4698,8 @@
         "source" : "N19",
         "id" : "1929",
         "selected" : false,
-        "target" : "N11"
+        "target" : "N11",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4527,7 +4712,8 @@
         "source" : "N18",
         "id" : "1930",
         "selected" : false,
-        "target" : "N70"
+        "target" : "N70",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4540,7 +4726,8 @@
         "source" : "N18",
         "id" : "1931",
         "selected" : false,
-        "target" : "N19"
+        "target" : "N19",
+        "obstructions" : "1.6"
       },
       "selected" : false
     }, {
@@ -4553,7 +4740,8 @@
         "source" : "N17",
         "id" : "1932",
         "selected" : false,
-        "target" : "N137"
+        "target" : "N137",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4566,7 +4754,8 @@
         "source" : "N17",
         "id" : "1933",
         "selected" : false,
-        "target" : "N59"
+        "target" : "N59",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4579,7 +4768,8 @@
         "source" : "N17",
         "id" : "1934",
         "selected" : false,
-        "target" : "N38"
+        "target" : "N38",
+        "obstructions" : "1.2"
       },
       "selected" : false
     }, {
@@ -4592,7 +4782,8 @@
         "source" : "N16",
         "id" : "1935",
         "selected" : false,
-        "target" : "N28"
+        "target" : "N28",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4605,7 +4796,8 @@
         "source" : "N16",
         "id" : "1936",
         "selected" : false,
-        "target" : "N71"
+        "target" : "N71",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -4618,7 +4810,8 @@
         "source" : "N15",
         "id" : "1937",
         "selected" : false,
-        "target" : "N16"
+        "target" : "N16",
+        "obstructions" : "1.3"
       },
       "selected" : false
     }, {
@@ -4631,7 +4824,8 @@
         "source" : "N15",
         "id" : "1938",
         "selected" : false,
-        "target" : "N13"
+        "target" : "N13",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4644,7 +4838,8 @@
         "source" : "N15",
         "id" : "1939",
         "selected" : false,
-        "target" : "N14"
+        "target" : "N14",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4657,7 +4852,8 @@
         "source" : "N12",
         "id" : "1940",
         "selected" : false,
-        "target" : "N56"
+        "target" : "N56",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4670,7 +4866,8 @@
         "source" : "N12",
         "id" : "1941",
         "selected" : false,
-        "target" : "N15"
+        "target" : "N15",
+        "obstructions" : "1.3"
       },
       "selected" : false
     }, {
@@ -4683,7 +4880,8 @@
         "source" : "N12",
         "id" : "1942",
         "selected" : false,
-        "target" : "N3"
+        "target" : "N3",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4696,7 +4894,8 @@
         "source" : "N11",
         "id" : "1943",
         "selected" : false,
-        "target" : "N72"
+        "target" : "N72",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4709,7 +4908,8 @@
         "source" : "N11",
         "id" : "1944",
         "selected" : false,
-        "target" : "N10"
+        "target" : "N10",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4722,7 +4922,8 @@
         "source" : "N10",
         "id" : "1945",
         "selected" : false,
-        "target" : "N16"
+        "target" : "N16",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -4735,7 +4936,8 @@
         "source" : "N9",
         "id" : "1946",
         "selected" : false,
-        "target" : "N4"
+        "target" : "N4",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4748,7 +4950,8 @@
         "source" : "N6",
         "id" : "1951",
         "selected" : false,
-        "target" : "N72"
+        "target" : "N72",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4761,7 +4964,8 @@
         "source" : "N5",
         "id" : "1952",
         "selected" : false,
-        "target" : "N1"
+        "target" : "N1",
+        "obstructions" : "1.3"
       },
       "selected" : false
     }, {
@@ -4774,7 +4978,8 @@
         "source" : "N5",
         "id" : "1953",
         "selected" : false,
-        "target" : "N6"
+        "target" : "N6",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4787,7 +4992,8 @@
         "source" : "N4",
         "id" : "1954",
         "selected" : false,
-        "target" : "N72"
+        "target" : "N72",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4800,7 +5006,8 @@
         "source" : "N4",
         "id" : "1955",
         "selected" : false,
-        "target" : "N133"
+        "target" : "N133",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4813,7 +5020,8 @@
         "source" : "N4",
         "id" : "1956",
         "selected" : false,
-        "target" : "N5"
+        "target" : "N5",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -4826,7 +5034,8 @@
         "source" : "N3",
         "id" : "1957",
         "selected" : false,
-        "target" : "C2"
+        "target" : "C2",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4839,7 +5048,8 @@
         "source" : "N3",
         "id" : "1958",
         "selected" : false,
-        "target" : "N25"
+        "target" : "N25",
+        "obstructions" : "1.2"
       },
       "selected" : false
     }, {
@@ -4852,7 +5062,8 @@
         "source" : "N3",
         "id" : "1959",
         "selected" : false,
-        "target" : "N26"
+        "target" : "N26",
+        "obstructions" : "1.4"
       },
       "selected" : false
     }, {
@@ -4865,7 +5076,8 @@
         "source" : "N3",
         "id" : "1960",
         "selected" : false,
-        "target" : "N9"
+        "target" : "N9",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4878,7 +5090,8 @@
         "source" : "N1",
         "id" : "1961",
         "selected" : false,
-        "target" : "N137"
+        "target" : "N137",
+        "obstructions" : "1.2"
       },
       "selected" : false
     }, {
@@ -4891,7 +5104,8 @@
         "source" : "N1",
         "id" : "1962",
         "selected" : false,
-        "target" : "N18"
+        "target" : "N18",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4904,7 +5118,8 @@
         "source" : "N1",
         "id" : "1963",
         "selected" : false,
-        "target" : "N20"
+        "target" : "N20",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4917,7 +5132,8 @@
         "source" : "N1",
         "id" : "1964",
         "selected" : false,
-        "target" : "N17"
+        "target" : "N17",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -4930,7 +5146,8 @@
         "source" : "N2",
         "id" : "2352",
         "selected" : false,
-        "target" : "C3"
+        "target" : "C3",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4943,7 +5160,8 @@
         "source" : "N7",
         "id" : "2362",
         "selected" : false,
-        "target" : "N8"
+        "target" : "N8",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4956,7 +5174,8 @@
         "source" : "N8",
         "id" : "2364",
         "selected" : false,
-        "target" : "N29"
+        "target" : "N29",
+        "obstructions" : "1.2"
       },
       "selected" : false
     }, {
@@ -4969,7 +5188,8 @@
         "source" : "N32",
         "id" : "2368",
         "selected" : false,
-        "target" : "N31"
+        "target" : "N31",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -4982,7 +5202,8 @@
         "source" : "N87",
         "id" : "2374",
         "selected" : false,
-        "target" : "N67"
+        "target" : "N67",
+        "obstructions" : "1.1"
       },
       "selected" : false
     }, {
@@ -4995,7 +5216,8 @@
         "source" : "N87",
         "id" : "2376",
         "selected" : false,
-        "target" : "C4"
+        "target" : "C4",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -5008,7 +5230,8 @@
         "source" : "N92",
         "id" : "2382",
         "selected" : false,
-        "target" : "N120"
+        "target" : "N120",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -5021,7 +5244,8 @@
         "source" : "N92",
         "id" : "2384",
         "selected" : false,
-        "target" : "C6"
+        "target" : "C6",
+        "obstructions" : "1.5"
       },
       "selected" : false
     }, {
@@ -5034,7 +5258,8 @@
         "source" : "N100",
         "id" : "2390",
         "selected" : false,
-        "target" : "N119"
+        "target" : "N119",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -5047,7 +5272,8 @@
         "source" : "N100",
         "id" : "2392",
         "selected" : false,
-        "target" : "C6"
+        "target" : "C6",
+        "obstructions" : "1.3"
       },
       "selected" : false
     }, {
@@ -5060,7 +5286,8 @@
         "source" : "N109",
         "id" : "2402",
         "selected" : false,
-        "target" : "N33"
+        "target" : "N33",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -5073,7 +5300,8 @@
         "source" : "N110",
         "id" : "2408",
         "selected" : false,
-        "target" : "N76"
+        "target" : "N76",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -5086,7 +5314,8 @@
         "source" : "N134",
         "id" : "2414",
         "selected" : false,
-        "target" : "N127"
+        "target" : "N127",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -5099,7 +5328,8 @@
         "source" : "N134",
         "id" : "2416",
         "selected" : false,
-        "target" : "N17"
+        "target" : "N17",
+        "obstructions" : "1.4"
       },
       "selected" : false
     }, {
@@ -5112,7 +5342,8 @@
         "source" : "N135",
         "id" : "2422",
         "selected" : false,
-        "target" : "R5"
+        "target" : "R5",
+        "obstructions" : ""
       },
       "selected" : false
     }, {
@@ -5125,7 +5356,8 @@
         "source" : "N101",
         "id" : "2431",
         "selected" : false,
-        "target" : "N108"
+        "target" : "N108",
+        "obstructions" : ""
       },
       "selected" : false
     } ]

@@ -24,7 +24,7 @@ function dijkstra(cyGraph, startNode) {
       let edge = graph.getElementById(
         `${shortestDistance.id()}${nodes[i].id()}`
       );
-      let weight = edge.data("length");
+      let weight = edge.data("weight");
       let adjusted = relax(shortestDistance, nodes[i], weight);
       if (adjusted) {
         queue.enqueue(nodes[i]);

@@ -1,4 +1,5 @@
 import { traceback } from "../js/pathModules.js";
+import { simStats, avgDeliveryTime } from "./stats.js";
 
 let eleType = {
   default: "default",
@@ -21,6 +22,7 @@ class CyGraph {
     this.pathFunc = pathFunc;
     this.tickSpeed = tickSpeed;
     this.courierCount = 0;
+    this.simulationStats = new simStats();
   }
 
   // Arrays that keep track of all elements in the graph
@@ -101,16 +103,18 @@ class CyGraph {
    * @param {String} sourceNode The source node of the edge
    * @param {String} targetNode The target node of the edge
    */
-  addEdge(_id, _source, _target) {
+  addEdge(_id, _source, _target, _obstructions) {
     this.graph.add({
       group: "edges",
       data: {
         source: _source,
         target: _target,
         id: _id,
+        obstructions: _obstructions,
       },
     });
     this.calcLength(_id);
+    this.calculateWeight(_id);
   }
 
   /** Initializes name and length of all edges. */
@@ -121,10 +125,12 @@ class CyGraph {
       let source = edges[i].data("source"),
         target = edges[i].data("target"),
         newId = this.getEdgeId(source, target),
-        newIdRev = this.getEdgeId(target, source);
+        newIdRev = this.getEdgeId(target, source),
+        obstructions = edges[i].data("obstructions");
 
-      this.addEdge(newId, source, target);
-      this.addEdge(newIdRev, target, source);
+      this.addEdge(newId, source, target, obstructions);
+      this.addEdge(newIdRev, target, source, obstructions);
+
       this.delNode(edges[i].id());
 
       this.graph.$id(newId).inRoute = new Array();
@@ -177,6 +183,18 @@ class CyGraph {
       );
     edge.data("length", length);
     return length;
+  }
+
+  /**
+   * Gives an edge a weight by calculating its property and assigning it to weight property
+   * @param {String} edgeId The ID of the edge whose weight is being calculated
+   */
+  calculateWeight(edgeId) {
+    let edge = this.graph.$id(edgeId);
+    let obstructions = edge.data("obstructions")
+      ? edge.data("obstructions")
+      : 1;
+    edge.data("weight", edge.data("length") * obstructions);
   }
 
   /**
@@ -306,6 +324,11 @@ class CyGraph {
           this.graph.$id(path[index + 1]).couriers.push(courier);
           // otherwise the order has been delivered at its destination, and we can reset the courier
           courier.data("currentOrder", null);
+          order.endTime = this.simulationStats.simTimeMinutes;
+          this.simulationStats.deliveredOrdersArr.push(order);
+          this.simulationStats.averageDeliveryTime = avgDeliveryTime(
+            this.simulationStats.deliveredOrdersArr
+          );
           this.moveNode(courier.id(), nextPos.x, nextPos.y);
           return;
         }

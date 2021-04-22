@@ -2,6 +2,7 @@ import { dijkstra } from "./dijkstra.js";
 import { generateHeatmap } from "./heatGeneration.js";
 import { eleType } from "./graphHelper.js";
 
+
 let timeMinutes = 479; // start at 8:00
 let totalOrders = 0; // may be used for statistics
 
@@ -33,7 +34,13 @@ function perTick(cyGraph) {
 
   if (timeMinutes == 1440) {
     timeMinutes = 0;
+    cyGraph.simulationStats.simDays++;
   }
+
+  /* Can be placed within the if-statement underneath incase 
+     it takes too much computational time. */
+  cyGraph.simulationStats.simTimeMinutes = timeMinutes;
+  cyGraph.simulationStats.simTime = formatTime(timeMinutes);
 
   if (!(timeMinutes % 5)) {
     console.log(formatTime(timeMinutes));
@@ -127,12 +134,17 @@ function generateOrders(cyGraph, timeMinutes) {
     if (roll <= restaurant.data("orderRate") * intensity) {
       let i = getRandomInt(0, cyGraph.customers.length - 1);
       let order = new Order(
-        ++totalOrders,
+        cyGraph.simulationStats.totalOrdersArr.length + 1,
         restaurant,
         cyGraph.customers[i],
         timeMinutes
       );
       cyGraph.orders.push(order);
+      cyGraph.simulationStats.totalOrdersArr.push(order);
+      cyGraph.simulationStats.pendingOrders = cyGraph.orders.length;
+      cyGraph.simulationStats.activeOrders =
+        cyGraph.simulationStats.totalOrdersArr.length -
+        cyGraph.simulationStats.deliveredOrdersArr.length;
     }
   }
 }
@@ -162,13 +174,14 @@ function assignCourier(cyGraph, order, index) {
   let courier = findCourier(cyGraph, order);
   if (courier) {
     console.log(
-      `[${
+      `Graph: [${cyGraph.name}] - Order: [${
         order.id
-      }] : [${courier.id()}] -> [${order.restaurant.id()}] -> [${order.customer.id()}]`
+      }] - Route: [${courier.id()}] -> [${order.restaurant.id()}] -> [${order.customer.id()}]`
     );
     courier.data("currentOrder", order);
     cyGraph.traversePath(courier.id(), order.restaurant.id());
     cyGraph.orders.splice(index, 1);
+    cyGraph.simulationStats.pendingOrders = cyGraph.orders.length;
   }
 }
 

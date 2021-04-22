@@ -1,5 +1,3 @@
-const maxSpeedLimit = 130;
-
 /**
  * All nodes are initialized by setting their distance to
  * the origin/source to infinity and setting their parents to null.
@@ -53,19 +51,6 @@ function heuristicApprox(cyGraph, currentNodeId, endNodeId) {
   let [endX, endY] = [endPos.x, endPos.y];
 
   return Math.sqrt(Math.pow(currentX - endX, 2) + Math.pow(currentY - endY, 2));
-}
-
-/**
- * Gives an edge a weight by calculating its property and assigning it to weight property
- * @param {Object} courierObject The object for the courier en route
- * @param {Object} edgeObject The edge whose weight is being calculated
- */
-function calculateWeight(edgeObject, courierObject) {
-  edgeObject.weight =
-    edgeObject.distance *
-    (maxSpeedLimit / edgeObject.speedLimit) *
-    edgeObject.permObstructions; // * (edge.tempObstructions) <- multiply onto when taking traffic and temporary obstructions into account.
-  console.log(edgeObject.weight);
 }
 
 /**
@@ -159,10 +144,4 @@ let edge = {
   }
   */
 
-export {
-  initializeSingleSource,
-  relax,
-  heuristicApprox,
-  calculateWeight,
-  traceback,
-};
+export { initializeSingleSource, relax, heuristicApprox, traceback };

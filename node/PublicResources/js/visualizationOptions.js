@@ -75,7 +75,7 @@ const simulationMenu = (event) => {
 /**
  * This function generates a div, containing the algorithm options for
  * the visualization menu.
- * @param {String} value A string, representing the amount of chosen graphs
+ * @param {Number} value A string, representing the amount of chosen graphs
  * to include. It will be used to determine how many algorithm divs already exist.
  * @param {HTMLDivElement} insertionPoint The insertion point in the html file of
  * the newly generated div.
@@ -111,8 +111,18 @@ const simElementGeneration = (value, insertionPoint) => {
   }
 };
 
+/**
+ * This function will create an input and label set for one type of algorithm.
+ * This will be appended to the parent node.
+ * @param {HTMLDivElement} appendPoint The parent, where the input and label
+ * should be appended as a child.
+ * @param {Number} value A string, representing the amount of chosen graphs
+ * to include. It will be used to determine how many algorithm divs already exist.
+ * @param {Object} algorithm An object, containing the name and description of an SPA.
+ */
 const createInputAndLabels = (appendPoint, value, algorithm) => {
   let input = document.createElement("input");
+  if (algorithm.name === "astar") input.setAttribute("checked", "");
   input.setAttribute("id", `simulation-${value}-spa-${algorithm.name}`);
   input.setAttribute("name", `simulation-${value}-spa`);
   input.setAttribute("type", `radio`);
