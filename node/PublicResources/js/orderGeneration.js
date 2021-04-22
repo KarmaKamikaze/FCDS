@@ -1,10 +1,9 @@
 import { dijkstra } from "./dijkstra.js";
 import { generateHeatmap } from "./heatGeneration.js";
 import { eleType } from "./graphHelper.js";
-
+import { updateStats } from "./stats.js";
 
 let timeMinutes = 479; // start at 8:00
-let totalOrders = 0; // may be used for statistics
 
 /**
  * Starts the order generation simulation
@@ -44,6 +43,8 @@ function perTick(cyGraph) {
 
   if (!(timeMinutes % 5)) {
     console.log(formatTime(timeMinutes));
+    cyGraph.simulationStats.calcRuntime();
+    updateStats(cyGraph.simulationStats);
     generateOrders(cyGraph, timeMinutes);
   }
   if (!(timeMinutes % 60) && timeMinutes >= 480 && timeMinutes < 1260) {

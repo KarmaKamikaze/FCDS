@@ -196,7 +196,14 @@ const generateOptionsHTML = (pageObject) => {
       : ``;
 
   body += `<div class="graph-size">
-                  <label for="graph-size">Size of graphs</label>
+                  <label for="graph-size">`;
+  body +=
+    pageObject.formaction === "visualization"
+      ? `Size of graphs`
+      : pageObject.formaction === `headless-simulation`
+      ? `Size of graph`
+      : "";
+  body += `</label>
                   <div class="radio-container">
                     <input
                       checked=""
@@ -284,6 +291,7 @@ const generateHeadlessHTML = (graphSize, algorithm, graph) => {
           algorithmName[`${algorithm}`]
         }</span></p>
         <p>Time: <span id="time" class="control-value"></span></p>
+        <p>Simulation runtime: <span id="simulation-runtime" class="control-value"></span></p>
         <p>
           Total orders: <span id="total-orders" class="control-value"></span>
         </p>
