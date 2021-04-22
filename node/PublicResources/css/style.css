@@ -171,3 +171,113 @@ button:hover {
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
 }
+
+div.cy.headless {
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.control-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1000px;
+  height: 600px;
+  display: inline;
+  color: white;
+  box-shadow: 3px 10px 20px 5px rgba(0, 0, 0, 0.5);
+}
+
+.control-center h1 {
+  font-size: 36px;
+  padding-top: 30px;
+  padding-bottom: 50px;
+  font-weight: 300;
+  text-align: center;
+  font-weight: bold;
+}
+
+.control-center p {
+  font-size: 18px;
+  padding: 5px;
+  margin-left: 50px;
+}
+
+div.slider-container {
+  padding-top: 50px;
+}
+
+.control-center input {
+  margin-left: 50px;
+  width: 170px;
+}
+
+input[type="range"] {
+  position: relative;
+  -webkit-appearance: none;
+  width: 20%;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 2px;
+  background: #f3f3f3;
+  border-bottom: 1px solid #2980b9;
+}
+input[type="range"]::-webkit-slider-runnable-track:before {
+  content: "";
+  background: white;
+  width: 2px;
+  height: 15px;
+  position: absolute;
+  top: -7px;
+  border-left: 1px solid #2980b9;
+}
+input[type="range"]::-webkit-slider-runnable-track:after {
+  content: "";
+  background: white;
+  width: 2px;
+  height: 15px;
+  position: absolute;
+  top: -7px;
+  right: 0;
+  border-right: 1px solid #2980b9;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 3px solid #246d9c;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  margin-top: -9px;
+  position: relative;
+  z-index: 1;
+}
+input[type="range"]:focus {
+  outline: none;
+}
+
+#orders {
+  position: absolute;
+  width: 60%;
+  height: 70%;
+  left: 340px;
+  top: 120px;
+  background: rgba(20, 20, 20, 0.8);
+  padding: 0;
+}
+
+#orders textarea {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #fff;
+  border: none;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  resize: none;
+  outline: none;
+  cursor: default;
+}
