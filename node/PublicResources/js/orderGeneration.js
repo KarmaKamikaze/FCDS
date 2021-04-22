@@ -1,5 +1,5 @@
 import { dijkstra } from "./dijkstra.js";
-import { generateHeatmap, idleZones } from "./heatGeneration.js";
+import { generateHeatmap } from "./heatGeneration.js";
 import { eleType } from "./graphHelper.js";
 
 let timeMinutes = 479; // start at 8:00
