@@ -2,8 +2,6 @@ import { dijkstra } from "./dijkstra.js";
 import { eleType } from "./graphHelper.js";
 import { orderIntensity, timeToFloat } from "./orderGeneration.js";
 
-let idleZones = [];
-
 /**
  * Generates a heat map based on restaurant order activity, and finds/assigns appropriate idle-zones
  * @param {Object} cyGraph The graph the simulation is contained within.
@@ -11,7 +9,7 @@ let idleZones = [];
  */
 function generateHeatmap(cyGraph, timeMinutes) {
   resetHeat(cyGraph);
-  idleZones = [];
+  cyGraph.idleZones = [];
 
   //Assign appropriate heat values to all regular nodes
   assignHeat(cyGraph, timeMinutes);
@@ -20,7 +18,7 @@ function generateHeatmap(cyGraph, timeMinutes) {
   let n = getZoneCount(cyGraph);
   for (let i = 0; i < n; i++) {
     let zone = findIdleZone(cyGraph);
-    idleZones.push(zone);
+    cyGraph.idleZones.push(zone);
     // Update the heat of surrounding nodes
     updateHeat(cyGraph, zone);
   }
@@ -84,7 +82,7 @@ function findIdleZone(cyGraph) {
       return heatB - heatA;
     });
   let i = 0;
-  while (isIdleZone(sortedNodes[i])) {
+  while (isIdleZone(sortedNodes[i], cyGraph)) {
     i++;
   }
   return sortedNodes[i];
@@ -141,8 +139,8 @@ function updateColors(cyGraph) {
  * @param {Object} node the node to check
  * @returns True if the node in question is an idle-zone, false if not
  */
-function isIdleZone(node) {
-  return idleZones.indexOf(node) > -1 ? true : false;
+function isIdleZone(node, cyGraph) {
+  return cyGraph.idleZones.indexOf(node) > -1 ? true : false;
 }
 
 /**
@@ -174,4 +172,4 @@ function findNodesInRadius(cyGraph, startNode, radius) {
   return nodesInRadius;
 }
 
-export { generateHeatmap, idleZones };
+export { generateHeatmap };
