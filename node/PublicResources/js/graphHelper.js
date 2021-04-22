@@ -21,7 +21,6 @@ class CyGraph {
     this.pathFunc = pathFunc;
     this.tickSpeed = tickSpeed;
     this.courierCount = 0;
-    this.idleZones = [];
   }
 
   // Arrays that keep track of all elements in the graph
@@ -29,6 +28,7 @@ class CyGraph {
   restaurants = new Array();
   customers = new Array();
   orders = new Array();
+  idleZones = new Array();
 
   sortOrders() {
     this.orders.sort((a, b) => a.startTime - b.startTime);
