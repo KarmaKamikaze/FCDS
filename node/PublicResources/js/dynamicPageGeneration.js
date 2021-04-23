@@ -275,7 +275,7 @@ const generateHeadlessHTML = (graphSize, algorithm, graph) => {
     </head>
     <body>
     ${graph}
-      <div class="control-center disable-select">
+      <div id="headless-div" class="control-center disable-select">
         <h1>Headless simulation</h1>
         <p>Graph size: <span id="graph-size" class="control-value">${
           sizeName[`${graphSize}`]

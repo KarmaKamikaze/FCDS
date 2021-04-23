@@ -3,7 +3,7 @@ function lineBreak(element) {
   document.getElementById(`${element}`).after(br);
 }
 
-export function addDarkBtn(graphArr) {
+function addDarkBtn(graphArr) {
   let graphClasses = document.querySelectorAll(".cy"),
     darkBtn = document.createElement("input"),
     documentTheme = "Dark mode";
@@ -21,9 +21,8 @@ export function addDarkBtn(graphArr) {
       graphClasses.forEach(
         (graphClass) => (graphClass.style.backgroundColor = "rgb(30,30,30)")
       );
-
+        
       graphArr.forEach((cyGraph) => {
-        cyGraph.graph.style().selector("node").style("color", "lightgreen");
         cyGraph.graph.style().selector("edge").style("line-color", "white");
         cyGraph.graph
           .style()
@@ -35,9 +34,11 @@ export function addDarkBtn(graphArr) {
           .style("color", "lightgreen")
           .update();
       });
+      document.getElementById("headless-div").style.color = "white";
+      document.getElementById("order-textarea").style.backgroundColor = "black";
     } else {
       documentTheme = "Light mode";
-      darkBtn.value = documentTheme;
+      darkBtn.value = "Dark mode";
       document.body.style.backgroundColor = "white";
       document.body.style.color = "black";
 
@@ -46,7 +47,6 @@ export function addDarkBtn(graphArr) {
       );
 
       graphArr.forEach((cyGraph) => {
-        cyGraph.graph.style().selector("node").style("color", "darkgreen");
         cyGraph.graph.style().selector("edge").style("line-color", "black");
         cyGraph.graph
           .style()
@@ -58,8 +58,12 @@ export function addDarkBtn(graphArr) {
           .style("color", "darkgreen")
           .update();
       });
+      document.getElementById("headless-div").style.color = "black";
+      document.getElementById("order-textarea").style.backgroundColor = "lightgrey";
     }
   });
   document.getElementById("cy0").before(darkBtn);
   lineBreak(darkBtn.id);
 }
+
+export { addDarkBtn };
