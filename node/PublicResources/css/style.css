@@ -262,9 +262,9 @@ input[type="range"]:focus {
 
 #orders {
   position: absolute;
-  width: 60%;
+  width: 55%;
   height: 70%;
-  left: 340px;
+  left: 380px;
   top: 120px;
   background: rgba(20, 20, 20, 0.8);
   padding: 0;
@@ -272,6 +272,7 @@ input[type="range"]:focus {
 
 #orders textarea {
   background-color: rgba(0, 0, 0, 0.1);
+  font-size: 12px;
   color: #fff;
   border: none;
   padding: 0;

@@ -254,6 +254,9 @@ class CyGraph {
       courier = this.graph.$id(courierId),
       startNode = this.graph.$id(courier.data("currentNode")),
       endNode = this.graph.$id(endId);
+    // Updates the order status to be in transit. Used in statistics.
+    let order = courier.data("currentOrder");
+    order.status = "transit";
 
     this.pathFunc(this, startNode, endNode);
     let path = traceback(graph, endNode);
@@ -325,6 +328,8 @@ class CyGraph {
           // otherwise the order has been delivered at its destination, and we can reset the courier
           courier.data("currentOrder", null);
           order.endTime = this.simulationStats.simTimeMinutes;
+          order.endTimeClock = this.simulationStats.simTime;
+          order.status = "delivered";
           this.simulationStats.deliveredOrdersArr.push(order);
           this.simulationStats.avgDeliveryTime();
           this.moveNode(courier.id(), nextPos.x, nextPos.y);

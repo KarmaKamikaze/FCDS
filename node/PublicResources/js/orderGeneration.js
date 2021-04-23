@@ -163,6 +163,9 @@ function Order(id, origin, destination, startTime) {
   this.customer = destination;
   this.maxDuration = 60;
   this.startTime = startTime;
+  this.startTimeClock = formatTime(startTime);
+  this.assignedCourier = "No courier assigned yet";
+  this.status = "pending";
 }
 
 /**
@@ -180,6 +183,7 @@ function assignCourier(cyGraph, order, index) {
       }] - Route: [${courier.id()}] -> [${order.restaurant.id()}] -> [${order.customer.id()}]`
     );
     courier.data("currentOrder", order);
+    order.assignedCourier = courier.id(); /* Used to print the assigned courier of an order only using an array of orders*/
     cyGraph.traversePath(courier.id(), order.restaurant.id());
     cyGraph.orders.splice(index, 1);
     cyGraph.simulationStats.pendingOrders = cyGraph.orders.length;

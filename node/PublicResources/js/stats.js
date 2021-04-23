@@ -6,7 +6,7 @@ const totalOrdersStat = document.querySelector("#total-orders");
 const activeOrdersStat = document.querySelector("#active-orders");
 const averageDeliveryTimeStat = document.querySelector("#avg-delivery-time");
 const failedOrdersStat = document.querySelector("#failed-orders");
-const orderTextArea = document.querySelector("order-textarea");
+const orderTextArea = document.querySelector("#order-textarea");
 
 /**
  * Constructor for the simulation statistics object
@@ -58,4 +58,29 @@ function updateStats(simStatObject) {
     2
   )} minutes`;
   failedOrdersStat.textContent = simStatObject.failedOrders;
+  if (simStatObject.totalOrdersArr !== null) {
+    let data = "";
+    for (let i = 0; i < simStatObject.totalOrdersArr.length; i++) {
+      data +=
+        ` Order: ${simStatObject.totalOrdersArr[i].id} - ` +
+        `Status: ${simStatObject.totalOrdersArr[i].status} - `;
+
+      if (simStatObject.totalOrdersArr[i].status !== "pending") {
+        data += `${simStatObject.totalOrdersArr[i].assignedCourier} \u279D `;
+      }
+      data +=
+        `${simStatObject.totalOrdersArr[i].restaurant.data("id")} \u279D ` +
+        `${simStatObject.totalOrdersArr[i].customer.data("id")} : ` +
+        `Placed: ${simStatObject.totalOrdersArr[i].startTimeClock}`;
+      if (simStatObject.totalOrdersArr[i].status !== "pending") {
+        data += ` - Delivered: ${simStatObject.totalOrdersArr[i].endTimeClock}`;
+      }
+      data += `\n`;
+    }
+
+    orderTextArea.value = data;
+
+    // Scrolls to the bottom to watch the newest data added to the field
+    orderTextArea.scrollTop = orderTextArea.scrollHeight;
+  }
 }
