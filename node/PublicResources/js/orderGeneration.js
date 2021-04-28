@@ -2,10 +2,6 @@ import { dijkstra } from "./dijkstra.js";
 import { generateHeatmap } from "./heatGeneration.js";
 import { eleType } from "./graphHelper.js";
 
-
-let timeMinutes = 479; // start at 8:00
-let totalOrders = 0; // may be used for statistics
-
 /**
  * Starts the order generation simulation
  * @param {Object} cyGraph The graph the simulation is contained within.
@@ -30,34 +26,79 @@ function startSimulation(cyGraph, tickSpeed) {
  * @param {Object} cyGraph The graph the simulation is contained within.
  */
 function perTick(cyGraph) {
-  timeMinutes++;
+  let timeMinutes = ++cyGraph.timeMinutes;
 
   if (timeMinutes == 1440) {
-    console.log(`Day ${cyGraph.simulationStats.simDays}: Delivered ${cyGraph.simulationStats.deliveredOrdersArr.length}/${cyGraph.simulationStats.totalOrdersArr.length}`)
-
-    timeMinutes = 0;
+    cyGraph.simulationStats.failedOrders += cyGraph.orders.length;
+    cyGraph.orders = new Array();
+    console.log(`[${cyGraph.name}] Day ${cyGraph.simulationStats.simDays}: Succesful orders: ${cyGraph.simulationStats.deliveredOrdersArr.length - cyGraph.simulationStats.failedOrders}/${cyGraph.simulationStats.totalOrdersArr.length}. Average delivery time: ${ cyGraph.simulationStats.avgDeliveryTime() } minutes.`);
+    cyGraph.timeMinutes = 0;
     cyGraph.simulationStats.simDays++;
   }
 
-  /* Can be placed within the if-statement underneath incase 
-     it takes too much computational time. */
-  cyGraph.simulationStats.simTimeMinutes = timeMinutes;
+  cyGraph.simulationStats.simtimeMinutes = timeMinutes;
   cyGraph.simulationStats.simTime = formatTime(timeMinutes);
 
+  // Handle order generation every 5 ticks
   if (!(timeMinutes % 5)) {
     generateOrders(cyGraph, timeMinutes);
-    console.log(formatTime(timeMinutes));
   }
 
+  // Generate idle zones and update the courier amount every 60 ticks
   if (!(timeMinutes % 60)) {
+    maintainCouriers(timeMinutes, cyGraph);
     if (timeMinutes >= 480 && timeMinutes < 1260) {
       generateHeatmap(cyGraph, timeMinutes);
     }
+    console.log(`[${cyGraph.name}][${formatTime(timeMinutes)}]: ${cyGraph.couriers.length} couriers, ${cyGraph.orders.length} pending orders`)
   }
 
-  for (let i = 0; i < cyGraph.couriers.length; i++) {
-    if (cyGraph.orders[i]) {
-      assignCourier(cyGraph, cyGraph.orders[i], i);
+  if (!(timeMinutes % 2)) {
+    for (let i = 0; i < cyGraph.couriers.length; i++) {
+        if (cyGraph.orders[i]) {
+          assignCourier(cyGraph, cyGraph.orders[i], i);
+        }
+      }
+  }
+}
+
+/** 
+ * Ensures that the number of couriers is set according to expected values for each hour
+ * @param {Number} timeMinutes The current simulation time in minutes.
+ * @param {Object} cyGraph The graph the simulation is contained within.
+ */
+function maintainCouriers (timeMinutes, cyGraph) {
+  // The expectedCouriers array denotes how many couriers should be available at each hour of the day (starting at 00:00)
+  //                     00 01 02 03 04 05 06 07 08 09 10 11 12 13  14  15  16  17  18 19  20 21 22 23
+  let expectedCouriers = [0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 7, 7, 7, 9, 9, 11, 13, 14, 11, 7, 3, 0, 0];
+  let expectedCourierCount = expectedCouriers[Math.floor(timeMinutes/60)];
+  let courierCount = cyGraph.couriers.length;
+
+  // If the amount of couriers is too high, try to 'send some of them home'
+  if (courierCount > expectedCourierCount) {
+    let index = 0;
+    while (courierCount > expectedCourierCount && index < courierCount) {
+      let currentCourier = cyGraph.couriers[index];
+      // If the current courier has an order, immediately remove it from the courier array
+      // but only remove the node after all its orders have been delivered
+      if (currentCourier.data("currentOrder") || currentCourier.data("pendingOrder")) {
+        currentCourier.data("terminationImminent", true);
+        cyGraph.couriers.splice(index, 1);
+        courierCount--;
+      }
+      // Otherwise, if the courier has no orders, simply remove it
+      else {
+        //console.log(`Deleting ${currentCourier.id()}`)
+        cyGraph.couriers.splice(index, 1);
+        cyGraph.delNode(currentCourier.id());
+        courierCount--;
+      }
+    }  
+  }
+  // In the other case, there are too few couriers, so simply add the missing number of couriers
+  else {
+    for (courierCount; courierCount < expectedCourierCount; courierCount++) {
+      cyGraph.addCourier();
     }
   }
 }
@@ -187,7 +228,7 @@ function assignCourier(cyGraph, order, index) {
     else {
       cyGraph.traversePath(courier.id(), order.restaurant.id());
     }
-    console.log(`[${courier.id()}] ${order.restaurant.id()} -> ${order.customer.id()}`)
+//  console.log(`[${courier.id()}] ${order.restaurant.id()} -> ${order.customer.id()}`)
     cyGraph.orders.splice(index, 1);
     cyGraph.simulationStats.pendingOrders = cyGraph.orders.length;
   }

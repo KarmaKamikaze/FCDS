@@ -2,6 +2,26 @@ import { dijkstra } from "./dijkstra.js";
 import { eleType } from "./graphHelper.js";
 import { orderIntensity, timeToFloat } from "./orderGeneration.js";
 
+
+let graphRadius = null;
+/**
+ * Gets the graph 'radius', which is the average edge weight of the graph
+ * @param {Object} cyGraph The graph the simulation is contained within.
+ * @returns The graph radius
+ */
+function getGraphRadius(cyGraph) {
+  if (graphRadius) {
+      return graphRadius;
+  }
+  let edges = cyGraph.graph.edges(),
+      totalWeight = 0;
+  for (const edge of edges) {
+    totalWeight += edge.data("weight");
+  }
+  graphRadius = totalWeight / edges.length;
+  return graphRadius;
+}
+
 /**
  * Generates a heat map based on restaurant order activity, and finds/assigns appropriate idle-zones
  * @param {Object} cyGraph The graph the simulation is contained within.
@@ -26,13 +46,13 @@ function generateHeatmap(cyGraph, timeMinutes) {
   updateColors(cyGraph);
 }
 
-/** //TODO: should probably put more thought into the formula
+/**
  * Calculates a number of idle zones based on the number of restaurants and couriers
  * @param {Object} cyGraph The graph the simulation is contained within.
  * @returns The amount of idle zones to assign (based on restaurants pr courier).
  */
 function getZoneCount(cyGraph) {
-  return 5;
+  return Math.ceil(cyGraph.restaurants.length/2);
 }
 
 /**
@@ -51,7 +71,7 @@ function resetHeat(cyGraph) {
  * @param {Number} timeMinutes The current time in minutes since the simulation began.
  */
 function assignHeat(cyGraph, timeMinutes) {
-  let radius = 1000; //TODO: make a formula for the radius (i.e., based on avg edge length?)
+  let radius = 3*getGraphRadius(cyGraph);
   for (const restaurant of cyGraph.restaurants) {
     dijkstra(cyGraph, restaurant);
     let closeNodes = findNodesInRadius(cyGraph, restaurant, radius);
@@ -78,9 +98,10 @@ function findIdleZone(cyGraph) {
     .sort((a, b) => {
       let heatA = a.data("heat");
       let heatB = b.data("heat");
-
       return heatB - heatA;
     });
+  // Skip all nodes that are already idle-zones
+  // Since the array of nodes is sorted, the first available node will be the 'best'
   let i = 0;
   while (isIdleZone(sortedNodes[i], cyGraph)) {
     i++;
@@ -89,15 +110,15 @@ function findIdleZone(cyGraph) {
 }
 
 /**
- * Reduces heat around a node
+ * Reduces heat of nodes in a radius around the input idle zone node
  * @param {Object} cyGraph The graph the simulation is contained within.
  * @param {Object} zone The node around which heat should be updated.
  */
 function updateHeat(cyGraph, zone) {
-  let closeNodes = findNodesInRadius(cyGraph, zone, 500);
+  let closeNodes = findNodesInRadius(cyGraph, zone, getGraphRadius(cyGraph));
   for (let node of closeNodes) {
     let oldVal = node.data("heat");
-    node.data("heat", oldVal * 0.6); //? reduce the heat of each closely connected node by 40%
+    node.data("heat", oldVal * 0.6); //? reduce the heat of each closely connected node by 1 - 0.6 = 40%
   }
 }
 
@@ -126,7 +147,7 @@ function updateColors(cyGraph) {
 
     if (isIdleZone(node, cyGraph)) {
       node.addClass(eleType.idlezone_red);
-    } else if (node.data("heat") > max * 0.33) {
+    } else if (node.data("heat") > max * 0.33) { //? if the heat value is within 77% of the max heat
       node.addClass(eleType.idlezone_orange);
     } else {
       node.addClass(eleType.idlezone_yellow);
@@ -146,7 +167,7 @@ function isIdleZone(node, cyGraph) {
 /**
  * Determines whether a node is regular (read: not a restaurant or courier)
  * @param {Object} n The node to check
- * @returns True or false, depending on if node is regular or not
+ * @returns True if the node is regular, false otherwise
  */
 function isRegNode(n) {
   let firstChar = n.id().charAt(0);
@@ -154,7 +175,7 @@ function isRegNode(n) {
 }
 
 /**
- *
+ * Finds all nodes in a radius around the given startNode.
  * @param {Object} cyGraph The graph the simulation is contained within.
  * @param {Object} startNode The center of the selection circle
  * @param {Number} radius The radius of the circle.

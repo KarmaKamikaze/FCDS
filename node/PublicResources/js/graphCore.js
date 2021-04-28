@@ -2,7 +2,6 @@ import { CyGraph, eleType } from "./graphHelper.js";
 import { CytoStyle } from "./cytoStylesheet.js";
 import { dijkstra } from "./dijkstra.js";
 import { aStar } from "./aStar.js";
-import { traceback } from "./pathModules.js";
 import { addDarkBtn } from "./darkMode.js";
 import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 import { startSimulation } from "./orderGeneration.js";
@@ -32,12 +31,8 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
  *  @param {CyGraph} cyGraph The graph to perform the simulation on
  */
 function simulationTest(cyGraph) {
-  cyGraph.addCourier("N1");
-  cyGraph.addCourier("N2");
-  cyGraph.addCourier("N3");
-  cyGraph.addCourier("N4");
-
   startSimulation(cyGraph, DEFAULT_TICKSPEED);
+  console.log(`started sim in ${cyGraph.name}`)
 }
 
 /**
@@ -47,10 +42,9 @@ function simulationTest(cyGraph) {
  * document, containing information about the intended graph properties.
  * @returns A string, indicating if the graph is either small or large.
  */
-const setGraphSize = (graph) => {
-  if (graph.className.includes("small")) return "small";
-  else return "large";
-};
+function getGraphSize(graph) {
+  return graph.className.includes("small") ? GRAPH_PRESET_FILE : BIG_GRAPH_PRESET_FILE;
+}
 
 /**
  * This function determines the intended algorithm that should run on the
@@ -60,82 +54,32 @@ const setGraphSize = (graph) => {
  * @returns A string, indicating if the graph algorithm that should run on
  * the network is either astar, bfs or dijkstra.
  */
-const setAlgorithm = (graph) => {
+ function getAlgorithm(graph) {
   return graph.className.includes("astar")
-    ? "astar"
+    ? aStar
     : graph.className.includes("bfs")
-    ? "bfs"
-    : "dijkstra";
-};
-
+    ? greedyBestFirstSearch
+    : dijkstra;
+}
+  
 /**
  * This function attaches a cytoscape network and SPA algorithm to each
  * graph div and starts the visualization simulation.
  */
-const startSim = () => {
-  document.querySelectorAll("div").forEach((graph) => {
-    if (graph.id.includes("cy")) {
-      let cytoStyle = new CytoStyle(graph.id);
-      let network = {};
-
-      switch (setAlgorithm(graph)) {
-        case "astar":
-          network = new CyGraph(graph.id, cytoStyle, aStar, DISTANCE_PER_TICK, true, DEFAULT_TICKSPEED);
-          graphArray.push(network);
-          if (setGraphSize(graph) === "small") {
-            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
-          } else {
-            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
-          }
-          break;
-
-        case "bfs":
-          network = new CyGraph(
-            graph.id,
-            cytoStyle,
-            greedyBestFirstSearch,
-            DISTANCE_PER_TICK,
-            true,
-            DEFAULT_TICKSPEED
-          );
-          graphArray.push(network);
-          if (setGraphSize(graph) === "small") {
-            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
-          } else {
-            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
-          }
-          break;
-
-        case "dijkstra":
-          network = new CyGraph(
-            graph.id,
-            cytoStyle,
-            dijkstra,
-            DISTANCE_PER_TICK,
-            true,
-            DEFAULT_TICKSPEED
-          );
-          graphArray.push(network);
-          if (setGraphSize(graph) === "small") {
-            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
-          } else {
-            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
-          }
-          break;
-
-        default:
-          console.error("Graph generation failed.");
-          break;
-      }
-    }
+function startSim() {
+  document.querySelectorAll(".cy").forEach((graph) => {
+    let cytoStyle = new CytoStyle(graph.id);
+    let cyGraph = new CyGraph(graph.id, cytoStyle, getAlgorithm(graph), DISTANCE_PER_TICK, false, true, DEFAULT_TICKSPEED);
+    graphArray.push(cyGraph);
+    SetupGraph(cyGraph, getGraphSize(graph), simulationTest);
   });
-};
+}
 
 /// MAIN ///
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
 let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
-const DEFAULT_TICKSPEED = 100;
-const DISTANCE_PER_TICK = 200;
+const DEFAULT_TICKSPEED = 50;
+const DISTANCE_PER_TICK = 300; // 300 units per tick -> meters per minute -> 18 km/h
 
 let graphArray = [];
 startSim();

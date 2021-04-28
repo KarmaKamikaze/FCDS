@@ -1,6 +1,8 @@
 import { traceback } from "../js/pathModules.js";
 import { dijkstra } from "./dijkstra.js";
-import { simStats, avgDeliveryTime } from "./stats.js";
+import { simStats } from "./stats.js";
+
+const simStartTime = 479;
 
 let eleType = {
   default: "default",
@@ -17,7 +19,7 @@ let eleType = {
 };
 
 class CyGraph {
-  constructor(name, graph, pathFunc, distancePerTick, headless = false, tickSpeed = 1000) {
+  constructor(name, graph, pathFunc, distancePerTick, useIdleZones = true, headless = false, tickSpeed = 1000) {
     this.name = name;
     this.graph = graph;
     this.pathFunc = pathFunc;
@@ -26,6 +28,8 @@ class CyGraph {
     this.simulationStats = new simStats();
     this.distancePerTick = distancePerTick;
     this.headless = headless;
+    this.timeMinutes = simStartTime;
+    this.useIdleZones = useIdleZones;
   }
 
   // Arrays that keep track of all elements in the graph
@@ -34,10 +38,6 @@ class CyGraph {
   customers = new Array();
   orders = new Array();
   idleZones = new Array();
-
-  sortOrders() {
-    this.orders.sort((a, b) => a.startTime - b.startTime);
-  }
 
   /**
    * Adds a node at specified location with potential weight
@@ -78,25 +78,29 @@ class CyGraph {
 
   /**
    * Adds a courier to the map on rootNode
-   * @param {String} rootNode The node for the courier to be placed on
-   * @param {Boolean} _hasCar Whether the courier drives a car or not
    */
-  addCourier(rootNodeId, _hasCar = false) {
-    let node = this.graph.add({
+  addCourier() {
+    let nodes = this.graph.nodes().filter((n) => this.couriers.indexOf(n));
+    let i = this.getRandomInt(nodes.length-1),
+        randomNode = nodes[i];
+
+    let courier = this.graph.add({
       group: "nodes",
       data: {
         id: `courier${++this.courierCount}`,
-        hasCar: _hasCar,
-        currentNode: this.graph.$id(rootNodeId),
+        currentNode: randomNode,
         currentOrder: null,
+        pendingOrder: false,
+        movingOrder: false,
       },
-      position: {
-        x: this.getPos(rootNodeId).x,
-        y: this.getPos(rootNodeId).y,
-      },
+      position: { x: randomNode.position("x"), y: randomNode.position("y") },
     });
-    node.addClass(eleType.courier);
-    this.couriers.push(node); // add the courier to the list of couriers
+    courier.addClass(eleType.courier);
+    this.couriers.push(courier); // add the courier to the list of couriers
+//  console.log(`placed ${courier.id()} at node ${randomNode.id()}`)
+    if (this.orders.length === 0) {
+        this.moveToIdleZone(courier);
+    }
   }
 
   /**
@@ -284,7 +288,7 @@ class CyGraph {
     if (courier.data("pendingOrder")) {
       courier.data("pendingOrder", false);
       courier.data("moving", false);
-      console.log(`${courier.id()}: nvm bro`)
+      // console.log(`${courier.id()}: nvm bro`)
       return this.traversePath(courier.id(), courier.data("currentOrder").restaurant.id());
     }
 
@@ -309,12 +313,8 @@ class CyGraph {
         }
         // Otherwise the courier has arrived at the customer, so the order has been successfully delivered
         else if (path[i-1] == order.customer.id()) {
-          courier.data("currentOrder", null);
-          this.updateOrderStats(order);
-          // If there are no pending orders, send the courier to an idle zone
-          if (!this.orders.length) {
-            this.moveToIdleZone(courier);
-          }
+            //console.info(this.timeMinutes-order.startTime);
+            this.deliverOrder(courier, order);
         }
       }
     }
@@ -337,18 +337,12 @@ class CyGraph {
             bestZone = zone;
         }
     }
-    console.log(`Moving ${courier.id()} to idle zone ${bestZone.id()}`);
-    this.traversePath(courier.id(), bestZone.id());
+    if (bestZone) {
+      //console.log(`Moving ${courier.id()} to idle zone ${bestZone.id()}`);
+      this.traversePath(courier.id(), bestZone.id());
+    }
   }
-
-  updateOrderStats(order) {
-    order.endTime = this.simulationStats.simTimeMinutes;
-    this.simulationStats.deliveredOrdersArr.push(order);
-    this.simulationStats.averageDeliveryTime = avgDeliveryTime(
-      this.simulationStats.deliveredOrdersArr
-    );
-  }
-
+  
   /**
    * Animates the movement of a courier from point A to B, highlighting the route.
    * @param {Array} path The array of nodes produced by a pathfinding algorithm
@@ -369,7 +363,7 @@ class CyGraph {
       diff2 = nextPos.y - currentPos.y,
       steps = ~~(this.getLength(path[index], path[index + 1]) / 10),
       i = 0,
-      perTick = ~~(this.tickSpeed / 20);
+      perTick = ~~(this.tickSpeed / 30);
 
     let anim = setInterval(() => {
       courier.shift({ x: diff1 / steps, y: diff2 / steps });
@@ -377,6 +371,12 @@ class CyGraph {
       if (i >= steps) {
         clearInterval(anim);
         courier.data("currentNode", this.graph.$id(path[index + 1]));
+        if (courier.data("pendingOrder")) {
+          courier.data("pendingOrder", false);
+          courier.data("moving", false);
+          console.log(`${courier.id()}: nvm bro`)
+          return this.traversePath(courier.id(), courier.data("currentOrder").restaurant.id());
+        }
         if (index < path.length - 2) {
           // on traversing a node
           //  console.log(`[${this.name}] ${courier.id()} went through ${courier.data("currentNode")}`);
@@ -392,21 +392,63 @@ class CyGraph {
             }
           }
           // on arrival
-          // check if the current node is the restaurant node of a given order, then send the courier to its destination
           let order = courier.data("currentOrder");
-          if (order && courier.data("currentNode") === order.restaurant) {
-            return this.traversePath(courier.id(), order.customer.id());
+          if (order) {
+            // check if the current node is the restaurant node of a given order, then send the courier to its destination
+            if (courier.data("currentNode") === order.restaurant) {
+                return this.traversePath(courier.id(), order.customer.id());
+            }
+            // otherwise the order has been delivered at its destination, and we can reset the courier
+            this.deliverOrder(courier, order, nextPos);
           }
-          // otherwise the order has been delivered at its destination, and we can reset the courier
-          courier.data("currentOrder", null);
-          this.updateOrderStats(order);
-          this.moveNode(courier.id(), nextPos.x, nextPos.y);
           return;
         }
       }
     }, perTick);
   }
 
+  /**
+   * Updates stats and runs functions upon delivering an order
+   * @param {Object} courier The courier which should complete its order
+   * @param {Object} order The order to be delivered
+   * @param {Object} targetNode The node to place the courier on (to fix positional offset in non-headless mode)
+   */
+  deliverOrder(courier, order, targetNode = null) {
+    // get order time, update stats
+    order.endTime = this.timeMinutes;
+    order.deliveryTime = order.endTime - order.startTime;
+    this.simulationStats.deliveredOrdersArr.push(order);
+    this.simulationStats.totalDeliveryTime += order.deliveryTime;
+
+    // if the delivery took > 60 min, consider it a failed delivery
+    if (order.deliveryTime > 60) {
+        console.log(`yikes, order${order.id} took ${order.deliveryTime} minutes! EPIC FAIL!!!1`);
+        this.simulationStats.failedOrders++;
+    }
+    
+    // If the courier is to be removed from the graph, remove when they arrive at their final destination
+    if (courier.data("terminationImminent")) {
+      //console.log(`${courier.id()} has delivered their order and is heading home. Bye!`);
+      this.delNode(courier.id())
+      return;
+    }
+
+    if (targetNode) {
+      this.moveNode(courier.id(), targetNode.x, targetNode.y);
+    }
+    
+    courier.data("currentOrder", null);
+    // If there are no pending orders, send the courier to an idle zone
+    if (this.useIdleZones && !this.orders.length) {
+      this.moveToIdleZone(courier);
+    }
+  }
+
+  /**
+   * Creates a collection of edges (a route) based on a path from traceback
+   * @param {Array} path Array of nodes to traverse
+   * @returns A collection of edges (which connect nodes in the path) to traverse
+   */
   getRoute(path) {
     let edges = this.graph.collection();
     for (let i = 0; i < path.length - 1; i++) {
@@ -448,44 +490,5 @@ class CyGraph {
     });
   }
 }
-
-// Unused functions
-
-/**
- * Selects a random position in the map
- * @returns The coordinates of the random position
- */
-function getRandomPos() {
-  let pos = {
-    x: getRandomInt(Viewport.width) - Viewport.width / 2,
-    y: getRandomInt(Viewport.height) - Viewport.height / 2,
-  };
-  return pos;
-}
-
-/* WIP: Generate random customers in the network
-  let numCustomers = 0;
-  function generateCustomer() {
-    let maxNodeDistance = 100, // global variable?
-        randPos = getRandomPos(),
-        nodes = this.graph.nodes(),
-        n = nodes.length;
-
-    for(i = 0; i < n; i++) {
-        let orgPos = nodes[i].position(),
-            distance = Math.sqrt((randPos.x-orgPos.x)*(randPos.x-orgPos.x)+(randPos.y-orgPos.y)*(randPos.y-orgPos.y));
-
-        if(distance <= maxNodeDistance) {
-            if(i === n-1) {
-                return; // could not find a valid position
-            }
-            else { // set a new random position and try again
-                randPos = getRandomPos();
-                i = 0;
-            }
-        }
-    }
-    addNode(`C${++numCustomers}`, randPos.x, randPos.y);
-  }*/
 
 export { eleType, CyGraph };
