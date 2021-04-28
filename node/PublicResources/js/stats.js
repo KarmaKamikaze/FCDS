@@ -8,6 +8,10 @@ const averageDeliveryTimeStat = document.querySelector("#avg-delivery-time");
 const failedOrdersStat = document.querySelector("#failed-orders");
 const orderTextArea = document.querySelector("#order-textarea");
 
+let scrolling = true;
+orderTextArea.addEventListener("mouseleave", () => (scrolling = true));
+orderTextArea.addEventListener("mouseenter", () => (scrolling = false));
+
 /**
  * Constructor for the simulation statistics object
  */
@@ -71,9 +75,9 @@ function updateStats(simStatObject) {
       data +=
         `${simStatObject.totalOrdersArr[i].restaurant.data("id")} \u279D ` +
         `${simStatObject.totalOrdersArr[i].customer.data("id")} : ` +
-        `Placed: ${simStatObject.totalOrdersArr[i].startTimeClock}`;
+        `Timestamp: ${simStatObject.totalOrdersArr[i].startTimeClock}`;
       if (simStatObject.totalOrdersArr[i].status !== "pending") {
-        data += ` - Delivered: ${simStatObject.totalOrdersArr[i].endTimeClock}`;
+        data += ` - ${simStatObject.totalOrdersArr[i].endTimeClock}`;
       }
       data += `\n`;
     }
@@ -81,6 +85,8 @@ function updateStats(simStatObject) {
     orderTextArea.value = data;
 
     // Scrolls to the bottom to watch the newest data added to the field
-    orderTextArea.scrollTop = orderTextArea.scrollHeight;
+    if (scrolling) {
+      orderTextArea.scrollTop = orderTextArea.scrollHeight;
+    }
   }
 }

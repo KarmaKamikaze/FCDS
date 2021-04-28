@@ -46,12 +46,18 @@ const generateVisualizationHTML = (graphs) => {
  * have an id and three classes associated with it: The cy tag, the size of the graph which will
  * be placed in the div and the algorithm that should be used.
  */
-const generateGraphDivs = (graphAmount, graphSize, algorithms, pageName) => {
+const generateGraphDivs = (
+  graphAmount,
+  graphSize,
+  algorithms,
+  idleZones,
+  pageName
+) => {
   switch (pageName) {
     case "visualization":
       let graphs = `<div style="text-align: center">`;
       for (let i = 0; i < graphAmount; i++) {
-        graphs += `<div id="cy${i}" class="cy ${graphSize} ${algorithms[i]}"></div>`;
+        graphs += `<div id="cy${i}" class="cy ${graphSize} ${algorithms[i]} ${idleZones}"></div>`;
       }
       graphs += `</div>`;
       return graphs;
@@ -59,7 +65,7 @@ const generateGraphDivs = (graphAmount, graphSize, algorithms, pageName) => {
     case "headless-simulation":
       let graph = `<div id="cy${graphAmount - 1}" class="cy ${graphSize} ${
         algorithms[0]
-      } headless"></div>`;
+      } ${idleZones} headless"></div>`;
       return graph;
 
     default:
@@ -230,6 +236,36 @@ const generateOptionsHTML = (pageObject) => {
                 </div>`;
   body +=
     pageObject.formaction === "headless-simulation" ? algorithmOption : ``;
+
+  body += `<div class="idle-zones">
+      <label for="idle-zones"
+        >Idle zones</label
+      >
+      <div id="idle-zones" class="radio-container">
+        <input
+          id="idle-zones-yes"
+          name="idle-zones"
+          type="radio"
+          value="enable-idle"
+          checked
+          required
+        />
+        <label for="idle-zones-yes" class="disable-select"
+          >Enable</label
+        >
+        <input
+          id="idle-zones-no"
+          name="idle-zones"
+          type="radio"
+          value="disable-idle"
+          required
+        />
+        <label for="idle-zones-no" class="disable-select"
+          >Disable</label
+        >
+      </div>
+    </div>`;
+
   body += `</div>
             </header>
             <footer>
