@@ -1,5 +1,6 @@
 export { SimStats, updateStats };
 
+// Constant abbreviations of html stat elements
 const timeStat = document.querySelector("#time");
 const simulationRuntimeStat = document.querySelector("#simulation-runtime");
 const totalOrdersStat = document.querySelector("#total-orders");
@@ -8,26 +9,29 @@ const averageDeliveryTimeStat = document.querySelector("#avg-delivery-time");
 const failedOrdersStat = document.querySelector("#failed-orders");
 const orderTextArea = document.querySelector("#order-textarea");
 
+// The scrolling value determines if the text field should auto scroll.
 let scrolling = true;
-orderTextArea.addEventListener("mouseleave", () => (scrolling = true));
-orderTextArea.addEventListener("mouseenter", () => (scrolling = false));
+if (orderTextArea) {
+  orderTextArea.addEventListener("mouseleave", () => (scrolling = true));
+  orderTextArea.addEventListener("mouseenter", () => (scrolling = false));
+}
 
 /**
  * Constructor for the simulation statistics object
  */
 class SimStats {
   constructor() {
-    this.simDays = 0;
-    this.simTimeMinutes = 0;
-    this.simTime = "";
-    this.runtime = 0;
-    this.simStart = new Date();
-    this.totalOrdersArr = new Array();
-    this.deliveredOrdersArr = new Array();
-    this.pendingOrders = 0;
-    this.activeOrders = 0;
-    this.failedOrders = 0; /* Not implemented yet due to missing delivery time constraint! */
-    this.averageDeliveryTime = 0;
+    this.simDays = 0; //The amount of days passed in simulation
+    this.simTimeMinutes = 0; //The current time in simulation
+    this.simTime = ""; //24-hour formatted time in simulation
+    this.runtime = 0; //Realtime passed since the simulation was started
+    this.simStart = new Date(); //The date at which the simulation was started
+    this.totalOrdersArr = new Array(); //An array of all orders that have been present in the graph
+    this.deliveredOrdersArr = new Array(); //An array of all orders successfully delivered
+    this.pendingOrders = 0; //The number of orders waiting to have a courier assigned
+    this.activeOrders = 0; //The number of orders assigned to couriers
+    this.failedOrders = 0; /*                     Not implemented yet due to missing delivery time constraint!                    */
+    this.averageDeliveryTime = 0; //The average delivery time of orders on the graph
   }
 
   /**
@@ -45,6 +49,9 @@ class SimStats {
     this.averageDeliveryTime = avgTime;
   }
 
+  /**
+   * Calculates the amount of time the simulation has been running
+   */
   calcRuntime() {
     let currentTime = new Date();
     let runtime = currentTime.getTime() - this.simStart.getTime();
@@ -53,6 +60,10 @@ class SimStats {
   }
 }
 
+/**
+ * Visually updates all the statistics on the headless simulation page
+ * @param {Object} simStatObject The statistics object for the current graph
+ */
 function updateStats(simStatObject) {
   simulationRuntimeStat.textContent = `${simStatObject.runtime} seconds`;
   timeStat.textContent = simStatObject.simTime;
@@ -62,6 +73,8 @@ function updateStats(simStatObject) {
     2
   )} minutes`;
   failedOrdersStat.textContent = simStatObject.failedOrders;
+
+  // The textarea containing the entire log of orders in the simulation
   if (simStatObject.totalOrdersArr !== null) {
     let data = "";
     for (let i = 0; i < simStatObject.totalOrdersArr.length; i++) {
@@ -81,7 +94,6 @@ function updateStats(simStatObject) {
       }
       data += `\n`;
     }
-
     orderTextArea.value = data;
 
     // Scrolls to the bottom to watch the newest data added to the field

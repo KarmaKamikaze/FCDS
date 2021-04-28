@@ -32,6 +32,9 @@ class CyGraph {
   orders = new Array();
   idleZones = new Array();
 
+  /**
+   * Sorts orders based on start times
+   */
   sortOrders() {
     this.orders.sort((a, b) => a.startTime - b.startTime);
   }
@@ -39,6 +42,7 @@ class CyGraph {
   /**
    * Adds a node at specified location with potential weight
    * @param {String} nodeId An ID for the node
+   * @param {String} type The type of the node, customer or restaurant (defaults to regular node)
    * @param {Number} xCoord The x coordinate
    * @param {Number} yCoord The y coordinate
    * @param {Number} nodeWeight The specified weight (defaults to 1)
@@ -330,8 +334,8 @@ class CyGraph {
           order.endTime = this.simulationStats.simTimeMinutes;
           order.endTimeClock = this.simulationStats.simTime;
           order.status = "delivered";
-          this.simulationStats.deliveredOrdersArr.push(order);
-          this.simulationStats.avgDeliveryTime();
+          this.simulationStats.deliveredOrdersArr.push(order); // Stat: includes the delivered order in the array of delivered orders
+          this.simulationStats.avgDeliveryTime(); // Stat: calculates the average delivery time across all deliveries
           this.moveNode(courier.id(), nextPos.x, nextPos.y);
           return;
         }

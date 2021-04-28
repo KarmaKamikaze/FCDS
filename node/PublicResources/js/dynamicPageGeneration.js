@@ -40,6 +40,7 @@ const generateVisualizationHTML = (graphs) => {
  * requested by the user.
  * @param {String} graphSize The size of the graphs which will be contained in the divs.
  * @param {String} algorithms The different types of algorithms associated with each graph div.
+ * @param {String} idleZones Determines whether idle zones should be contained within the div.
  * @param {String} pageName This value determines the appropriate switch case, since the two end
  * points will need different properties for css reasons.
  * @returns A string, which contains the specified amount of graph divs in series. The graph will
