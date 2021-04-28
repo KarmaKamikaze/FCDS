@@ -2,10 +2,10 @@ import "../../../node_modules/cytoscape/dist/cytoscape.min.js";
 import { eleType } from "./graphHelper.js";
 
 /**
- * The stylesheet applied to CytoScape networks
+ * Applies the stylesheet to the cytoscape graph
  * @param {string} containerId The id of the given graph
  * @param {string} graphSize The size of the graph, either "small" or "large", that the stylesheet is to be applied to
- * @returns The finished stylesheet
+ * @returns The finished graph object
  */
 function CytoStyle(containerId, graphSize) {
   let minZoomVal, maxZoomVal, allowPanning;
