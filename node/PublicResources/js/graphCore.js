@@ -75,6 +75,7 @@ const startSim = () => {
     if (graph.id.includes("cy")) {
       let cytoStyle;
 
+      //Selects the correct CytoStyle options based on the graphs size
       if (setGraphSize(graph) === "small") {
         cytoStyle = new CytoStyle(graph.id, "small");
       } else {
