@@ -38,7 +38,7 @@ function addDarkBtn(graphArr) {
       });
       //Changes colors on the headless simulation page
       document.getElementById("headless-div").style.color = "white";
-      document.getElementById("order-textarea").style.backgroundColor = "rgba(" + 0 + "," + 0 + "," + 0 + "," + 0.1 + ")";
+      document.getElementById("order-textarea").style.backgroundColor = "rgba(0,0,0,0.1)";
       document.getElementById("order-textarea").style.color = "white";
     } else { //If the theme is dark switch every attribute to light
       documentTheme = "Light mode";
