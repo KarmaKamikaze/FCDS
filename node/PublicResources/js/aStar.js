@@ -34,45 +34,45 @@ function aStar(cyGraph, startNode, endNode) {
     }
 
     // forEach loop that manages the queue for the successors of the currently observed node.
-    cyGraph.graph.edges().forEach((edge) => {
-      if (edge.source().id() === currentShortest.id()) {
-        let successor = edge.target();
-        let weight = edge.data("weight");
-        /** possibleImprovedCost is a variable used to describe the possible improvement
-         * on the value residing in successor.data("distanceOrigin"), which is based on
-         * earlier iterations of the forEach loop */
-        let possibleImprovedCost =
-          currentShortest.data("distanceOrigin") + weight;
+    currentShortest.closedNeighborhood((ele) => {
+      if (ele.isEdge()) {
+        if (ele.target() != currentShortest) {
+          let successor = ele.target();
+          let weight = ele.data("weight");
 
-        // If the successor is in the open list:
-        if (pending.nodes.includes(successor)) {
-          /** If the new possibleImprovedCost is less efficient than the existing cost,
-           *  we do not apply it and return */
-          if (successor.data("distanceOrigin") <= possibleImprovedCost) {
-            return;
+          /** possibleImprovedCost is a variable used to describe the possible improvement
+           * on the value residing in successor.data("distanceOrigin"), which is based on
+           * earlier iterations of the forEach loop */
+          let possibleImprovedCost =
+            currentShortest.data("distanceOrigin") + weight;
+
+          // If the successor is in the open list:
+          if (pending.nodes.includes(successor)) {
+            /** If the new possibleImprovedCost is less efficient than the existing cost,
+             *  we do not apply it and return */
+            if (successor.data("distanceOrigin") <= possibleImprovedCost) {
+              return;
+            }
           }
-        }
-        // If the successor is in the closed list, but possibly needs reassessment:
-        else if (fullyExpanded.has(successor)) {
-          if (successor.data("distanceOrigin") <= possibleImprovedCost) {
-            return;
+          // If the successor is in the closed list, but possibly needs reassessment:
+          else if (fullyExpanded.has(successor)) {
+            if (successor.data("distanceOrigin") <= possibleImprovedCost) {
+              return;
+            }
+            fullyExpanded.delete(successor);
           }
+          // Otherwise the successor has not yet been enqueued; enqueue it:
+          /** This code only runs if possibleImprovedCost is larger than the current cost.
+           * Updates the successor's cost using possibleImprovedCost and the heuristic
+           * approximation. Also assigns the parent of the successor. */
+          successor.data(
+            "distanceOrigin",
+            possibleImprovedCost +
+              heuristicApprox(cyGraph, successor.id(), endNode.id())
+          );
           pending.enqueue(successor);
-          fullyExpanded.delete(successor);
+          successor.data("_parent", currentShortest.id());
         }
-        // Otherwise the successor has not yet been enqueued; enqueue it:
-        else {
-          pending.enqueue(successor);
-        }
-        /** This code only runs if possibleImprovedCost is larger than the current cost.
-         * Updates the successor's cost using possibleImprovedCost and the heuristic
-         * approximation. Also assigns the parent of the successor. */
-        successor.data(
-          "distanceOrigin",
-          possibleImprovedCost +
-            heuristicApprox(cyGraph, successor.id(), endNode.id())
-        );
-        successor.data("_parent", currentShortest.id());
       }
     });
     /** When we are finished with a parent node and all successors has been enqueued,
