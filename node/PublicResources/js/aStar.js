@@ -33,7 +33,7 @@ function aStar(cyGraph, startNode, endNode) {
       break;
     }
 
-    // forEach loop that manages the queue for the successors of the currently observed node.
+    //loop that manages the queue for the successors of the currently observed node utilizing neighborhood method.
     currentShortest.closedNeighborhood((ele) => {
       if (ele.isEdge()) {
         if (ele.target() != currentShortest) {
@@ -61,8 +61,7 @@ function aStar(cyGraph, startNode, endNode) {
             }
             fullyExpanded.delete(successor);
           }
-          // Otherwise the successor has not yet been enqueued; enqueue it:
-          /** This code only runs if possibleImprovedCost is larger than the current cost.
+          /** This code runs if possibleImprovedCost is larger than the current cost or node has not yet been enqueued.
            * Updates the successor's cost using possibleImprovedCost and the heuristic
            * approximation. Also assigns the parent of the successor. */
           successor.data(
