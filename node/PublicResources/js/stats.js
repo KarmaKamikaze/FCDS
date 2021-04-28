@@ -30,7 +30,7 @@ class SimStats {
     this.deliveredOrdersArr = new Array(); //An array of all orders successfully delivered
     this.pendingOrders = 0; //The number of orders waiting to have a courier assigned
     this.activeOrders = 0; //The number of orders assigned to couriers
-    this.failedOrders = 0; /*                     Not implemented yet due to missing delivery time constraint!                    */
+    this.failedOrders = 0; // Not implemented yet due to missing delivery time constraint!
     this.averageDeliveryTime = 0; //The average delivery time of orders on the graph
   }
 
