@@ -74,7 +74,15 @@ const setAlgorithm = (graph) => {
 const startSim = () => {
   document.querySelectorAll("div").forEach((graph) => {
     if (graph.id.includes("cy")) {
-      let cytoStyle = new CytoStyle(graph.id);
+      let cytoStyle;
+
+      //Selects the correct CytoStyle options based on the graphs size
+      if (setGraphSize(graph) === "small") {
+        cytoStyle = new CytoStyle(graph.id, "small");
+      } else {
+        cytoStyle = new CytoStyle(graph.id, "large");
+      }
+      
       let network = {};
 
       switch (setAlgorithm(graph)) {

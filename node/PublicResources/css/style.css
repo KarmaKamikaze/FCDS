@@ -177,6 +177,7 @@ div.cy.headless {
   padding: 0;
   overflow: hidden;
   visibility: hidden;
+  color: black;
 }
 
 .control-center {
