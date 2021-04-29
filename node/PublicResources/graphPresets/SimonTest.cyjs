@@ -1,0 +1,192 @@
+{
+  "format_version" : "1.0",
+  "generated_by" : "cytoscape-3.8.2",
+  "target_cytoscapejs_version" : "~2.1",
+  "data" : {
+    "shared_name" : "SimonTest",
+    "name" : "SimonTest",
+    "SUID" : 7065,
+    "__Annotations" : [ ],
+    "selected" : true
+  },
+  "elements" : {
+    "nodes" : [ {
+      "data" : {
+        "id" : "N1",
+        "shared_name" : "Node 1",
+        "name" : "Node 1",
+        "SUID" : 7081,
+        "type" : "restaurant",
+        "selected" : false
+      },
+      "position" : {
+        "x" : -448.0,
+        "y" : 217.0
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "N2",
+        "shared_name" : "Node 2",
+        "name" : "Node 2",
+        "SUID" : 7080,
+        "type" : "default",
+        "selected" : false
+      },
+      "position" : {
+        "x" : -327.0,
+        "y" : 115.0
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "N3",
+        "shared_name" : "Node 3",
+        "name" : "Node 3",
+        "SUID" : 7079,
+        "type" : "default",
+        "selected" : false
+      },
+      "position" : {
+        "x" : -328.0,
+        "y" : -25.0
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "N4",
+        "shared_name" : "Node 4",
+        "name" : "Node 4",
+        "SUID" : 7078,
+        "type" : "default",
+        "selected" : false
+      },
+      "position" : {
+        "x" : -166.0,
+        "y" : -22.0
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "N5",
+        "shared_name" : "Node 5",
+        "name" : "Node 5",
+        "SUID" : 7077,
+        "type" : "customer",
+        "selected" : false
+      },
+      "position" : {
+        "x" : -41.99474079639369,
+        "y" : 109.02103681442524
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "N6",
+        "shared_name" : "Node 6",
+        "name" : "Node 6",
+        "SUID" : 7076,
+        "type" : "default",
+        "selected" : false
+      },
+      "position" : {
+        "x" : -237.47633358377163,
+        "y" : 166.98948159278737
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "7075",
+        "shared_name" : "Node 7",
+        "name" : "Node 7",
+        "SUID" : 7075,
+        "type" : "default",
+        "selected" : false
+      },
+      "position" : {
+        "x" : -237.60781367392934,
+        "y" : 114.26446280991735
+      },
+      "selected" : false
+    } ],
+    "edges" : [ {
+      "data" : {
+        "id" : "7087",
+        "source" : "N1",
+        "target" : "N2",
+        "shared_name" : "Node 1 (interacts with) Node 2",
+        "name" : "Node 1 (interacts with) Node 2",
+        "interaction" : "interacts with",
+        "SUID" : 7087,
+        "shared_interaction" : "interacts with",
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "7086",
+        "source" : "N1",
+        "target" : "N3",
+        "shared_name" : "Node 1 (interacts with) Node 3",
+        "name" : "Node 1 (interacts with) Node 3",
+        "interaction" : "interacts with",
+        "SUID" : 7086,
+        "shared_interaction" : "interacts with",
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "7085",
+        "source" : "N1",
+        "target" : "N6",
+        "shared_name" : "Node 1 (interacts with) Node 7",
+        "name" : "Node 1 (interacts with) Node 7",
+        "interaction" : "interacts with",
+        "SUID" : 7085,
+        "shared_interaction" : "interacts with",
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "7084",
+        "source" : "N2",
+        "target" : "N3",
+        "shared_name" : "Node 2 (interacts with) Node 3",
+        "name" : "Node 2 (interacts with) Node 3",
+        "interaction" : "interacts with",
+        "SUID" : 7084,
+        "shared_interaction" : "interacts with",
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "7083",
+        "source" : "N3",
+        "target" : "N4",
+        "shared_name" : "Node 3 (interacts with) Node 5",
+        "name" : "Node 3 (interacts with) Node 5",
+        "interaction" : "interacts with",
+        "SUID" : 7083,
+        "shared_interaction" : "interacts with",
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "7082",
+        "source" : "N4",
+        "target" : "N5",
+        "shared_name" : "Node 5 (interacts with) Node 6",
+        "name" : "Node 5 (interacts with) Node 6",
+        "interaction" : "interacts with",
+        "SUID" : 7082,
+        "shared_interaction" : "interacts with",
+        "selected" : false
+      },
+      "selected" : false
+    } ]
+  }
+}

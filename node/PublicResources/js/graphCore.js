@@ -82,7 +82,7 @@ const startSim = () => {
       } else {
         cytoStyle = new CytoStyle(graph.id, "large");
       }
-      
+
       let network = {};
 
       switch (setAlgorithm(graph)) {
@@ -140,6 +140,9 @@ let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
 const DEFAULT_TICKSPEED = 100;
 
 let graphArray = [];
+runAllTests();
 startSim();
 
 addDarkBtn(graphArray);
+
+export { SetupGraph, simulationTest, setGraphSize, setAlgorithm, startSim };
