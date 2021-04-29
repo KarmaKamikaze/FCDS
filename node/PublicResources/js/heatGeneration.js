@@ -137,6 +137,7 @@ function updateColors(cyGraph) {
 /**
  * Determines whether a given node is currently an idle-zone
  * @param {Object} node the node to check
+ * @param {Object} cyGraph the graph the node is present on
  * @returns True if the node in question is an idle-zone, false if not
  */
 function isIdleZone(node, cyGraph) {
@@ -154,7 +155,7 @@ function isRegNode(n) {
 }
 
 /**
- *
+ * Finds all nodes within a specified radius of the startNode
  * @param {Object} cyGraph The graph the simulation is contained within.
  * @param {Object} startNode The center of the selection circle
  * @param {Number} radius The radius of the circle.

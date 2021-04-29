@@ -40,18 +40,25 @@ const generateVisualizationHTML = (graphs) => {
  * requested by the user.
  * @param {String} graphSize The size of the graphs which will be contained in the divs.
  * @param {String} algorithms The different types of algorithms associated with each graph div.
+ * @param {String} idleZones Determines whether idle zones should be contained within the div.
  * @param {String} pageName This value determines the appropriate switch case, since the two end
  * points will need different properties for css reasons.
  * @returns A string, which contains the specified amount of graph divs in series. The graph will
  * have an id and three classes associated with it: The cy tag, the size of the graph which will
  * be placed in the div and the algorithm that should be used.
  */
-const generateGraphDivs = (graphAmount, graphSize, algorithms, pageName) => {
+const generateGraphDivs = (
+  graphAmount,
+  graphSize,
+  algorithms,
+  idleZones,
+  pageName
+) => {
   switch (pageName) {
     case "visualization":
       let graphs = `<div style="text-align: center">`;
       for (let i = 0; i < graphAmount; i++) {
-        graphs += `<div id="cy${i}" class="cy ${graphSize} ${algorithms[i]}"></div>`;
+        graphs += `<div id="cy${i}" class="cy ${graphSize} ${algorithms[i]} ${idleZones}"></div>`;
       }
       graphs += `</div>`;
       return graphs;
@@ -59,7 +66,7 @@ const generateGraphDivs = (graphAmount, graphSize, algorithms, pageName) => {
     case "headless-simulation":
       let graph = `<div id="cy${graphAmount - 1}" class="cy ${graphSize} ${
         algorithms[0]
-      } headless"></div>`;
+      } ${idleZones} headless"></div>`;
       return graph;
 
     default:
@@ -196,7 +203,14 @@ const generateOptionsHTML = (pageObject) => {
       : ``;
 
   body += `<div class="graph-size">
-                  <label for="graph-size">Size of graphs</label>
+                  <label for="graph-size">`;
+  body +=
+    pageObject.formaction === "visualization"
+      ? `Size of graphs`
+      : pageObject.formaction === `headless-simulation`
+      ? `Size of graph`
+      : "";
+  body += `</label>
                   <div class="radio-container">
                     <input
                       checked=""
@@ -223,6 +237,36 @@ const generateOptionsHTML = (pageObject) => {
                 </div>`;
   body +=
     pageObject.formaction === "headless-simulation" ? algorithmOption : ``;
+
+  body += `<div class="idle-zones">
+      <label for="idle-zones"
+        >Idle zones</label
+      >
+      <div id="idle-zones" class="radio-container">
+        <input
+          id="idle-zones-yes"
+          name="idle-zones"
+          type="radio"
+          value="enable-idle"
+          checked
+          required
+        />
+        <label for="idle-zones-yes" class="disable-select"
+          >Enable</label
+        >
+        <input
+          id="idle-zones-no"
+          name="idle-zones"
+          type="radio"
+          value="disable-idle"
+          required
+        />
+        <label for="idle-zones-no" class="disable-select"
+          >Disable</label
+        >
+      </div>
+    </div>`;
+
   body += `</div>
             </header>
             <footer>
@@ -275,7 +319,7 @@ const generateHeadlessHTML = (graphSize, algorithm, graph) => {
     </head>
     <body>
     ${graph}
-      <div class="control-center disable-select">
+      <div id="statistics-div" class="control-center disable-select">
         <h1>Headless simulation</h1>
         <p>Graph size: <span id="graph-size" class="control-value">${
           sizeName[`${graphSize}`]
@@ -284,6 +328,7 @@ const generateHeadlessHTML = (graphSize, algorithm, graph) => {
           algorithmName[`${algorithm}`]
         }</span></p>
         <p>Time: <span id="time" class="control-value"></span></p>
+        <p>Simulation runtime: <span id="simulation-runtime" class="control-value"></span></p>
         <p>
           Total orders: <span id="total-orders" class="control-value"></span>
         </p>

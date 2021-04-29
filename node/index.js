@@ -67,6 +67,7 @@ let validateParameters = [
   body("simulation-1-spa").trim().toLowerCase().escape(),
   body("simulation-2-spa").trim().toLowerCase().escape(),
   body("simulation-3-spa").trim().toLowerCase().escape(),
+  body("idle-zones").trim().toLowerCase().escape(),
 ];
 
 // Routes
@@ -97,14 +98,22 @@ app.post("/visualization", validateParameters, (req, res) => {
     req.body["simulation-2-spa"],
     req.body["simulation-3-spa"],
   ];
+  const idleZones = req.body["idle-zones"];
 
   res.send(
     generateVisualizationHTML(
-      generateGraphDivs(graphAmount, graphSize, simulationSPAs, "visualization")
+      generateGraphDivs(
+        graphAmount,
+        graphSize,
+        simulationSPAs,
+        idleZones,
+        "visualization"
+      )
     )
   );
   console.log(
-    `Sent: Visualization with params: Graph amount: ${graphAmount}, graph size: ${graphSize}, simulation SPAs: ${simulationSPAs}`
+    `Sent: Visualization with params: Graph amount: ${graphAmount}, graph size: ${graphSize},` +
+      ` simulation SPAs: ${simulationSPAs}, idle zones: ${idleZones}`
   );
 });
 
@@ -128,6 +137,7 @@ app.post("/headless-simulation", validateParameters, (req, res) => {
   const graphAmount = req.body["number-of-graphs"];
   const graphSize = req.body["graph-size"];
   const simulationSPAs = [req.body["simulation-1-spa"]];
+  const idleZones = req.body["idle-zones"];
 
   res.send(
     generateHeadlessHTML(
@@ -137,11 +147,15 @@ app.post("/headless-simulation", validateParameters, (req, res) => {
         graphAmount,
         graphSize,
         simulationSPAs,
+        idleZones,
         "headless-simulation"
       )
     )
   );
-  console.log("Sent: Headless simulation page");
+  console.log(
+    `Sent: Headless simulation with params: Graph amount: ${graphAmount}, graph size: ${graphSize},` +
+      ` simulation SPAs: ${simulationSPAs}, idle zones: ${idleZones}`
+  );
 });
 
 // Start the server app

@@ -1,10 +1,11 @@
 import { dijkstra } from "./dijkstra.js";
 import { generateHeatmap } from "./heatGeneration.js";
 import { eleType } from "./graphHelper.js";
+import { updateStats } from "./stats.js";
 
+const isHeadless = document.querySelector("div.headless");
 
 let timeMinutes = 479; // start at 8:00
-let totalOrders = 0; // may be used for statistics
 
 /**
  * Starts the order generation simulation
@@ -34,16 +35,20 @@ function perTick(cyGraph) {
 
   if (timeMinutes == 1440) {
     timeMinutes = 0;
-    cyGraph.simulationStats.simDays++;
+    cyGraph.simulationStats.simDays++; // Stat: Used to track the amount of days simulated
   }
 
   /* Can be placed within the if-statement underneath incase 
      it takes too much computational time. */
-  cyGraph.simulationStats.simTimeMinutes = timeMinutes;
-  cyGraph.simulationStats.simTime = formatTime(timeMinutes);
+  cyGraph.simulationStats.simTimeMinutes = timeMinutes; // Stat: Used to track the time in the simulation
+  cyGraph.simulationStats.simTime = formatTime(timeMinutes); // Stat: converts the simulation time to a string using 24 hours formatting
 
   if (!(timeMinutes % 5)) {
     console.log(formatTime(timeMinutes));
+    cyGraph.simulationStats.calcRuntime(); // Stat: Calculates the amount of real-world time has passed
+    if (isHeadless) {
+      updateStats(cyGraph.simulationStats); // Updates all statistics
+    }
     generateOrders(cyGraph, timeMinutes);
   }
   if (!(timeMinutes % 60) && timeMinutes >= 480 && timeMinutes < 1260) {
@@ -140,9 +145,9 @@ function generateOrders(cyGraph, timeMinutes) {
         timeMinutes
       );
       cyGraph.orders.push(order);
-      cyGraph.simulationStats.totalOrdersArr.push(order);
-      cyGraph.simulationStats.pendingOrders = cyGraph.orders.length;
-      cyGraph.simulationStats.activeOrders =
+      cyGraph.simulationStats.totalOrdersArr.push(order); // Stat: pushes the new order to the array of total orders
+      cyGraph.simulationStats.pendingOrders = cyGraph.orders.length; // Stat: keeps track of the current amount of orders waiting to be picked up
+      cyGraph.simulationStats.activeOrders = // Stat: keeps track of the current amount of orders both in waiting and actively being delivered
         cyGraph.simulationStats.totalOrdersArr.length -
         cyGraph.simulationStats.deliveredOrdersArr.length;
     }
@@ -162,6 +167,9 @@ function Order(id, origin, destination, startTime) {
   this.customer = destination;
   this.maxDuration = 60;
   this.startTime = startTime;
+  this.startTimeClock = formatTime(startTime);
+  this.assignedCourier = "";
+  this.status = "pending";
 }
 
 /**
@@ -179,9 +187,10 @@ function assignCourier(cyGraph, order, index) {
       }] - Route: [${courier.id()}] -> [${order.restaurant.id()}] -> [${order.customer.id()}]`
     );
     courier.data("currentOrder", order);
+    order.assignedCourier = courier.id(); /* Used to print the assigned courier of an order only using an array of orders*/
     cyGraph.traversePath(courier.id(), order.restaurant.id());
     cyGraph.orders.splice(index, 1);
-    cyGraph.simulationStats.pendingOrders = cyGraph.orders.length;
+    cyGraph.simulationStats.pendingOrders = cyGraph.orders.length; // Stat: Updates the amount of waiting orders after an order starts being delivered
   }
 }
 
