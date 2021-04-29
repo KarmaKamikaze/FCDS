@@ -1,7 +1,28 @@
 import "../../../node_modules/cytoscape/dist/cytoscape.min.js";
 import { eleType } from "./graphHelper.js";
 
-function CytoStyle(containerId) {
+/**
+ * Applies the stylesheet to the cytoscape graph
+ * @param {string} containerId The id of the given graph
+ * @param {string} graphSize The size of the graph, either "small" or "large", that the stylesheet is to be applied to
+ * @returns The finished graph object
+ */
+function CytoStyle(containerId, graphSize) {
+  let minZoomVal, maxZoomVal, allowPanning;
+
+  //Settings specific to the small graph
+  if (graphSize == "small") {
+    minZoomVal = 1.2;
+    maxZoomVal = 1.2;
+    allowPanning = false;
+  }
+  //Settings specific to the large graph
+  else {
+    minZoomVal = 0.12;
+    maxZoomVal = 1.5;
+    allowPanning = true;
+  }
+
   return cytoscape({
     container: document.getElementById(containerId),
 
@@ -9,8 +30,9 @@ function CytoStyle(containerId) {
     boxSelectionEnabled: false,
     autounselectify: true,
     autoungrabify: true,
-    minZoom: 0.12,
-    maxZoom: 1.5,
+    minZoom: minZoomVal,
+    maxZoom: maxZoomVal,
+    userPanningEnabled: allowPanning,
 
     // Stylesheet
     style: cytoscape
@@ -18,7 +40,7 @@ function CytoStyle(containerId) {
       .selector("node")
       .style({
         content: "data(id)",
-        color: "lightgreen",
+        color: "limegreen",
       })
       .selector("edge")
       .style({
@@ -40,46 +62,47 @@ function CytoStyle(containerId) {
       })
       .selector(`.${eleType.restaurant}`)
       .style({
-        "background-color": "#d100ff",
+        "background-color": "#FFFFFF",
         content: "data(id)",
       })
       .selector(`.${eleType.courier}`)
       .style({
         width: 55,
         height: 55,
-        "background-color": "#B22222",
+        "background-color": "#E0520F",
+        color: "#FF5D12",
         content: "data(id)",
       })
       .selector(`.${eleType.customer}`)
       .style({
         width: 60,
         height: 60,
-        "background-color": "#89CFF0",
+        "background-color": "#976ED7",
         content: "data(id)",
       })
       .selector(`.${eleType.idlezone_yellow}`)
       .style({
-        "background-color": "#FFFF00",
+        "background-color": "#EADA52",
       })
       .selector(`.${eleType.idlezone_orange}`)
       .style({
-        "background-color": "#FFA500",
+        "background-color": "#F39A27",
       })
       .selector(`.${eleType.idlezone_red}`)
       .style({
-        "background-color": "#DC143C",
+        "background-color": "#C23B23",
         width: 60,
         height: 60,
       })
       .selector(`.${eleType.lunch}`)
       .style({
-        "background-color": "#008000",
+        "background-color": "#03AF37",
         width: 80,
         height: 80,
       })
       .selector(`.${eleType.dinner}`)
       .style({
-        "background-color": "#4169E1",
+        "background-color": "#579ABE",
         width: 80,
         height: 80,
       }),

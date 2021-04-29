@@ -8,9 +8,11 @@ backButton.addEventListener("click", () => {
 });
 
 // Listen for changes on the html radio elements.
-numOfGraphsRadio.addEventListener("change", (event) => {
-  simulationMenu(event);
-});
+if (numOfGraphsRadio !== null) {
+  numOfGraphsRadio.addEventListener("change", (event) => {
+    simulationMenu(event);
+  });
+}
 
 /**
  * This function generates and inserts algorithm options on the visualization

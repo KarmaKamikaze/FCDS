@@ -1,6 +1,7 @@
 import { traceback } from "../js/pathModules.js";
 import { dijkstra } from "./dijkstra.js";
 import { simStats } from "./stats.js";
+export { eleType, CyGraph };
 
 const simStartTime = 479;
 
@@ -44,6 +45,7 @@ class CyGraph {
   /**
    * Adds a node at specified location with potential weight
    * @param {String} nodeId An ID for the node
+   * @param {String} type The type of the node, customer or restaurant (defaults to regular node)
    * @param {Number} xCoord The x coordinate
    * @param {Number} yCoord The y coordinate
    * @param {Number} nodeWeight The specified weight (defaults to 1)
@@ -99,9 +101,9 @@ class CyGraph {
     });
     courier.addClass(eleType.courier);
     this.couriers.push(courier); // add the courier to the list of couriers
-//  console.log(`placed ${courier.id()} at node ${randomNode.id()}`)
+    //console.log(`placed ${courier.id()} at node ${randomNode.id()}`)
     if (this.useIdleZones && this.orders.length === 0) {
-        this.moveToIdleZone(courier);
+      this.moveToIdleZone(courier);
     }
   }
 
@@ -249,7 +251,6 @@ class CyGraph {
     let courier = this.graph.$id(courierId),
         startNode = courier.data("currentNode"),
         endNode = this.graph.$id(endId);
-    
     this.pathFunc(this, startNode, endNode);
     let path = traceback(this.graph, endNode);
 
@@ -483,5 +484,3 @@ class CyGraph {
     });
   }
 }
-
-export { eleType, CyGraph };

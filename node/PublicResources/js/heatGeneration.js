@@ -1,7 +1,7 @@
 import { dijkstra } from "./dijkstra.js";
 import { eleType } from "./graphHelper.js";
 import { orderIntensity, timeToFloat } from "./orderGeneration.js";
-
+export { generateHeatmap };
 
 let graphRadius = null;
 /**
@@ -156,6 +156,7 @@ function updateColors(cyGraph) {
 /**
  * Determines whether a given node is currently an idle-zone
  * @param {Object} node the node to check
+ * @param {Object} cyGraph the graph the node is present on
  * @returns True if the node in question is an idle-zone, false if not
  */
 function isIdleZone(node, cyGraph) {
@@ -190,5 +191,3 @@ function findNodesInRadius(cyGraph, startNode, radius) {
   }
   return nodesInRadius;
 }
-
-export { generateHeatmap };
