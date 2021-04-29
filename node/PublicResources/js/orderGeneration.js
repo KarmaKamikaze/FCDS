@@ -9,15 +9,16 @@ import { eleType } from "./graphHelper.js";
  * @returns The update interval.
  */
 function startSimulation(cyGraph, tickSpeed) {
-  for (const restaurant of cyGraph.restaurants) {
-    let intensityFunc = Math.random() > 0.5 ? lunchRate : dinnerRate;
-    restaurant.intensityFunc = intensityFunc;
-    if (intensityFunc == lunchRate) {
-      restaurant.addClass(eleType.lunch);
+  let n = cyGraph.restaurants.length;
+  for (let i = 0; i < n; i++) {
+    if (i < Math.ceil(n/2)) {
+      cyGraph.restaurants[i].intensityFunc = lunchRate;
+      cyGraph.restaurants[i].addClass(eleType.lunch);
     } else {
-      restaurant.addClass(eleType.dinner);
+      cyGraph.restaurants[i].intensityFunc = dinnerRate;
+      cyGraph.restaurants[i].addClass(eleType.dinner);
+      }
     }
-  }
   return setInterval(() => perTick(cyGraph), tickSpeed);
 }
 
@@ -26,9 +27,9 @@ function startSimulation(cyGraph, tickSpeed) {
  * @param {Object} cyGraph The graph the simulation is contained within.
  */
 function perTick(cyGraph) {
-  let timeMinutes = ++cyGraph.timeMinutes;
+  cyGraph.timeMinutes++;
 
-  if (timeMinutes == 1440) {
+  if (cyGraph.timeMinutes == 1440) {
     cyGraph.simulationStats.failedOrders += cyGraph.orders.length;
     cyGraph.orders = new Array();
     console.log(`[${cyGraph.name}] Day ${cyGraph.simulationStats.simDays}: Succesful orders: ${cyGraph.simulationStats.deliveredOrdersArr.length - cyGraph.simulationStats.failedOrders}/${cyGraph.simulationStats.totalOrdersArr.length}. Average delivery time: ${ cyGraph.simulationStats.avgDeliveryTime() } minutes.`);
@@ -36,24 +37,24 @@ function perTick(cyGraph) {
     cyGraph.simulationStats.simDays++;
   }
 
-  cyGraph.simulationStats.simtimeMinutes = timeMinutes;
-  cyGraph.simulationStats.simTime = formatTime(timeMinutes);
+  cyGraph.simulationStats.simtimeMinutes = cyGraph.timeMinutes;
+  cyGraph.simulationStats.simTime = formatTime(cyGraph.timeMinutes);
 
   // Handle order generation every 5 ticks
-  if (!(timeMinutes % 5)) {
-    generateOrders(cyGraph, timeMinutes);
+  if (!(cyGraph.timeMinutes % 5)) {
+    generateOrders(cyGraph);
   }
 
   // Generate idle zones and update the courier amount every 60 ticks
-  if (!(timeMinutes % 60)) {
-    maintainCouriers(timeMinutes, cyGraph);
-    if (timeMinutes >= 480 && timeMinutes < 1260) {
-      generateHeatmap(cyGraph, timeMinutes);
+  if (!(cyGraph.timeMinutes % 60)) {
+    if (cyGraph.useIdleZones && cyGraph.timeMinutes >= 480 && cyGraph.timeMinutes < 1260) {
+      generateHeatmap(cyGraph);
     }
-    console.log(`[${cyGraph.name}][${formatTime(timeMinutes)}]: ${cyGraph.couriers.length} couriers, ${cyGraph.orders.length} pending orders`)
+    maintainCouriers(cyGraph);
+    console.log(`[${cyGraph.name}][${formatTime(cyGraph.timeMinutes)}]: ${cyGraph.couriers.length} couriers, ${cyGraph.orders.length} pending orders`)
   }
 
-  if (!(timeMinutes % 2)) {
+  if (!(cyGraph.timeMinutes % 2)) {
     for (let i = 0; i < cyGraph.couriers.length; i++) {
         if (cyGraph.orders[i]) {
           assignCourier(cyGraph, cyGraph.orders[i], i);
@@ -64,14 +65,14 @@ function perTick(cyGraph) {
 
 /** 
  * Ensures that the number of couriers is set according to expected values for each hour
- * @param {Number} timeMinutes The current simulation time in minutes.
  * @param {Object} cyGraph The graph the simulation is contained within.
  */
-function maintainCouriers (timeMinutes, cyGraph) {
+function maintainCouriers (cyGraph) {
   // The expectedCouriers array denotes how many couriers should be available at each hour of the day (starting at 00:00)
-  //                     00 01 02 03 04 05 06 07 08 09 10 11 12 13  14  15  16  17  18 19  20 21 22 23
-  let expectedCouriers = [0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 7, 7, 7, 9, 9, 11, 13, 14, 11, 7, 3, 0, 0];
-  let expectedCourierCount = expectedCouriers[Math.floor(timeMinutes/60)];
+  //                                00   01   02   03   04   05   06   07   08   09   10   11   12   13   14   15   16   17   18   19   20   21   22   23
+  let expectedCourierMultiplier = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.3, 0.3, 0.6, 0.6, 0.4, 0.4, 0.4, 0.6, 0.7, 1.0, 1.0, 0.6, 0.4, 0.0, 0.0];
+  let curHour = Math.floor(cyGraph.timeMinutes/60);
+  let expectedCourierCount = Math.ceil(cyGraph.courierFreq * expectedCourierMultiplier[curHour]);
   let courierCount = cyGraph.couriers.length;
 
   // If the amount of couriers is too high, try to 'send some of them home'
@@ -88,7 +89,6 @@ function maintainCouriers (timeMinutes, cyGraph) {
       }
       // Otherwise, if the courier has no orders, simply remove it
       else {
-        //console.log(`Deleting ${currentCourier.id()}`)
         cyGraph.couriers.splice(index, 1);
         cyGraph.delNode(currentCourier.id());
         courierCount--;
@@ -169,13 +169,12 @@ function getRandomInt(min, max) {
 /**
  * Generates an order from a random restaurant to a random customer in the network based on the current intensity and some randomness.
  * @param {Object} cyGraph The graph the simulation is contained within.
- * @param {Number} time The current minutes to the hour.
  * @returns The new order.
  */
-function generateOrders(cyGraph, timeMinutes) {
+function generateOrders(cyGraph) {
   for (const restaurant of cyGraph.restaurants) {
     let intensity = orderIntensity(
-      timeToFloat(timeMinutes),
+      timeToFloat(cyGraph.timeMinutes),
       restaurant.intensityFunc
     );
     let roll = Math.random();
@@ -185,7 +184,7 @@ function generateOrders(cyGraph, timeMinutes) {
         cyGraph.simulationStats.totalOrdersArr.length + 1,
         restaurant,
         cyGraph.customers[i],
-        timeMinutes
+        cyGraph.timeMinutes
       );
       cyGraph.orders.push(order);
       cyGraph.simulationStats.totalOrdersArr.push(order);

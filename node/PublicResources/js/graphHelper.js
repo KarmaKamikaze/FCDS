@@ -19,7 +19,7 @@ let eleType = {
 };
 
 class CyGraph {
-  constructor(name, graph, pathFunc, distancePerTick, useIdleZones = true, headless = false, tickSpeed = 1000) {
+  constructor(name, graph, pathFunc, distancePerTick, orderRate, useIdleZones, headless, courierFreq, tickSpeed) {
     this.name = name;
     this.graph = graph;
     this.pathFunc = pathFunc;
@@ -30,6 +30,8 @@ class CyGraph {
     this.headless = headless;
     this.timeMinutes = simStartTime;
     this.useIdleZones = useIdleZones;
+    this.orderRate = orderRate;
+    this.courierFreq = courierFreq;
   }
 
   // Arrays that keep track of all elements in the graph
@@ -98,7 +100,7 @@ class CyGraph {
     courier.addClass(eleType.courier);
     this.couriers.push(courier); // add the courier to the list of couriers
 //  console.log(`placed ${courier.id()} at node ${randomNode.id()}`)
-    if (this.orders.length === 0) {
+    if (this.useIdleZones && this.orders.length === 0) {
         this.moveToIdleZone(courier);
     }
   }
@@ -135,9 +137,7 @@ class CyGraph {
 
       this.addEdge(newId, source, target, obstructions);
       this.addEdge(newIdRev, target, source, obstructions);
-
       this.delNode(edges[i].id());
-
       this.graph.$id(newId).inRoute = new Array();
       this.graph.$id(newIdRev).inRoute = new Array();
     }
@@ -154,7 +154,7 @@ class CyGraph {
       nodes[i].data("heat", 0);
       switch (type.toUpperCase()) {
         case "R":
-          nodes[i].data("orderRate", 0.25); // assign individual order probability
+          nodes[i].data("orderRate", this.orderRate); // assign individual order probability
           nodes[i].addClass(eleType.restaurant);
           this.restaurants.push(nodes[i]);
           break;
@@ -217,13 +217,6 @@ class CyGraph {
    * @param {String} node2Id The ID of the second node
    * @returns A concatenated string of the two nodes sorted lexicographically
    */
-
-  /*   getEdgeIdOld(node1Id, node2Id) {
-    return node1Id.localeCompare(node2Id) === -1
-      ? node1Id + node2Id
-      : node2Id + node1Id;
-  } */
-
   getEdgeId(node1Id, node2Id) {
     return node1Id + node2Id;
   }
@@ -422,7 +415,7 @@ class CyGraph {
 
     // if the delivery took > 60 min, consider it a failed delivery
     if (order.deliveryTime > 60) {
-        console.log(`yikes, order${order.id} took ${order.deliveryTime} minutes! EPIC FAIL!!!1`);
+        console.log(`Oh no, order${order.id} took ${order.deliveryTime} minutes! Anyway...`);
         this.simulationStats.failedOrders++;
     }
     

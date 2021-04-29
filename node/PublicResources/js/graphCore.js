@@ -32,7 +32,7 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
  */
 function simulationTest(cyGraph) {
   startSimulation(cyGraph, DEFAULT_TICKSPEED);
-  console.log(`started sim in ${cyGraph.name}`)
+  console.log(`started sim in ${cyGraph.name}. `)
 }
 
 /**
@@ -69,7 +69,13 @@ function getGraphSize(graph) {
 function startSim() {
   document.querySelectorAll(".cy").forEach((graph) => {
     let cytoStyle = new CytoStyle(graph.id);
-    let cyGraph = new CyGraph(graph.id, cytoStyle, getAlgorithm(graph), DISTANCE_PER_TICK, false, true, DEFAULT_TICKSPEED);
+    let cyGraph = new CyGraph(graph.id, cytoStyle, getAlgorithm(graph), // graph name, stylesheet and SP-algorithm
+                              DISTANCE_PER_TICK, // courier movement speed
+                              0.3, // order rate (pr restaurant)
+                              true, // use idle zones
+                              true, // headless simulation
+                              8, // max number of couriers
+                              DEFAULT_TICKSPEED); // tickspeed
     graphArray.push(cyGraph);
     SetupGraph(cyGraph, getGraphSize(graph), simulationTest);
   });

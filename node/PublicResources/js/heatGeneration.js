@@ -25,14 +25,13 @@ function getGraphRadius(cyGraph) {
 /**
  * Generates a heat map based on restaurant order activity, and finds/assigns appropriate idle-zones
  * @param {Object} cyGraph The graph the simulation is contained within.
- * @param {Number} timeMinutes The current time in minutes since the simulation began.
  */
-function generateHeatmap(cyGraph, timeMinutes) {
+function generateHeatmap(cyGraph) {
   resetHeat(cyGraph);
   cyGraph.idleZones = [];
 
   //Assign appropriate heat values to all regular nodes
-  assignHeat(cyGraph, timeMinutes);
+  assignHeat(cyGraph);
 
   //Find n waiting zones
   let n = getZoneCount(cyGraph);
@@ -68,9 +67,8 @@ function resetHeat(cyGraph) {
 /**
  * Calculates a heat property for all nodes in a specific radius of each restaurant
  * @param {Object} cyGraph The graph the simulation is contained within.
- * @param {Number} timeMinutes The current time in minutes since the simulation began.
  */
-function assignHeat(cyGraph, timeMinutes) {
+function assignHeat(cyGraph) {
   let radius = 3*getGraphRadius(cyGraph);
   for (const restaurant of cyGraph.restaurants) {
     dijkstra(cyGraph, restaurant);
@@ -78,7 +76,7 @@ function assignHeat(cyGraph, timeMinutes) {
     for (const node of closeNodes) {
       let oldVal = node.data("heat");
       let intensity = orderIntensity(
-        timeToFloat(timeMinutes),
+        timeToFloat(cyGraph.timeMinutes),
         restaurant.intensityFunc
       );
       node.data("heat", oldVal + restaurant.data("orderRate") * intensity);
