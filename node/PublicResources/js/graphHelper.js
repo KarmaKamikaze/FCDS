@@ -1,5 +1,5 @@
 import { traceback } from "../js/pathModules.js";
-import { simStats, avgDeliveryTime } from "./stats.js";
+import { SimStats } from "./stats.js";
 
 let eleType = {
   default: "default",
@@ -22,7 +22,7 @@ class CyGraph {
     this.pathFunc = pathFunc;
     this.tickSpeed = tickSpeed;
     this.courierCount = 0;
-    this.simulationStats = new simStats();
+    this.simulationStats = new SimStats();
   }
 
   // Arrays that keep track of all elements in the graph
@@ -32,6 +32,9 @@ class CyGraph {
   orders = new Array();
   idleZones = new Array();
 
+  /**
+   * Sorts orders based on start times
+   */
   sortOrders() {
     this.orders.sort((a, b) => a.startTime - b.startTime);
   }
@@ -39,6 +42,7 @@ class CyGraph {
   /**
    * Adds a node at specified location with potential weight
    * @param {String} nodeId An ID for the node
+   * @param {String} type The type of the node, customer or restaurant (defaults to regular node)
    * @param {Number} xCoord The x coordinate
    * @param {Number} yCoord The y coordinate
    * @param {Number} nodeWeight The specified weight (defaults to 1)
@@ -254,6 +258,9 @@ class CyGraph {
       courier = this.graph.$id(courierId),
       startNode = this.graph.$id(courier.data("currentNode")),
       endNode = this.graph.$id(endId);
+    // Updates the order status to be in transit. Used in statistics.
+    let order = courier.data("currentOrder");
+    order.status = "transit";
 
     this.pathFunc(this, startNode, endNode);
     let path = traceback(graph, endNode);
@@ -325,10 +332,10 @@ class CyGraph {
           // otherwise the order has been delivered at its destination, and we can reset the courier
           courier.data("currentOrder", null);
           order.endTime = this.simulationStats.simTimeMinutes;
-          this.simulationStats.deliveredOrdersArr.push(order);
-          this.simulationStats.averageDeliveryTime = avgDeliveryTime(
-            this.simulationStats.deliveredOrdersArr
-          );
+          order.endTimeClock = this.simulationStats.simTime;
+          order.status = "delivered";
+          this.simulationStats.deliveredOrdersArr.push(order); // Stat: includes the delivered order in the array of delivered orders
+          this.simulationStats.avgDeliveryTime(); // Stat: calculates the average delivery time across all deliveries
           this.moveNode(courier.id(), nextPos.x, nextPos.y);
           return;
         }

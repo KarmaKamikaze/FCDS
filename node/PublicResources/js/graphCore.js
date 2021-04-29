@@ -28,8 +28,9 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
     });
 }
 
-/** Callback function which starts the simulation once the graph is initialized
- *  @param {CyGraph} cyGraph The graph to perform the simulation on
+/**
+ * Callback function which starts the simulation once the graph is initialized
+ * @param {CyGraph} cyGraph The graph to perform the simulation on
  */
 function simulationTest(cyGraph) {
   cyGraph.addCourier("R1");
