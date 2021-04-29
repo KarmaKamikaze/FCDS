@@ -2,7 +2,6 @@ import { CyGraph, eleType } from "./graphHelper.js";
 import { CytoStyle } from "./cytoStylesheet.js";
 import { dijkstra } from "./dijkstra.js";
 import { aStar } from "./aStar.js";
-import { traceback } from "./pathModules.js";
 import { addDarkBtn } from "./darkMode.js";
 import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 import { startSimulation } from "./orderGeneration.js";
@@ -40,98 +39,86 @@ function simulationTest(cyGraph) {
 }
 
 /**
- * This function determines the intended size of the graph, which should be
- * placed in the div.
- * @param {HTMLDivElement} graph A div element from the visualization html
- * document, containing information about the intended graph properties.
- * @returns A string, indicating if the graph is either small or large.
- */
-const setGraphSize = (graph) => {
-  if (graph.className.includes("small")) return "small";
-  else return "large";
-};
-
-/**
- * This function determines the intended algorithm that should run on the
- * network in this div.
- * @param {HTMLDivElement} graph A div element from the visualization html
- * document, containing information about the intended graph properties.
- * @returns A string, indicating if the graph algorithm that should run on
- * the network is either astar, bfs or dijkstra.
- */
-const setAlgorithm = (graph) => {
-  return graph.className.includes("astar")
-    ? "astar"
-    : graph.className.includes("bfs")
-    ? "bfs"
-    : "dijkstra";
-};
-
-/**
  * This function attaches a cytoscape network and SPA algorithm to each
  * graph div and starts the visualization simulation.
  */
-const startSim = () => {
-  document.querySelectorAll("div").forEach((graph) => {
-    if (graph.id.includes("cy")) {
-      let cytoStyle;
-
-      //Selects the correct CytoStyle options based on the graphs size
-      if (setGraphSize(graph) === "small") {
-        cytoStyle = new CytoStyle(graph.id, "small");
-      } else {
-        cytoStyle = new CytoStyle(graph.id, "large");
-      }
-      
-      let network = {};
-
-      switch (setAlgorithm(graph)) {
-        case "astar":
-          network = new CyGraph(graph.id, cytoStyle, aStar, DEFAULT_TICKSPEED);
-          graphArray.push(network);
-          if (setGraphSize(graph) === "small") {
-            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
-          } else {
-            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
-          }
-          break;
-
-        case "bfs":
-          network = new CyGraph(
-            graph.id,
-            cytoStyle,
-            greedyBestFirstSearch,
-            DEFAULT_TICKSPEED
-          );
-          graphArray.push(network);
-          if (setGraphSize(graph) === "small") {
-            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
-          } else {
-            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
-          }
-          break;
-
-        case "dijkstra":
-          network = new CyGraph(
-            graph.id,
-            cytoStyle,
-            dijkstra,
-            DEFAULT_TICKSPEED
-          );
-          graphArray.push(network);
-          if (setGraphSize(graph) === "small") {
-            SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
-          } else {
-            SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
-          }
-          break;
-
-        default:
-          console.error("Graph generation failed.");
-          break;
-      }
+const startSim = async () => {
+  let graphSettings = {};
+  try {
+    const response = await fetch("../js/HTMLRequestParams.json");
+    if (!response.ok) {
+      const errorMessage = `An error occurred: ${response.status}`;
+      throw new Error(errorMessage);
     }
-  });
+    graphSettings = await response.json();
+  } catch (err) {
+    console.log(err);
+  }
+
+  for (let i = 0; i < graphSettings["number-of-graphs"]; i++) {
+    let graphDivs = document.querySelectorAll("div.cy");
+    let cytoStyle;
+
+    // Selects the correct CytoStyle options based on the graphs size
+    if (graphSettings["graph-size"] === "small") {
+      cytoStyle = new CytoStyle(graphDivs[i].id, "small");
+    } else {
+      cytoStyle = new CytoStyle(graphDivs[i].id, "large");
+    }
+
+    let network = {};
+
+    switch (graphSettings[`simulation-${i + 1}-spa`]) {
+      case "astar":
+        network = new CyGraph(
+          graphDivs[i].id,
+          cytoStyle,
+          aStar,
+          DEFAULT_TICKSPEED
+        );
+        graphArray.push(network);
+        if (graphSettings["graph-size"] === "small") {
+          SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
+        } else {
+          SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
+        }
+        break;
+
+      case "bfs":
+        network = new CyGraph(
+          graphDivs[i].id,
+          cytoStyle,
+          greedyBestFirstSearch,
+          DEFAULT_TICKSPEED
+        );
+        graphArray.push(network);
+        if (graphSettings["graph-size"] === "small") {
+          SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
+        } else {
+          SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
+        }
+        break;
+
+      case "dijkstra":
+        network = new CyGraph(
+          graphDivs[i].id,
+          cytoStyle,
+          dijkstra,
+          DEFAULT_TICKSPEED
+        );
+        graphArray.push(network);
+        if (graphSettings["graph-size"] === "small") {
+          SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
+        } else {
+          SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
+        }
+        break;
+
+      default:
+        console.error("Graph generation failed.");
+        break;
+    }
+  }
 };
 
 /// MAIN ///

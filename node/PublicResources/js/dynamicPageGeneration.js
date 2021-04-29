@@ -38,35 +38,24 @@ const generateVisualizationHTML = (graphs) => {
  * This function generates an amount of divs to contain graph networks on the html page.
  * @param {Number} graphAmount The number of graph divs to generate. This value is usually
  * requested by the user.
- * @param {String} graphSize The size of the graphs which will be contained in the divs.
- * @param {String} algorithms The different types of algorithms associated with each graph div.
- * @param {String} idleZones Determines whether idle zones should be contained within the div.
  * @param {String} pageName This value determines the appropriate switch case, since the two end
  * points will need different properties for css reasons.
  * @returns A string, which contains the specified amount of graph divs in series. The graph will
  * have an id and three classes associated with it: The cy tag, the size of the graph which will
  * be placed in the div and the algorithm that should be used.
  */
-const generateGraphDivs = (
-  graphAmount,
-  graphSize,
-  algorithms,
-  idleZones,
-  pageName
-) => {
+const generateGraphDivs = (graphAmount, pageName) => {
   switch (pageName) {
     case "visualization":
       let graphs = `<div style="text-align: center">`;
       for (let i = 0; i < graphAmount; i++) {
-        graphs += `<div id="cy${i}" class="cy ${graphSize} ${algorithms[i]} ${idleZones}"></div>`;
+        graphs += `<div id="cy${i}" class="cy"></div>`;
       }
       graphs += `</div>`;
       return graphs;
 
     case "headless-simulation":
-      let graph = `<div id="cy${graphAmount - 1}" class="cy ${graphSize} ${
-        algorithms[0]
-      } ${idleZones} headless"></div>`;
+      let graph = `<div id="cy${graphAmount - 1}" class="cy headless"></div>`;
       return graph;
 
     default:
@@ -189,25 +178,25 @@ const generateOptionsHTML = (pageObject) => {
           <form
             class="options-container"
             id="options-form"
-            action="/${pageObject.formaction}"
+            action="/process-options"
             method="POST"
           >
             <header>
               <h1>Choose your options for the FCDP ${pageObject.h1}</h1>
               <div class="set">`;
   body +=
-    pageObject.formaction === "visualization"
+    pageObject.h1 === "Visualization"
       ? numberOfGraphOption
-      : pageObject.formaction === "headless-simulation"
+      : pageObject.h1 === "Simulation"
       ? oneGraphOption
       : ``;
 
   body += `<div class="graph-size">
                   <label for="graph-size">`;
   body +=
-    pageObject.formaction === "visualization"
+    pageObject.h1 === "Visualization"
       ? `Size of graphs`
-      : pageObject.formaction === `headless-simulation`
+      : pageObject.h1 === `Simulation`
       ? `Size of graph`
       : "";
   body += `</label>
@@ -235,8 +224,7 @@ const generateOptionsHTML = (pageObject) => {
                     >
                   </div>
                 </div>`;
-  body +=
-    pageObject.formaction === "headless-simulation" ? algorithmOption : ``;
+  body += pageObject.h1 === "Simulation" ? algorithmOption : ``;
 
   body += `<div class="idle-zones">
       <label for="idle-zones"
@@ -265,9 +253,46 @@ const generateOptionsHTML = (pageObject) => {
           >Disable</label
         >
       </div>
-    </div>`;
-
-  body += `</div>
+    </div>
+    <div class="slider-container">
+          <p>Order frequency:</p>
+          <input
+            type="range"
+            name="order-frequency"
+            value="0.25"
+            id="order-frequency"
+            min="0.2"
+            max="0.3"
+            step="0.01"
+            oninput="this.nextElementSibling.value = this.value"
+          />
+          <output>0.25</output>
+          <p>Ticks per second:</p>
+          <input
+            type="range"
+            name="ticks-per-second"
+            value="10"
+            id="ticks-per-second"
+            min="1"
+            max="20"
+            step="1"
+            oninput="this.nextElementSibling.value = this.value"
+          />
+          <output>10</output>
+          <p>Courier frequency:</p>
+          <input
+            type="range"
+            name="courier-frequency"
+            value="10"
+            id="courier-frequency"
+            min="1"
+            max="20"
+            step="1"
+            oninput="this.nextElementSibling.value = this.value"
+          />
+          <output>10</output>
+        </div>
+        </div>
             </header>
             <footer>
               <div class="set">
@@ -342,41 +367,6 @@ const generateHeadlessHTML = (graphSize, algorithm, graph) => {
         <p>
           Failed orders: <span id="failed-orders" class="control-value"></span>
         </p>
-        <div class="slider-container">
-          <p>Order frequency:</p>
-          <input
-            type="range"
-            value="0.5"
-            id="order-frequency"
-            min="0"
-            max="1"
-            step="0.01"
-            oninput="this.nextElementSibling.value = this.value"
-          />
-          <output>0.5</output>
-          <p>Tick rate:</p>
-          <input
-            type="range"
-            value="500"
-            id="tick-rate"
-            min="0"
-            max="1000"
-            step="10"
-            oninput="this.nextElementSibling.value = this.value"
-          />
-          <output>500</output>
-          <p>Couriers:</p>
-          <input
-            type="range"
-            value="25"
-            id="couriers"
-            min="1"
-            max="50"
-            step="1"
-            oninput="this.nextElementSibling.value = this.value"
-          />
-          <output>25</output>
-        </div>
         <div id="orders">
         <textarea readonly name="orders-textarea" id="order-textarea"></textarea>
         </div>
