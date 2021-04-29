@@ -168,7 +168,7 @@ function Order(id, origin, destination, startTime) {
   this.maxDuration = 60;
   this.startTime = startTime;
   this.startTimeClock = formatTime(startTime);
-  this.assignedCourier = "No courier assigned yet";
+  this.assignedCourier = "";
   this.status = "pending";
 }
 
