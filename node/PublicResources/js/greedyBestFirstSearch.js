@@ -19,7 +19,7 @@ function greedyBestFirstSearch(cyGraph, startNode, endNode) {
   // Initialization
   startNode.data("_parent", null);
   startNode.data(
-    "distanceorigin",
+    "distanceOrigin",
     heuristicApprox(cyGraph, startNode.id(), endNode.id())
   );
   pending.enqueue(startNode);
@@ -27,7 +27,6 @@ function greedyBestFirstSearch(cyGraph, startNode, endNode) {
   // While-loop runs until the queue is empty OR until we have reached the endNode.
   while (!pending.isEmpty()) {
     currentShortest = pending.dequeue();
-
     // We have reached our destination; stop looking.
     if (currentShortest === endNode) {
       break;
@@ -35,38 +34,38 @@ function greedyBestFirstSearch(cyGraph, startNode, endNode) {
     // Add current node being analyzed to closed list.
     fullyExpanded.add(currentShortest);
 
-    // forEach loop that manages the queue for the successors of the currently observed node.
-    cyGraph.graph.edges().forEach((edge) => {
-      // Check if edge connecting current node to adjacent node is a one-way, and if so, it does not add it to open list.
-      if (edge.source().id() === currentShortest.id()) {
-        let adjacentNode = edge.target();
+    //loop that manages the queue for the successors of the currently observed node utilizing neighborhood method.
+    currentShortest.closedNeighborhood((ele) => {
+      if (ele.isEdge()) {
+        if (ele.target() != currentShortest) {
+          let adjacentNode = ele.target();
 
-        // If the successor is in the closed list, do not add it to open list.
-        if (fullyExpanded.has(adjacentNode)) {
-          return;
+          // If the successor is in the closed list, do not add it to open list, continue to next adjacent node.
+          if (fullyExpanded.has(adjacentNode)) {
+            return;
+          }
+
+          // If adjacent node is end node set it's parent node to this node, stop searching adjacent nodes and add it to top of queue to stop search.
+          else if (adjacentNode === endNode) {
+            adjacentNode.data("_parent", currentShortest.id());
+            adjacentNode.data("distanceOrigin", 1); //To avoid problems where checks are made if 'distanceOrigin' is set to 0, to determine whether 'distanceOrigin' has been set yet.
+            pending.enqueue(adjacentNode);
+            return;
+          } else if (!pending.nodes.includes(adjacentNode)) {
+            // Calculate SLD for adjacent node.
+            adjacentNode.data(
+              "distanceOrigin",
+              heuristicApprox(cyGraph, adjacentNode.id(), endNode.id())
+            );
+            // Set parent node to current node and add adjacent node to the open queue.
+            adjacentNode.data("_parent", currentShortest.id());
+            pending.enqueue(adjacentNode);
+            return;
+          }
         }
-
-        // If adjacent node is end node set it's parent node to this node, stop searching adjacent nodes and add it to top of queue to stop search.
-        if (adjacentNode === endNode) {
-          adjacentNode.data("_parent", currentShortest.id());
-          adjacentNode.data("distanceorigin", 0);
-          pending.enqueue(adjacentNode);
-          return;
-        }
-
-        // Calculate SLD for adjacent node.
-        adjacentNode.data(
-          "distanceorigin",
-          heuristicApprox(cyGraph, adjacentNode.id(), endNode.id())
-        );
-
-        // Add adjacent node to the open queue and set parent node to current node.
-        pending.enqueue(adjacentNode);
-        adjacentNode.data("_parent", currentShortest.id());
       }
     });
   }
-
   if (currentShortest.id() !== endNode.id()) {
     throw new Error("BFS error: Open list is empty. Path could not be found!");
   }
