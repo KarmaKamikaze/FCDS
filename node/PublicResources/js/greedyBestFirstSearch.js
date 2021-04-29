@@ -18,6 +18,10 @@ function greedyBestFirstSearch(cyGraph, startNode, endNode) {
 
   // Initialization
   startNode.data("_parent", null);
+  startNode.data(
+    "distanceOrigin",
+    heuristicApprox(cyGraph, startNode.id(), endNode.id())
+  );
   pending.enqueue(startNode);
 
   // While-loop runs until the queue is empty OR until we have reached the endNode.
@@ -44,7 +48,7 @@ function greedyBestFirstSearch(cyGraph, startNode, endNode) {
           // If adjacent node is end node set it's parent node to this node, stop searching adjacent nodes and add it to top of queue to stop search.
           else if (adjacentNode === endNode) {
             adjacentNode.data("_parent", currentShortest.id());
-            adjacentNode.data("distanceOrigin", 1);
+            adjacentNode.data("distanceOrigin", 1); //To avoid problems where checks are made if 'distanceOrigin' is set to 0, to determine whether 'distanceOrigin' has been set yet.
             pending.enqueue(adjacentNode);
             return;
           } else if (!pending.nodes.includes(adjacentNode)) {
@@ -53,9 +57,9 @@ function greedyBestFirstSearch(cyGraph, startNode, endNode) {
               "distanceOrigin",
               heuristicApprox(cyGraph, adjacentNode.id(), endNode.id())
             );
-            // Add adjacent node to the open queue and set parent node to current node.
-            pending.enqueue(adjacentNode);
+            // Set parent node to current node and add adjacent node to the open queue.
             adjacentNode.data("_parent", currentShortest.id());
+            pending.enqueue(adjacentNode);
             return;
           }
         }
