@@ -69,7 +69,10 @@ function getGraphSize(graph) {
  */
 function startSim() {
   document.querySelectorAll(".cy").forEach((graph) => {
-    let cytoStyle = new CytoStyle(graph.id);
+    let graphSize = getGraphSize(graph),
+        styleSize = graphSize === GRAPH_PRESET_FILE ? "small" : "large";
+    let cytoStyle = new CytoStyle(graph.id, styleSize);
+
     let cyGraph = new CyGraph(graph.id, cytoStyle, getAlgorithm(graph), // graph name, stylesheet and SP-algorithm
                               DISTANCE_PER_TICK, // courier movement speed
                               0.3, // order rate (pr restaurant)
@@ -78,7 +81,7 @@ function startSim() {
                               8, // max number of couriers
                               DEFAULT_TICKSPEED); // tickspeed
     graphArray.push(cyGraph);
-    SetupGraph(cyGraph, getGraphSize(graph), simulationTest);
+    SetupGraph(cyGraph, graphSize, simulationTest);
   });
 }
 
