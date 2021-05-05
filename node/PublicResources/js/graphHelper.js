@@ -364,7 +364,6 @@ class CyGraph {
         if (courier.data("pendingOrder")) {
           courier.data("pendingOrder", false);
           courier.data("moving", false);
-          console.log(`${courier.id()}: nvm bro`)
           return this.traversePath(courier.id(), courier.data("currentOrder").restaurant.id());
         }
         if (index < path.length - 2) {
@@ -406,9 +405,9 @@ class CyGraph {
     // get order time, update stats
     order.endTime = this.timeMinutes;
     order.deliveryTime = order.endTime - order.startTime;
+    order.status = "delivered";
     this.simulationStats.deliveredOrdersArr.push(order);
     this.simulationStats.totalDeliveryTime += order.deliveryTime;
-
     // if the delivery took > 60 min, consider it a failed delivery
     if (order.deliveryTime > 60) {
         this.simulationStats.failedOrders++;
