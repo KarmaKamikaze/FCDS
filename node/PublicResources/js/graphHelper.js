@@ -101,7 +101,6 @@ class CyGraph {
     });
     courier.addClass(eleType.courier);
     this.couriers.push(courier); // add the courier to the list of couriers
-    //console.log(`placed ${courier.id()} at node ${randomNode.id()}`)
     if (this.useIdleZones && this.orders.length === 0) {
       this.moveToIdleZone(courier);
     }
@@ -253,7 +252,7 @@ class CyGraph {
         endNode = this.graph.$id(endId);
     this.pathFunc(this, startNode, endNode);
     let path = traceback(this.graph, endNode);
-
+    courier.data("currentOrder").status = "transit";
     if (this.headless) {
       this.moveCourierHeadless(courier, path);
     }
@@ -282,7 +281,6 @@ class CyGraph {
     if (courier.data("pendingOrder")) {
       courier.data("pendingOrder", false);
       courier.data("moving", false);
-      // console.log(`${courier.id()}: nvm bro`)
       return this.traversePath(courier.id(), courier.data("currentOrder").restaurant.id());
     }
 
@@ -307,7 +305,6 @@ class CyGraph {
         }
         // Otherwise the courier has arrived at the customer, so the order has been successfully delivered
         else if (path[i-1] == order.customer.id()) {
-            //console.info(this.timeMinutes-order.startTime);
             this.deliverOrder(courier, order);
         }
       }
@@ -332,7 +329,6 @@ class CyGraph {
         }
     }
     if (bestZone) {
-      //console.log(`Moving ${courier.id()} to idle zone ${bestZone.id()}`);
       this.traversePath(courier.id(), bestZone.id());
     }
   }
@@ -373,7 +369,6 @@ class CyGraph {
         }
         if (index < path.length - 2) {
           // on traversing a node
-          //  console.log(`[${this.name}] ${courier.id()} went through ${courier.data("currentNode")}`);
           return this.animateCourier(path, courier, edges, index + 1);
         } else {
           for (const edge of edges) {
@@ -416,13 +411,11 @@ class CyGraph {
 
     // if the delivery took > 60 min, consider it a failed delivery
     if (order.deliveryTime > 60) {
-        console.log(`Oh no, order${order.id} took ${order.deliveryTime} minutes! Anyway...`);
         this.simulationStats.failedOrders++;
     }
     
     // If the courier is to be removed from the graph, remove when they arrive at their final destination
     if (courier.data("terminationImminent")) {
-      //console.log(`${courier.id()} has delivered their order and is heading home. Bye!`);
       this.delNode(courier.id())
       return;
     }
