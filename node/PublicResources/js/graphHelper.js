@@ -20,7 +20,17 @@ let eleType = {
 };
 
 class CyGraph {
-  constructor(name, graph, pathFunc, distancePerTick, orderRate, useIdleZones, headless, courierFreq, tickSpeed) {
+  constructor(
+    name,
+    graph,
+    pathFunc,
+    distancePerTick,
+    orderRate,
+    useIdleZones,
+    headless,
+    courierFreq,
+    tickSpeed
+  ) {
     this.name = name;
     this.graph = graph;
     this.pathFunc = pathFunc;
@@ -85,8 +95,8 @@ class CyGraph {
    */
   addCourier() {
     let nodes = this.graph.nodes().filter((n) => this.couriers.indexOf(n));
-    let i = this.getRandomInt(nodes.length-1),
-        randomNode = nodes[i];
+    let i = this.getRandomInt(nodes.length - 1),
+      randomNode = nodes[i];
 
     let courier = this.graph.add({
       group: "nodes",
@@ -248,18 +258,17 @@ class CyGraph {
    */
   traversePath(courierId, endId) {
     let courier = this.graph.$id(courierId),
-        startNode = courier.data("currentNode"),
-        endNode = this.graph.$id(endId);
+      startNode = courier.data("currentNode"),
+      endNode = this.graph.$id(endId);
     this.pathFunc(this, startNode, endNode);
-    let path = traceback(this.graph, endNode);
+    let path = traceback(this.graph, startNode, endNode);
     let order = courier.data("currentOrder");
     if (order) {
-        order.status = "transit";
+      order.status = "transit";
     }
     if (this.headless) {
       this.moveCourierHeadless(courier, path);
-    }
-    else {
+    } else {
       // Edge/route highlighting
       let pathEdges = this.getRoute(path);
       for (const edge of pathEdges) {
@@ -269,7 +278,7 @@ class CyGraph {
       this.animateCourier(path, courier, pathEdges);
     }
   }
-  
+
   /**
    * Moves the designated courier along the input path and performs an action based on the destination.
    * @param {Object} courier The courier node to move.
@@ -278,22 +287,27 @@ class CyGraph {
    */
   moveCourierHeadless(courier, path, i = 0) {
     let curNode = this.graph.$id(path[i]),
-        nextNode = this.graph.$id(path[i+1]);
-    
+      nextNode = this.graph.$id(path[i + 1]);
+
     // If the courier is moving towards an idle zone, stop the current route and begin on the order delivery
     if (courier.data("pendingOrder")) {
       courier.data("pendingOrder", false);
       courier.data("moving", false);
-      return this.traversePath(courier.id(), courier.data("currentOrder").restaurant.id());
+      return this.traversePath(
+        courier.id(),
+        courier.data("currentOrder").restaurant.id()
+      );
     }
 
     // The current node is not the destination
     if (i < path.length) {
-        courier.position(curNode.position());
-        courier.data("currentNode", curNode);
-        let distance = this.graph.$id(this.getEdgeId(curNode.id(), nextNode.id())).data("weight"),
-            timeout = (distance / this.distancePerTick) * this.tickSpeed;
-        setTimeout(() => this.moveCourierHeadless(courier, path, i+1), timeout);
+      courier.position(curNode.position());
+      courier.data("currentNode", curNode);
+      let distance = this.graph
+          .$id(this.getEdgeId(curNode.id(), nextNode.id()))
+          .data("weight"),
+        timeout = (distance / this.distancePerTick) * this.tickSpeed;
+      setTimeout(() => this.moveCourierHeadless(courier, path, i + 1), timeout);
     }
     // The current node is the destination
     else {
@@ -303,12 +317,12 @@ class CyGraph {
       }
       if (order) {
         // If the destination is a restaurant, send the courier to the order's customer
-        if (path[i-1] == order.restaurant.id()) {
+        if (path[i - 1] == order.restaurant.id()) {
           this.traversePath(courier.id(), order.customer.id());
         }
         // Otherwise the courier has arrived at the customer, so the order has been successfully delivered
-        else if (path[i-1] == order.customer.id()) {
-            this.deliverOrder(courier, order);
+        else if (path[i - 1] == order.customer.id()) {
+          this.deliverOrder(courier, order);
         }
       }
     }
@@ -323,19 +337,19 @@ class CyGraph {
     courier.data("moving", true);
     dijkstra(this, startNode);
     let lowestDistance = Infinity,
-        bestZone = null;
+      bestZone = null;
     for (const zone of this.idleZones) {
-        let dist = zone.data("distanceOrigin");
-        if(dist < lowestDistance) {
-            lowestDistance = dist;
-            bestZone = zone;
-        }
+      let dist = zone.data("distanceOrigin");
+      if (dist < lowestDistance) {
+        lowestDistance = dist;
+        bestZone = zone;
+      }
     }
     if (bestZone) {
       this.traversePath(courier.id(), bestZone.id());
     }
   }
-  
+
   /**
    * Animates the movement of a courier from point A to B, highlighting the route.
    * @param {Array} path The array of nodes produced by a pathfinding algorithm
@@ -367,7 +381,10 @@ class CyGraph {
         if (courier.data("pendingOrder")) {
           courier.data("pendingOrder", false);
           courier.data("moving", false);
-          return this.traversePath(courier.id(), courier.data("currentOrder").restaurant.id());
+          return this.traversePath(
+            courier.id(),
+            courier.data("currentOrder").restaurant.id()
+          );
         }
         if (index < path.length - 2) {
           // on traversing a node
@@ -387,7 +404,7 @@ class CyGraph {
           if (order) {
             // check if the current node is the restaurant node of a given order, then send the courier to its destination
             if (courier.data("currentNode") === order.restaurant) {
-                return this.traversePath(courier.id(), order.customer.id());
+              return this.traversePath(courier.id(), order.customer.id());
             }
             // otherwise the order has been delivered at its destination, and we can reset the courier
             this.deliverOrder(courier, order, nextPos);
@@ -413,19 +430,19 @@ class CyGraph {
     this.simulationStats.totalDeliveryTime += order.deliveryTime;
     // if the delivery took > 60 min, consider it a failed delivery
     if (order.deliveryTime > 60) {
-        this.simulationStats.failedOrders++;
+      this.simulationStats.failedOrders++;
     }
-    
+
     // If the courier is to be removed from the graph, remove when they arrive at their final destination
     if (courier.data("terminationImminent")) {
-      this.delNode(courier.id())
+      this.delNode(courier.id());
       return;
     }
 
     if (targetNode) {
       this.moveNode(courier.id(), targetNode.x, targetNode.y);
     }
-    
+
     courier.data("currentOrder", null);
     // If there are no pending orders, send the courier to an idle zone
     if (this.useIdleZones && !this.orders.length) {

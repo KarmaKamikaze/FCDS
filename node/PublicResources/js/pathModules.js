@@ -49,7 +49,6 @@ function heuristicApprox(cyGraph, currentNodeId, endNodeId) {
   let endPos = cyGraph.getPos(endNodeId);
   let [currentX, currentY] = [currentPos.x, currentPos.y];
   let [endX, endY] = [endPos.x, endPos.y];
-
   return Math.sqrt(Math.pow(currentX - endX, 2) + Math.pow(currentY - endY, 2));
 }
 
@@ -61,25 +60,18 @@ function heuristicApprox(cyGraph, currentNodeId, endNodeId) {
  * which we will use for navigation.
  * @param {Object} endNode The end goal for which we want to find the shortest path.
  */
-function traceback(graph, endNode) {
-  let shortestPath = "";
+function traceback(graph, startNode, endNode) {
   let jump = endNode;
   let path = new Array();
 
-  if (jump.data("_parent") == null) {
-    return new Error("No possible path to end node");
-  }
-
   /** While-loop that reiterates through the parents of jump,
    * creating a list of nodes used to go from start node to end node. */
-  while (
-    /*jump.data("_parent") !== null && */ jump.data("distanceOrigin") !== 0
-  ) {
+  while (jump.data("_parent") !== null && jump.data("distanceOrigin") !== 0) {
     path.unshift(jump.id());
     jump = graph.getElementById(`${jump.data("_parent")}`);
   }
   // Add the start node to the list.
-  path.unshift(jump.id());
+  path.unshift(startNode.id());
 
   return path;
 }

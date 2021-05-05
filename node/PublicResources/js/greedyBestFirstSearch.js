@@ -39,7 +39,6 @@ function greedyBestFirstSearch(cyGraph, startNode, endNode) {
       if (ele.isEdge()) {
         if (ele.target() != currentShortest) {
           let adjacentNode = ele.target();
-
           // If the successor is in the closed list, do not add it to open list, continue to next adjacent node.
           if (fullyExpanded.has(adjacentNode)) {
             return;
@@ -51,7 +50,7 @@ function greedyBestFirstSearch(cyGraph, startNode, endNode) {
             adjacentNode.data("distanceOrigin", 1); //To avoid problems where checks are made if 'distanceOrigin' is set to 0, to determine whether 'distanceOrigin' has been set yet.
             pending.enqueue(adjacentNode);
             return;
-          } else if (!pending.nodes.includes(adjacentNode)) {
+          } else {
             // Calculate SLD for adjacent node.
             adjacentNode.data(
               "distanceOrigin",
@@ -66,9 +65,9 @@ function greedyBestFirstSearch(cyGraph, startNode, endNode) {
       }
     });
   }
-  if (currentShortest.id() !== endNode.id()) {
+  /*if (currentShortest.id() !== endNode.id()) {
     throw new Error("BFS error: Open list is empty. Path could not be found!");
-  }
+  }*/
 }
 
 export { greedyBestFirstSearch };
