@@ -7,7 +7,7 @@ import { eleType } from "./graphHelper.js";
  * @param {string} graphSize The size of the graph, either "small" or "large", that the stylesheet is to be applied to
  * @returns The finished graph object
  */
-function CytoStyle(containerId, graphSize) {
+function CytoStyle(containerId, graphSize, headless) {
   let minZoomVal, maxZoomVal, allowPanning;
 
   //Settings specific to the small graph
@@ -25,6 +25,7 @@ function CytoStyle(containerId, graphSize) {
 
   return cytoscape({
     container: document.getElementById(containerId),
+    headless: headless,
 
     // Global settings
     boxSelectionEnabled: false,

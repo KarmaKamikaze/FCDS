@@ -30,23 +30,19 @@ class SimStats {
     this.deliveredOrdersArr = new Array(); //An array of all orders successfully delivered
     this.pendingOrders = 0; //The number of orders waiting to have a courier assigned
     this.activeOrders = 0; //The number of orders assigned to couriers
-    this.failedOrders = 0; // Not implemented yet due to missing delivery time constraint!
+    this.failedOrders = 0; //The number of failed orders
     this.averageDeliveryTime = 0; //The average delivery time of orders on the graph
+    this.totalDeliveryTime = 0; //Total delivery time
   }
 
   /**
    * Calculates the average delivery time of all delivered orders
    */
   avgDeliveryTime() {
-    let avgTime = 0;
-
-    for (let i = 0; i < this.deliveredOrdersArr.length; i++) {
-      avgTime +=
-        this.deliveredOrdersArr[i].endTime -
-        this.deliveredOrdersArr[i].startTime;
-    }
-    avgTime /= this.deliveredOrdersArr.length;
-    this.averageDeliveryTime = avgTime;
+    this.averageDeliveryTime = Math.round(
+      this.totalDeliveryTime / this.deliveredOrdersArr.length
+    );
+    return this.averageDeliveryTime;
   }
 
   /**
@@ -89,7 +85,10 @@ function updateStats(simStatObject) {
         `${simStatObject.totalOrdersArr[i].restaurant.data("id")} \u279D ` +
         `${simStatObject.totalOrdersArr[i].customer.data("id")} : ` +
         `Timestamp: ${simStatObject.totalOrdersArr[i].startTimeClock}`;
-      if (simStatObject.totalOrdersArr[i].status !== "pending") {
+      if (
+        simStatObject.totalOrdersArr[i].status !== "pending" &&
+        simStatObject.totalOrdersArr[i].status !== "transit"
+      ) {
         data += ` - ${simStatObject.totalOrdersArr[i].endTimeClock}`;
       }
       data += `\n`;

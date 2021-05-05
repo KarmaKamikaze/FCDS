@@ -12,8 +12,16 @@ import { startSimulation } from "./orderGeneration.js";
  * @param {File} presetFile The graph preset file to load
  * @param {Function} startSimulationCallback Callback function which starts the simulation
  */
-function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
-  if (presetFile === null) return;
+function SetupGraph(
+  cyGraph,
+  presetFile = null,
+  startSimulationCallback,
+  tickSpeed
+) {
+  if (presetFile === null) {
+    startSimulation(cyGraph);
+    return;
+  }
 
   fetch(presetFile)
     .then((response) => response.json())
@@ -24,7 +32,7 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
       cyGraph.initializeNodes();
       cyGraph.graph.fit(cyGraph.graph.elements());
       // then call the given start simulation function for this graph
-      startSimulationCallback(cyGraph);
+      startSimulationCallback(cyGraph, tickSpeed);
     });
 }
 
@@ -32,19 +40,27 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
  * Callback function which starts the simulation once the graph is initialized
  * @param {CyGraph} cyGraph The graph to perform the simulation on
  */
-function simulationTest(cyGraph) {
-  cyGraph.addCourier("R1");
-  cyGraph.addCourier("N4");
+function simulationTest(cyGraph, tickSpeed) {
+  startSimulation(cyGraph, tickSpeed);
+  console.log(`[${cyGraph.name}] Started simulation`);
+}
 
-  startSimulation(cyGraph, DEFAULT_TICKSPEED);
+function getAlgorithm(graph) {
+  return graph === "astar"
+    ? aStar
+    : graph === "bfs"
+    ? greedyBestFirstSearch
+    : dijkstra;
 }
 
 /**
  * This function attaches a cytoscape network and SPA algorithm to each
  * graph div and starts the visualization simulation.
  */
-const startSim = async () => {
+async function startSim() {
+  let graphDivs = document.querySelectorAll("div.cy");
   let graphSettings = {};
+
   try {
     const response = await fetch("../js/HTMLRequestParams.json");
     if (!response.ok) {
@@ -56,76 +72,39 @@ const startSim = async () => {
     console.log(err);
   }
 
+  let graphSize =
+      graphSettings["graph-size"] === "small"
+        ? GRAPH_PRESET_FILE
+        : BIG_GRAPH_PRESET_FILE,
+    tickSpeed = 1000 / graphSettings["ticks-per-second"];
+
   for (let i = 0; i < graphSettings["number-of-graphs"]; i++) {
-    let graphDivs = document.querySelectorAll("div.cy");
-    let cytoStyle;
+    let cytoStyle = new CytoStyle(
+      graphDivs[i].id,
+      graphSettings["graph-size"],
+      graphDivs[i].classList.contains("headless")
+    );
 
-    // Selects the correct CytoStyle options based on the graphs size
-    if (graphSettings["graph-size"] === "small") {
-      cytoStyle = new CytoStyle(graphDivs[i].id, "small");
-    } else {
-      cytoStyle = new CytoStyle(graphDivs[i].id, "large");
-    }
-
-    let network = {};
-
-    switch (graphSettings[`simulation-${i + 1}-spa`]) {
-      case "astar":
-        network = new CyGraph(
-          graphDivs[i].id,
-          cytoStyle,
-          aStar,
-          DEFAULT_TICKSPEED
-        );
-        graphArray.push(network);
-        if (graphSettings["graph-size"] === "small") {
-          SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
-        } else {
-          SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
-        }
-        break;
-
-      case "bfs":
-        network = new CyGraph(
-          graphDivs[i].id,
-          cytoStyle,
-          greedyBestFirstSearch,
-          DEFAULT_TICKSPEED
-        );
-        graphArray.push(network);
-        if (graphSettings["graph-size"] === "small") {
-          SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
-        } else {
-          SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
-        }
-        break;
-
-      case "dijkstra":
-        network = new CyGraph(
-          graphDivs[i].id,
-          cytoStyle,
-          dijkstra,
-          DEFAULT_TICKSPEED
-        );
-        graphArray.push(network);
-        if (graphSettings["graph-size"] === "small") {
-          SetupGraph(network, GRAPH_PRESET_FILE, simulationTest);
-        } else {
-          SetupGraph(network, BIG_GRAPH_PRESET_FILE, simulationTest);
-        }
-        break;
-
-      default:
-        console.error("Graph generation failed.");
-        break;
-    }
+    let cyGraph = new CyGraph(
+      graphDivs[i].id,
+      cytoStyle,
+      getAlgorithm(graphSettings[`simulation-${i + 1}-spa`]), // graph name, stylesheet and SP-algorithm
+      DISTANCE_PER_TICK, // courier movement speed
+      graphSettings["order-frequency"], // order rate (pr restaurant)
+      graphSettings["idle-zones"], // use idle zones
+      true, // headless traversal
+      graphSettings["courier-frequency"], // max number of couriers
+      tickSpeed // ms per tick
+    );
+    graphArray.push(cyGraph);
+    SetupGraph(cyGraph, graphSize, simulationTest, tickSpeed);
   }
-};
+}
 
 /// MAIN ///
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
 let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
-const DEFAULT_TICKSPEED = 100;
+const DISTANCE_PER_TICK = 300; // 300 units per tick -> meters per minute -> 18 km/h
 
 let graphArray = [];
 startSim();

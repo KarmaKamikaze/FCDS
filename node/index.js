@@ -68,9 +68,9 @@ let validateParameters = [
   body("simulation-1-spa").trim().toLowerCase().escape(),
   body("simulation-2-spa").trim().toLowerCase().escape(),
   body("simulation-3-spa").trim().toLowerCase().escape(),
-  body("idle-zones").trim().toLowerCase().escape(),
+  body("idle-zones").isLength({ max: 2 }).isNumeric().toInt().escape(),
   body("order-frequency").isLength({ max: 4 }).isNumeric().toFloat().escape(),
-  body("ticks-per-second").isLength({ max: 2 }).isNumeric().toInt().escape(),
+  body("ticks-per-second").isLength({ max: 3 }).isNumeric().toInt().escape(),
   body("courier-frequency").isLength({ max: 2 }).isNumeric().toInt().escape(),
 ];
 

@@ -226,35 +226,19 @@ const generateOptionsHTML = (pageObject) => {
                 </div>`;
   body += pageObject.h1 === "Simulation" ? algorithmOption : ``;
 
-  body += `<div class="idle-zones">
-      <label for="idle-zones"
-        >Idle zones</label
-      >
-      <div id="idle-zones" class="radio-container">
-        <input
-          id="idle-zones-yes"
-          name="idle-zones"
-          type="radio"
-          value="enable-idle"
-          checked
-          required
-        />
-        <label for="idle-zones-yes" class="disable-select"
-          >Enable</label
-        >
-        <input
-          id="idle-zones-no"
-          name="idle-zones"
-          type="radio"
-          value="disable-idle"
-          required
-        />
-        <label for="idle-zones-no" class="disable-select"
-          >Disable</label
-        >
-      </div>
-    </div>
-    <div class="slider-container">
+  body += `<div class="slider-container">
+          <p>Idle zones:</p>
+          <input
+            type="range"
+            name="idle-zones"
+            value="2"
+            id="idle-zones"
+            min="0"
+            max="10"
+            step="1"
+            oninput="this.nextElementSibling.value = this.value"
+          />
+          <output>2</output>
           <p>Order frequency:</p>
           <input
             type="range"
@@ -271,14 +255,14 @@ const generateOptionsHTML = (pageObject) => {
           <input
             type="range"
             name="ticks-per-second"
-            value="10"
+            value="50"
             id="ticks-per-second"
             min="1"
-            max="20"
+            max="100"
             step="1"
             oninput="this.nextElementSibling.value = this.value"
           />
-          <output>10</output>
+          <output>50</output>
           <p>Courier frequency:</p>
           <input
             type="range"
