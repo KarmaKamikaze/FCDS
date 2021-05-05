@@ -26,7 +26,7 @@ class CyGraph {
     this.pathFunc = pathFunc;
     this.tickSpeed = tickSpeed;
     this.courierCount = 0;
-    this.simulationStats = new simStats();
+    this.simulationStats = new SimStats();
     this.distancePerTick = distancePerTick;
     this.headless = headless;
     this.timeMinutes = simStartTime;
