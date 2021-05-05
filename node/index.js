@@ -1,7 +1,6 @@
 import express from "express";
 import RateLimit from "express-rate-limit";
 import { body, validationResult } from "express-validator";
-import fetch from "node-fetch";
 import {
   generateVisualizationHTML,
   generateGraphDivs,
@@ -20,10 +19,12 @@ const port = 3190;
 const pageObject = {
   visualization: {
     title: "Graph Visualization Options",
+    formaction: "visualization",
     h1: "Visualization",
   },
   headless: {
     title: "Headless Simulation Options",
+    formaction: "headless-simulation",
     h1: "Simulation",
   },
 };
@@ -57,8 +58,8 @@ app.use(
 );
 
 // Apply a rate limiter to all requests to prevent DDOS attacks
-// let limiter = new RateLimit({ windowMs: 1 * 60 * 1000, max: 5 });
-// app.use(limiter);
+let limiter = new RateLimit({ windowMs: 1 * 60 * 1000, max: 5 });
+app.use(limiter);
 
 // Validation rules
 let validateParameters = [
@@ -76,6 +77,7 @@ let validateParameters = [
 /**
  * Validates request and check for an empty body
  * @param {Object} req The request object, received from the client
+ * @param {Object} res The response object, used to respond to the client if an error occurs.
  * @returns The response, which sends an error message to the client.
  */
 const inputValidation = (req, res) => {
@@ -99,50 +101,7 @@ app.get("/", (req, res) => {
   console.log("Sent:", fileName);
 });
 
-app.get("/visualization", async (req, res) => {
-  let graphSettings = {};
-  try {
-    // node-fetch only accepts absolute urls
-    let data = await fetch(`http://localhost:${port}/graph-options-json`);
-    if (!data.ok) {
-      const errorMessage = `An error occurred: ${data.status}`;
-      throw new Error(errorMessage);
-    }
-    graphSettings = await data.json();
-  } catch (err) {
-    console.log(err);
-  }
-
-  res.send(
-    generateVisualizationHTML(
-      generateGraphDivs(graphSettings["number-of-graphs"], "visualization")
-    )
-  );
-  console.log(
-    `Sent: Visualization with params: ` +
-      `Graph amount: ${graphSettings["number-of-graphs"]}, ` +
-      `graph size: ${graphSettings["graph-size"]}, ` +
-      `simulation SPAs: ${graphSettings["simulation-1-spa"]} ` +
-      `${graphSettings["simulation-2-spa"]} ` +
-      `${graphSettings["simulation-3-spa"]}, ` +
-      `idle zones: ${graphSettings["idle-zones"]}, ` +
-      `order frequency: ${graphSettings["order-frequency"]}, ` +
-      `ticks per second: ${graphSettings["ticks-per-second"]}, ` +
-      `courier frequency: ${graphSettings["courier-frequency"]}.`
-  );
-});
-
-app.get("/visualization-options", (req, res) => {
-  res.send(generateOptionsHTML(pageObject.visualization));
-  console.log("Sent: Simulations visualization options page");
-});
-
-app.get("/headless-options", (req, res) => {
-  res.send(generateOptionsHTML(pageObject.headless));
-  console.log("Sent: Headless simulation options page");
-});
-
-app.post("/process-options", validateParameters, (req, res) => {
+app.post("/visualization", validateParameters, (req, res) => {
   inputValidation(req, res);
 
   // Write request parameters into json file
@@ -157,62 +116,69 @@ app.post("/process-options", validateParameters, (req, res) => {
     ),
     requestData
   );
-  console.log(`Options referer: ${req.header("Referer")}`);
-  if (req.header("Referer").includes("visualization-options")) {
-    res.redirect("/visualization");
-  } else if (req.header("Referer").includes("headless-options")) {
-    res.redirect("/headless-simulation");
-  } else {
-    res.status(422);
-  }
+
+  res.send(
+    generateVisualizationHTML(
+      generateGraphDivs(req.body["number-of-graphs"], "visualization")
+    )
+  );
+  console.log(
+    `Sent: Visualization with params: ` +
+      `Graph amount: ${req.body["number-of-graphs"]}, ` +
+      `graph size: ${req.body["graph-size"]}, ` +
+      `simulation SPAs: ${req.body["simulation-1-spa"]} ` +
+      `${req.body["simulation-2-spa"]} ` +
+      `${req.body["simulation-3-spa"]}, ` +
+      `idle zones: ${req.body["idle-zones"]}, ` +
+      `order frequency: ${req.body["order-frequency"]}, ` +
+      `ticks per second: ${req.body["ticks-per-second"]}, ` +
+      `courier frequency: ${req.body["courier-frequency"]}.`
+  );
 });
 
-app.get("/headless-simulation", async (req, res) => {
-  let graphSettings = {};
-  try {
-    // node-fetch only accepts absolute urls
-    let data = await fetch(`http://localhost:${port}/graph-options-json`);
-    if (!data.ok) {
-      const errorMessage = `An error occurred: ${data.status}`;
-      throw new Error(errorMessage);
-    }
-    graphSettings = await data.json();
-  } catch (err) {
-    console.log(err);
-  }
+app.get("/visualization-options", (req, res) => {
+  res.send(generateOptionsHTML(pageObject.visualization));
+  console.log("Sent: Simulations visualization options page");
+});
+
+app.get("/headless-options", (req, res) => {
+  res.send(generateOptionsHTML(pageObject.headless));
+  console.log("Sent: Headless simulation options page");
+});
+
+app.post("/headless-simulation", validateParameters, (req, res) => {
+  inputValidation(req, res);
+
+  // Write request parameters into json file
+  const requestData = JSON.stringify(req.body);
+  fs.writeFileSync(
+    path.join(
+      __dirname,
+      "node",
+      "PublicResources",
+      "js",
+      "HTMLRequestParams.json"
+    ),
+    requestData
+  );
 
   res.send(
     generateHeadlessHTML(
-      graphSettings["graph-size"],
-      graphSettings["simulation-1-spa"],
-      generateGraphDivs(
-        graphSettings["number-of-graphs"],
-        "headless-simulation"
-      )
+      req.body["graph-size"],
+      req.body["simulation-1-spa"],
+      generateGraphDivs(req.body["number-of-graphs"], "headless-simulation")
     )
   );
   console.log(
     `Sent: Headless simulation with params: ` +
-      `Graph amount: ${graphSettings["number-of-graphs"]}, ` +
-      `graph size: ${graphSettings["graph-size"]}, ` +
-      `simulation SPA: ${graphSettings["simulation-1-spa"]}, ` +
-      `idle zones: ${graphSettings["idle-zones"]}, ` +
-      `order frequency: ${graphSettings["order-frequency"]} ` +
-      `ticks per second: ${graphSettings["ticks-per-second"]} ` +
-      `courier frequency: ${graphSettings["courier-frequency"]}.`
+      `Graph amount: ${req.body["number-of-graphs"]}, ` +
+      `graph size: ${req.body["graph-size"]}, ` +
+      `simulation SPA: ${req.body["simulation-1-spa"]}, ` +
+      `idle zones: ${req.body["idle-zones"]}, ` +
+      `order frequency: ${req.body["order-frequency"]} ` +
+      `ticks per second: ${req.body["ticks-per-second"]} ` +
+      `courier frequency: ${req.body["courier-frequency"]}.`
   );
-});
-
-app.get("/graph-options-json", (req, res) => {
-  const fileName = path.join(
-    __dirname,
-    "node",
-    "PublicResources",
-    "js",
-    "HTMLRequestParams.json"
-  );
-  res.sendFile(fileName);
-  console.log("Sent:", fileName);
 });
 
 // Start the server app

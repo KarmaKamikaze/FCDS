@@ -178,7 +178,7 @@ const generateOptionsHTML = (pageObject) => {
           <form
             class="options-container"
             id="options-form"
-            action="/process-options"
+            action="/${pageObject.formaction}"
             method="POST"
           >
             <header>

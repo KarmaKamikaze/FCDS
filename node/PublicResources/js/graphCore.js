@@ -1,4 +1,4 @@
-import { CyGraph, eleType } from "./graphHelper.js";
+import { CyGraph } from "./graphHelper.js";
 import { CytoStyle } from "./cytoStylesheet.js";
 import { dijkstra } from "./dijkstra.js";
 import { aStar } from "./aStar.js";
@@ -10,6 +10,7 @@ import { startSimulation } from "./orderGeneration.js";
  * Performs setup and initialization of the input Cytoscape graph
  * @param {CyGraph} cyGraph The CyGraph class to set up
  * @param {File} presetFile The graph preset file to load
+ * @param {Function} startSimulationCallback Callback function which starts the simulation
  */
 function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
   if (presetFile === null) return;
