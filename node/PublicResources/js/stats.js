@@ -39,7 +39,9 @@ class SimStats {
    * Calculates the average delivery time of all delivered orders
    */
   avgDeliveryTime() {
-    this.averageDeliveryTime = Math.round(this.totalDeliveryTime / this.deliveredOrdersArr.length);
+    this.averageDeliveryTime = Math.round(
+      this.totalDeliveryTime / this.deliveredOrdersArr.length
+    );
     return this.averageDeliveryTime;
   }
 
@@ -83,7 +85,10 @@ function updateStats(simStatObject) {
         `${simStatObject.totalOrdersArr[i].restaurant.data("id")} \u279D ` +
         `${simStatObject.totalOrdersArr[i].customer.data("id")} : ` +
         `Timestamp: ${simStatObject.totalOrdersArr[i].startTimeClock}`;
-      if (simStatObject.totalOrdersArr[i].status !== "pending") {
+      if (
+        simStatObject.totalOrdersArr[i].status !== "pending" &&
+        simStatObject.totalOrdersArr[i].status !== "transit"
+      ) {
         data += ` - ${simStatObject.totalOrdersArr[i].endTimeClock}`;
       }
       data += `\n`;

@@ -2,7 +2,7 @@ import { dijkstra } from "./dijkstra.js";
 import { generateHeatmap } from "./heatGeneration.js";
 import { eleType } from "./graphHelper.js";
 import { updateStats } from "./stats.js";
-export { startSimulation, timeToFloat, orderIntensity };
+export { startSimulation, timeToFloat, orderIntensity, formatTime };
 
 const isHeadless = document.querySelector("div.headless");
 
@@ -17,14 +17,16 @@ let timeMinutes = 479; // start at 8:00
 function startSimulation(cyGraph, tickSpeed) {
   let n = cyGraph.restaurants.length;
   for (let i = 0; i < n; i++) {
-    if (i < Math.ceil(n/2)) { // Set half of restaurants to be lunch intensive
+    if (i < Math.ceil(n / 2)) {
+      // Set half of restaurants to be lunch intensive
       cyGraph.restaurants[i].intensityFunc = lunchRate;
       cyGraph.restaurants[i].addClass(eleType.lunch);
-    } else { // The rest should be dinner intensive
+    } else {
+      // The rest should be dinner intensive
       cyGraph.restaurants[i].intensityFunc = dinnerRate;
       cyGraph.restaurants[i].addClass(eleType.dinner);
-      }
     }
+  }
   return setInterval(() => perTick(cyGraph), tickSpeed);
 }
 
@@ -38,7 +40,16 @@ function perTick(cyGraph) {
   if (cyGraph.timeMinutes == 1440) {
     cyGraph.simulationStats.failedOrders += cyGraph.orders.length;
     cyGraph.orders = new Array();
-    console.log(`[${cyGraph.name}] Day ${cyGraph.simulationStats.simDays}: Succesful orders: ${cyGraph.simulationStats.deliveredOrdersArr.length - cyGraph.simulationStats.failedOrders}/${cyGraph.simulationStats.totalOrdersArr.length}. Average delivery time: ${ cyGraph.simulationStats.avgDeliveryTime() } minutes.`);
+    console.log(
+      `[${cyGraph.name}] Day ${
+        cyGraph.simulationStats.simDays
+      }: Succesful orders: ${
+        cyGraph.simulationStats.deliveredOrdersArr.length -
+        cyGraph.simulationStats.failedOrders
+      }/${
+        cyGraph.simulationStats.totalOrdersArr.length
+      }. Average delivery time: ${cyGraph.simulationStats.avgDeliveryTime()} minutes.`
+    );
     cyGraph.timeMinutes = 0;
     cyGraph.simulationStats.simDays++;
   }
@@ -57,32 +68,66 @@ function perTick(cyGraph) {
 
   // Generate idle zones and update the courier amount every 60 ticks
   if (!(cyGraph.timeMinutes % 60)) {
-    if (cyGraph.useIdleZones && cyGraph.timeMinutes >= 480 && cyGraph.timeMinutes < 1260) {
+    if (
+      cyGraph.idleZoneAmount &&
+      cyGraph.timeMinutes >= 480 &&
+      cyGraph.timeMinutes < 1260
+    ) {
       generateHeatmap(cyGraph);
     }
     maintainCouriers(cyGraph);
-    console.log(`[${cyGraph.name}][${formatTime(cyGraph.timeMinutes)}]: ${cyGraph.couriers.length} couriers, ${cyGraph.orders.length} pending orders`)
+    console.log(
+      `[${cyGraph.name}][${formatTime(cyGraph.timeMinutes)}]: ${
+        cyGraph.couriers.length
+      } couriers, ${cyGraph.orders.length} pending orders`
+    );
   }
 
   if (!(cyGraph.timeMinutes % 2)) {
     for (let i = 0; i < cyGraph.couriers.length; i++) {
-        if (cyGraph.orders[i]) {
-          assignCourier(cyGraph, cyGraph.orders[i], i);
-        }
+      if (cyGraph.orders[i]) {
+        assignCourier(cyGraph, cyGraph.orders[i], i);
       }
+    }
   }
 }
 
-/** 
+/**
  * Ensures that the number of couriers is set according to expected values for each hour
  * @param {Object} cyGraph The graph the simulation is contained within.
  */
-function maintainCouriers (cyGraph) {
+function maintainCouriers(cyGraph) {
   // The expectedCourierMultiplier array denotes the courier multiplier of each hour of the day (starting at 00:00)
-  //                                00   01   02   03   04   05   06   07   08   09   10   11   12   13   14   15   16   17   18   19   20   21   22   23
-  let expectedCourierMultiplier = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.3, 0.3, 0.6, 0.6, 0.4, 0.4, 0.4, 0.6, 0.7, 1.0, 1.0, 0.6, 0.4, 0.0, 0.0];
-  let curHour = Math.floor(cyGraph.timeMinutes/60);
-  let expectedCourierCount = Math.ceil(cyGraph.courierFreq * expectedCourierMultiplier[curHour]); // Number of couriers = max * multiplier
+  let expectedCourierMultiplier = [
+    0.0, // 00
+    0.0, // 01
+    0.0, // 02
+    0.0, // 03
+    0.0, // 04
+    0.0, // 05
+    0.0, // 06
+    0.0, // 07
+    0.2, // 08
+    0.3, // 09
+    0.3, // 10
+    0.6, // 11
+    0.6, // 12
+    0.4, // 13
+    0.4, // 14
+    0.4, // 15
+    0.6, // 16
+    0.7, // 17
+    1.0, // 18
+    1.0, // 19
+    0.6, // 20
+    0.4, // 21
+    0.0, // 22
+    0.0, // 23
+  ];
+  let curHour = Math.floor(cyGraph.timeMinutes / 60);
+  let expectedCourierCount = Math.ceil(
+    cyGraph.courierFreq * expectedCourierMultiplier[curHour]
+  ); // Number of couriers = max * multiplier
   let courierCount = cyGraph.couriers.length;
 
   // If the amount of couriers is too high, try to 'send some of them home'
@@ -92,7 +137,10 @@ function maintainCouriers (cyGraph) {
       let currentCourier = cyGraph.couriers[index];
       // If the current courier has an order, immediately remove it from the courier array
       // but only remove the node after all its orders have been delivered
-      if (currentCourier.data("currentOrder") || currentCourier.data("pendingOrder")) {
+      if (
+        currentCourier.data("currentOrder") ||
+        currentCourier.data("pendingOrder")
+      ) {
         currentCourier.data("terminationImminent", true);
         cyGraph.couriers.splice(index, 1);
         courierCount--;
@@ -103,7 +151,7 @@ function maintainCouriers (cyGraph) {
         cyGraph.delNode(currentCourier.id());
         courierCount--;
       }
-    }  
+    }
   }
   // In the other case, there are too few couriers, so simply add the missing number of couriers
   else {
@@ -237,8 +285,7 @@ function assignCourier(cyGraph, order, index) {
     order.assignedCourier = courier.id(); /* Used to print the assigned courier of an order only using an array of orders*/
     if (courier.data("moving")) {
       courier.data("pendingOrder", true);
-    }
-    else {
+    } else {
       cyGraph.traversePath(courier.id(), order.restaurant.id());
     }
     cyGraph.orders.splice(index, 1);
@@ -263,9 +310,9 @@ function findCourier(cyGraph, order) {
     }
   }
   for (const courier of availableCouriers) {
-      let curNode = courier.data("currentNode"),
-          curDistOrigin = curNode.data("distanceOrigin");
-      if (curDistOrigin < lowestDistance) {
+    let curNode = courier.data("currentNode"),
+      curDistOrigin = curNode.data("distanceOrigin");
+    if (curDistOrigin < lowestDistance) {
       lowestDistance = curDistOrigin;
       bestCourier = courier;
     }

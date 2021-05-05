@@ -11,10 +11,10 @@ let graphRadius = null;
  */
 function getGraphRadius(cyGraph) {
   if (graphRadius) {
-      return graphRadius;
+    return graphRadius;
   }
   let edges = cyGraph.graph.edges(),
-      totalWeight = 0;
+    totalWeight = 0;
   for (const edge of edges) {
     totalWeight += edge.data("weight");
   }
@@ -34,7 +34,7 @@ function generateHeatmap(cyGraph) {
   assignHeat(cyGraph);
 
   //Find n waiting zones
-  let n = getZoneCount(cyGraph);
+  let n = cyGraph.idleZoneAmount;
   for (let i = 0; i < n; i++) {
     let zone = findIdleZone(cyGraph);
     cyGraph.idleZones.push(zone);
@@ -51,7 +51,7 @@ function generateHeatmap(cyGraph) {
  * @returns The amount of idle zones to assign (based on restaurants pr courier).
  */
 function getZoneCount(cyGraph) {
-  return Math.ceil(cyGraph.restaurants.length/2);
+  return Math.ceil(cyGraph.restaurants.length / 2);
 }
 
 /**
@@ -69,7 +69,7 @@ function resetHeat(cyGraph) {
  * @param {Object} cyGraph The graph the simulation is contained within.
  */
 function assignHeat(cyGraph) {
-  let radius = 3*getGraphRadius(cyGraph);
+  let radius = 3 * getGraphRadius(cyGraph);
   for (const restaurant of cyGraph.restaurants) {
     dijkstra(cyGraph, restaurant);
     let closeNodes = findNodesInRadius(cyGraph, restaurant, radius);
@@ -145,7 +145,8 @@ function updateColors(cyGraph) {
 
     if (isIdleZone(node, cyGraph)) {
       node.addClass(eleType.idlezone_red);
-    } else if (node.data("heat") > max * 0.33) { //? if the heat value is within 77% of the max heat
+    } else if (node.data("heat") > max * 0.33) {
+      //? if the heat value is within 77% of the max heat
       node.addClass(eleType.idlezone_orange);
     } else {
       node.addClass(eleType.idlezone_yellow);

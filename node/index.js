@@ -7,6 +7,7 @@ import {
   generateOptionsHTML,
   generateHeadlessHTML,
 } from "./PublicResources/js/dynamicPageGeneration.js";
+import fs from "fs";
 import path from "path";
 const __dirname = path.resolve();
 
@@ -32,7 +33,7 @@ const pageObject = {
 let options = {
   dotfiles: "ignore", // allow, deny, ignore
   etag: true,
-  extensions: ["htm", "html", "js", "css", "ico", "cyjs", "png", "jpg"],
+  extensions: ["htm", "html", "js", "css", "ico", "cyjs", "png", "jpg", "json"],
   index: false, // Disables directory indexing - won't serve a whole folder
   // maxAge: "7d", // Expires after 7 days
   redirect: false,
@@ -67,8 +68,25 @@ let validateParameters = [
   body("simulation-1-spa").trim().toLowerCase().escape(),
   body("simulation-2-spa").trim().toLowerCase().escape(),
   body("simulation-3-spa").trim().toLowerCase().escape(),
-  body("idle-zones").trim().toLowerCase().escape(),
+  body("idle-zones").isLength({ max: 2 }).isNumeric().toInt().escape(),
+  body("order-frequency").isLength({ max: 4 }).isNumeric().toFloat().escape(),
+  body("ticks-per-second").isLength({ max: 3 }).isNumeric().toInt().escape(),
+  body("courier-frequency").isLength({ max: 2 }).isNumeric().toInt().escape(),
 ];
+
+/**
+ * Validates request and check for an empty body
+ * @param {Object} req The request object, received from the client
+ * @param {Object} res The response object, used to respond to the client if an error occurs.
+ * @returns The response, which sends an error message to the client.
+ */
+const inputValidation = (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.error(errors);
+    return res.status(422).json({ errors: errors.array() });
+  }
+};
 
 // Routes
 app.get("/", (req, res) => {
@@ -84,36 +102,37 @@ app.get("/", (req, res) => {
 });
 
 app.post("/visualization", validateParameters, (req, res) => {
-  // Validate request and check for an empty body
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    console.error(errors);
-    return res.status(422).json({ errors: errors.array() });
-  }
+  inputValidation(req, res);
 
-  const graphAmount = req.body["number-of-graphs"];
-  const graphSize = req.body["graph-size"];
-  const simulationSPAs = [
-    req.body["simulation-1-spa"],
-    req.body["simulation-2-spa"],
-    req.body["simulation-3-spa"],
-  ];
-  const idleZones = req.body["idle-zones"];
+  // Write request parameters into json file
+  const requestData = JSON.stringify(req.body);
+  fs.writeFileSync(
+    path.join(
+      __dirname,
+      "node",
+      "PublicResources",
+      "js",
+      "HTMLRequestParams.json"
+    ),
+    requestData
+  );
 
   res.send(
     generateVisualizationHTML(
-      generateGraphDivs(
-        graphAmount,
-        graphSize,
-        simulationSPAs,
-        idleZones,
-        "visualization"
-      )
+      generateGraphDivs(req.body["number-of-graphs"], "visualization")
     )
   );
   console.log(
-    `Sent: Visualization with params: Graph amount: ${graphAmount}, graph size: ${graphSize},` +
-      ` simulation SPAs: ${simulationSPAs}, idle zones: ${idleZones}`
+    `Sent: Visualization with params: ` +
+      `Graph amount: ${req.body["number-of-graphs"]}, ` +
+      `graph size: ${req.body["graph-size"]}, ` +
+      `simulation SPAs: ${req.body["simulation-1-spa"]} ` +
+      `${req.body["simulation-2-spa"]} ` +
+      `${req.body["simulation-3-spa"]}, ` +
+      `idle zones: ${req.body["idle-zones"]}, ` +
+      `order frequency: ${req.body["order-frequency"]}, ` +
+      `ticks per second: ${req.body["ticks-per-second"]}, ` +
+      `courier frequency: ${req.body["courier-frequency"]}.`
   );
 });
 
@@ -128,33 +147,37 @@ app.get("/headless-options", (req, res) => {
 });
 
 app.post("/headless-simulation", validateParameters, (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    console.error(errors);
-    return res.status(422).json({ errors: errors.array() });
-  }
+  inputValidation(req, res);
 
-  const graphAmount = req.body["number-of-graphs"];
-  const graphSize = req.body["graph-size"];
-  const simulationSPAs = [req.body["simulation-1-spa"]];
-  const idleZones = req.body["idle-zones"];
+  // Write request parameters into json file
+  const requestData = JSON.stringify(req.body);
+  fs.writeFileSync(
+    path.join(
+      __dirname,
+      "node",
+      "PublicResources",
+      "js",
+      "HTMLRequestParams.json"
+    ),
+    requestData
+  );
 
   res.send(
     generateHeadlessHTML(
-      graphSize,
-      simulationSPAs,
-      generateGraphDivs(
-        graphAmount,
-        graphSize,
-        simulationSPAs,
-        idleZones,
-        "headless-simulation"
-      )
+      req.body["graph-size"],
+      req.body["simulation-1-spa"],
+      generateGraphDivs(req.body["number-of-graphs"], "headless-simulation")
     )
   );
   console.log(
-    `Sent: Headless simulation with params: Graph amount: ${graphAmount}, graph size: ${graphSize},` +
-      ` simulation SPAs: ${simulationSPAs}, idle zones: ${idleZones}`
+    `Sent: Headless simulation with params: ` +
+      `Graph amount: ${req.body["number-of-graphs"]}, ` +
+      `graph size: ${req.body["graph-size"]}, ` +
+      `simulation SPA: ${req.body["simulation-1-spa"]}, ` +
+      `idle zones: ${req.body["idle-zones"]}, ` +
+      `order frequency: ${req.body["order-frequency"]} ` +
+      `ticks per second: ${req.body["ticks-per-second"]} ` +
+      `courier frequency: ${req.body["courier-frequency"]}.`
   );
 });
 

@@ -1,0 +1,4 @@
+{
+  "ignore": ["node/PublicResources/js/HTMLRequestParams.json"],
+  "verbose": true
+}

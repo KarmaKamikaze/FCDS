@@ -24,8 +24,8 @@ function CytoStyle(containerId, graphSize, headless) {
   }
 
   return cytoscape({
-      container: document.getElementById(containerId),
-      headless: headless,
+    container: document.getElementById(containerId),
+    headless: headless,
 
     // Global settings
     boxSelectionEnabled: false,
