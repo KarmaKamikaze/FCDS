@@ -252,7 +252,10 @@ class CyGraph {
         endNode = this.graph.$id(endId);
     this.pathFunc(this, startNode, endNode);
     let path = traceback(this.graph, endNode);
-    courier.data("currentOrder").status = "transit";
+    let order = courier.data("currentOrder");
+    if (order) {
+        order.status = "transit";
+    }
     if (this.headless) {
       this.moveCourierHeadless(courier, path);
     }
