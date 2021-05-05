@@ -1,6 +1,6 @@
 import { traceback } from "../js/pathModules.js";
 import { dijkstra } from "./dijkstra.js";
-import { simStats } from "./stats.js";
+import { SimStats } from "./stats.js";
 export { eleType, CyGraph };
 
 const simStartTime = 479;
