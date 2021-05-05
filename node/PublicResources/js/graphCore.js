@@ -100,7 +100,8 @@ async function startSim() {
       graphSettings["idle-zones"], // use idle zones
       true, // headless traversal
       graphSettings["courier-frequency"], // max number of couriers
-      tickSpeed // ms per tick
+      tickSpeed, // ms per tick
+      graphSettings["obstruction-level"]
     );
     graphArray.push(cyGraph);
     SetupGraph(cyGraph, graphSize, simulationTest, tickSpeed);

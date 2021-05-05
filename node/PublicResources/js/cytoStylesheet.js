@@ -53,7 +53,7 @@ function CytoStyle(containerId, graphSize, headless) {
         color: "lightgreen",
         content: "",
       })
-      .selector(`.${eleType.route}`)
+      .selector(`.${eleType.obstructions}`)
       .style({
         "background-color": "#B22222",
         "line-color": "#B22222",

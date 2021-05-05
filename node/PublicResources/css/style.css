@@ -283,3 +283,9 @@ input[type="range"]:focus {
   outline: none;
   cursor: default;
 }
+
+.legend {
+  position: absolute;
+  width: 50%;
+  transform: translateX(50%);
+}

@@ -11,8 +11,7 @@ let eleType = {
   courier: "courier",
   restaurant: "restaurant",
   customer: "customer",
-  route: "route",
-  routeDone: "routeDone",
+  obstructions: "obstructions",
   idlezone_yellow: "idlezone-yellow",
   idlezone_orange: "idlezone-orange",
   idlezone_red: "idlezone-red",
@@ -30,7 +29,8 @@ class CyGraph {
     idleZoneAmount,
     headless,
     courierFreq,
-    tickSpeed
+    tickSpeed,
+    obstructionLevel
   ) {
     this.name = name;
     this.graph = graph;
@@ -44,6 +44,7 @@ class CyGraph {
     this.idleZoneAmount = idleZoneAmount;
     this.orderRate = orderRate;
     this.courierFreq = courierFreq;
+    this.obstructionLevel = obstructionLevel;
   }
 
   // Arrays that keep track of all elements in the graph
@@ -52,6 +53,7 @@ class CyGraph {
   customers = new Array();
   orders = new Array();
   idleZones = new Array();
+  obstructions = new Array();
 
   /**
    * Adds a node at specified location with potential weight
@@ -146,7 +148,9 @@ class CyGraph {
         newId = this.getEdgeId(source, target),
         newIdRev = this.getEdgeId(target, source),
         obstructions = edges[i].data("obstructions");
-
+      if (!obstructions) {
+        obstructions = 1;
+      }
       this.addEdge(newId, source, target, obstructions);
       this.addEdge(newIdRev, target, source, obstructions);
       this.delNode(edges[i].id());
