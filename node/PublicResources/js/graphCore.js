@@ -1,4 +1,4 @@
-import { CyGraph, eleType } from "./graphHelper.js";
+import { CyGraph } from "./graphHelper.js";
 import { CytoStyle } from "./cytoStylesheet.js";
 import { dijkstra } from "./dijkstra.js";
 import { aStar } from "./aStar.js";
@@ -12,7 +12,10 @@ import { startSimulation } from "./orderGeneration.js";
  * @param {File} presetFile The graph preset file to load
  */
 function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
-  if (presetFile === null) return;
+  if (presetFile === null) {
+      startSimulation(cyGraph);
+      return;
+  }
 
   fetch(presetFile)
     .then((response) => response.json())
@@ -33,7 +36,7 @@ function SetupGraph(cyGraph, presetFile = null, startSimulationCallback) {
  */
 function simulationTest(cyGraph) {
   startSimulation(cyGraph, DEFAULT_TICKSPEED);
-  console.log(`started sim in ${cyGraph.name}. `)
+  console.log(`[${cyGraph.name}] Started simulation`);
 }
 
 /**
@@ -71,7 +74,7 @@ function startSim() {
   document.querySelectorAll(".cy").forEach((graph) => {
     let graphSize = getGraphSize(graph),
         styleSize = graphSize === GRAPH_PRESET_FILE ? "small" : "large";
-    let cytoStyle = new CytoStyle(graph.id, styleSize);
+    let cytoStyle = new CytoStyle(graph.id, styleSize, HEADLESS);
 
     let cyGraph = new CyGraph(graph.id, cytoStyle, getAlgorithm(graph), // graph name, stylesheet and SP-algorithm
                               DISTANCE_PER_TICK, // courier movement speed
@@ -88,8 +91,9 @@ function startSim() {
 /// MAIN ///
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
 let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
-const DEFAULT_TICKSPEED = 50;
+const DEFAULT_TICKSPEED = 1;
 const DISTANCE_PER_TICK = 300; // 300 units per tick -> meters per minute -> 18 km/h
+const HEADLESS = true; // should be determined by user input
 
 let graphArray = [];
 startSim();
