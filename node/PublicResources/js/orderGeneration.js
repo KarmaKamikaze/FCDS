@@ -98,32 +98,31 @@ function perTick(cyGraph) {
  */
 function maintainCouriers(cyGraph) {
   // The expectedCourierMultiplier array denotes the courier multiplier of each hour of the day (starting at 00:00)
-  //                                00   01   02   03   04   05   06   07   08   09   10   11   12   13   14   15   16   17   18   19   20   21   22   23
   let expectedCourierMultiplier = [
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.2,
-    0.3,
-    0.3,
-    0.6,
-    0.6,
-    0.4,
-    0.4,
-    0.4,
-    0.6,
-    0.7,
-    1.0,
-    1.0,
-    0.6,
-    0.4,
-    0.0,
-    0.0,
+    0.0, // 00
+    0.0, // 01
+    0.0, // 02
+    0.0, // 03
+    0.0, // 04
+    0.0, // 05
+    0.0, // 06
+    0.0, // 07
+    0.2, // 08
+    0.3, // 09
+    0.3, // 10
+    0.6, // 11
+    0.6, // 12
+    0.4, // 13
+    0.4, // 14
+    0.4, // 15
+    0.6, // 16
+    0.7, // 17
+    1.0, // 18
+    1.0, // 19
+    0.6, // 20
+    0.4, // 21
+    0.0, // 22
+    0.0, // 23
   ];
   let curHour = Math.floor(cyGraph.timeMinutes / 60);
   let expectedCourierCount = Math.ceil(

@@ -45,6 +45,12 @@ function simulationTest(cyGraph, tickSpeed) {
   console.log(`[${cyGraph.name}] Started simulation`);
 }
 
+/**
+ * This function determines the intended algorithm that should run on the
+ * network in this div.
+ * @param {String} graph A string containing the name of the intended algorithm.
+ * @returns The SPA that corresponds to the string parameter.
+ */
 function getAlgorithm(graph) {
   return graph === "astar"
     ? aStar
