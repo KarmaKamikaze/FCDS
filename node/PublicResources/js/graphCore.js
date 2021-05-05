@@ -6,6 +6,7 @@ import { traceback } from "./pathModules.js";
 import { addDarkBtn } from "./darkMode.js";
 import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 import { startSimulation } from "./orderGeneration.js";
+import { runAllTests } from "./tests.js";
 
 /**
  * Performs setup and initialization of the input Cytoscape graph
@@ -140,6 +141,7 @@ let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
 const DEFAULT_TICKSPEED = 100;
 
 let graphArray = [];
+
 runAllTests();
 startSim();
 

@@ -66,22 +66,21 @@ function traceback(graph, endNode) {
   let jump = endNode;
   let path = new Array();
 
+  if (jump.data("_parent") == null) {
+    return new Error("No possible path to end node");
+  }
+
   /** While-loop that reiterates through the parents of jump,
    * creating a list of nodes used to go from start node to end node. */
-  while (jump.data("_parent") !== null && jump.data("distanceOrigin") !== 0) {
-    if (shortestPath === "") {
-      shortestPath = jump.id();
-    } else {
-      shortestPath = jump.id() + " -> " + shortestPath;
-    }
+  while (
+    /*jump.data("_parent") !== null && */ jump.data("distanceOrigin") !== 0
+  ) {
     path.unshift(jump.id());
     jump = graph.getElementById(`${jump.data("_parent")}`);
   }
   // Add the start node to the list.
-  shortestPath = jump.id() + " -> " + shortestPath;
   path.unshift(jump.id());
 
-  //console.log(`Shortest path: ${shortestPath}`); // Test print
   return path;
 }
 

@@ -30,10 +30,59 @@ import { aStar } from "./aStar.js";
 import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 import { PriorityQueue } from "./queue.js";
 
+export { runAllTests };
+
+let TEST_GRAPH_PRESET_FILE = "../graphPresets/TestGraph.cyjs";
+
+var testCy = cytoscape({
+  container: document.getElementById(null), // container to render in
+});
+
+function refreshGraph() {
+  let testGraph = new CyGraph("Test", testCy);
+  SetupGraph(testGraph, TEST_GRAPH_PRESET_FILE, () => {});
+}
+
+refreshGraph();
+
+//Test if PFA reaches unreachable end node
+let startNode = testGraph.graph.getElementById(`N1`);
+let endNode = testGraph.graph.getElementById(`N7`);
+
+//For Dijkstra
+dijkstra(testGraph, startNode);
+let path = traceback(testGraph, endNode);
+let expected = new Error("No possible path to end node");
+let actual = "sat";
+console.assert(expected === actual);
+
+refreshGraph();
+
+//For A*
+
+//For Greedy Best First Search
+
+//Test if PFA reaches end node from start node with no edges
+startNode = testGraph.graph.getElementById(`N7`);
+endNode = testGraph.graph.getElementById(`N1`);
+
+//For Dijkstra
+
+//Test if PFA reaches reachable end node with expected path
+endNode = testGraph.graph.getElementById(`N5`);
+
+//For A*
+/*
+dijkstra(testGraph, startNode);
+let path = traceback(testGraph, endNode);
+greedyBestFirstSearch(testGraph, startNode, endNode);
+aStar(testGraph, startNode, endNode);*/
+
 //Integration tests
 
 //Unit test
 
-function runAllTests() {}
-
-runAllTests();
+function runAllTests() {
+  console.log("asdada");
+  console.log("asdada");
+}
