@@ -11,6 +11,7 @@ let eleType = {
   courier: "courier",
   restaurant: "restaurant",
   customer: "customer",
+  inroute: "inroute",
   obstructions: "obstructions",
   idlezone_yellow: "idlezone-yellow",
   idlezone_orange: "idlezone-orange",
@@ -271,7 +272,7 @@ class CyGraph {
     if (order) {
       order.status = "transit";
     }
-    if (this.headless) {
+    if (this.headless || this.tickSpeed < 100) {
       this.moveCourierHeadless(courier, path);
     } else {
       // Edge/route highlighting
@@ -279,7 +280,7 @@ class CyGraph {
       for (const edge of pathEdges) {
         edge.inRoute.push(courierId);
       }
-      pathEdges.addClass(eleType.route);
+      pathEdges.addClass(eleType.inroute);
       this.animateCourier(path, courier, pathEdges);
     }
   }
@@ -362,6 +363,9 @@ class CyGraph {
    * @param {Number} index The index to start from (default: 0)
    */
   animateCourier(path, courier, edges, index = 0) {
+    console.log(
+      `Path = ${path} - Index: ${index} - Path[index]: ${path[index]}`
+    );
     if (path.length === 1) {
       let order = courier.data("currentOrder");
       if (order && courier.data("currentNode") === order.restaurant) {
@@ -386,22 +390,30 @@ class CyGraph {
         if (courier.data("pendingOrder")) {
           courier.data("pendingOrder", false);
           courier.data("moving", false);
+          for (const edge of edges) {
+            let courierIndex = edge.inRoute.indexOf(courier.id());
+            edge.inRoute.splice(courierIndex, 1);
+            if (!edge.inRoute.length) {
+              edge.removeClass(eleType.inroute);
+            } else {
+              edge.addClass(eleType.inroute);
+            }
+          }
           return this.traversePath(
             courier.id(),
             courier.data("currentOrder").restaurant.id()
           );
-        }
-        if (index < path.length - 2) {
+        } else if (index < path.length - 2) {
           // on traversing a node
           return this.animateCourier(path, courier, edges, index + 1);
         } else {
           for (const edge of edges) {
-            let index = edge.inRoute.indexOf(courier.id());
-            edge.inRoute.splice(index, 1);
+            let courierIndex = edge.inRoute.indexOf(courier.id());
+            edge.inRoute.splice(courierIndex, 1);
             if (!edge.inRoute.length) {
-              edge.removeClass(eleType.route);
+              edge.removeClass(eleType.inroute);
             } else {
-              edge.addClass(eleType.route);
+              edge.addClass(eleType.inroute);
             }
           }
           // on arrival

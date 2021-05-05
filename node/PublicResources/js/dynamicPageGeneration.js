@@ -228,7 +228,11 @@ const generateOptionsHTML = (pageObject) => {
   body += pageObject.h1 === "Simulation" ? algorithmOption : ``;
 
   body += `<div class="slider-container">
-          <p>Idle zones:</p>
+          <br>
+          <div class="tooltip">Idle zones:
+            <span class="tooltiptext">Number of idle zones to generate.</span>
+          </div>
+          <br>
           <input
             type="range"
             name="idle-zones"
@@ -240,7 +244,11 @@ const generateOptionsHTML = (pageObject) => {
             oninput="this.nextElementSibling.value = this.value"
           />
           <output>2</output>
-          <p>Order frequency:</p>
+          <br>
+          <div class="tooltip">Order frequency:
+            <span class="tooltiptext">Estimated orders per minute per restaurant at peak times.</span>
+          </div>
+          <br>
           <input
             type="range"
             name="order-frequency"
@@ -252,7 +260,11 @@ const generateOptionsHTML = (pageObject) => {
             oninput="this.nextElementSibling.value = this.value"
           />
           <output>0.25</output>
-          <p>Ticks per second:</p>
+          <br>
+          <div class="tooltip">Ticks per second:
+            <span class="tooltiptext">10 or below for visualization - above 10 for headless.</span>
+          </div>
+          <br>
           <input
             type="range"
             name="ticks-per-second"
@@ -264,7 +276,11 @@ const generateOptionsHTML = (pageObject) => {
             oninput="this.nextElementSibling.value = this.value"
           />
           <output>50</output>
-          <p>Courier frequency:</p>
+          <br>
+          <div class="tooltip">Courier frequency:
+            <span class="tooltiptext">Factor determining the amount of couriers to simulate.</span>
+          </div>
+          <br>
           <input
             type="range"
             name="courier-frequency"
@@ -277,7 +293,11 @@ const generateOptionsHTML = (pageObject) => {
           />
           <output>10</output>
         </div>
-        <p>Obstruction level:</p>
+        <br>
+          <div class="tooltip">Obstruction level:
+            <span class="tooltiptext">Determines the number of edges to create obstructions on periodically.</span>
+          </div>
+          <br>
           <input
             type="range"
             name="obstruction-level"

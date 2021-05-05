@@ -53,13 +53,13 @@ function CytoStyle(containerId, graphSize, headless) {
         color: "lightgreen",
         content: "",
       })
+      .selector(`.${eleType.inroute}`)
+      .style({
+        "line-color": "#B22222",
+      })
       .selector(`.${eleType.obstructions}`)
       .style({
-        "background-color": "#B22222",
-        "line-color": "#B22222",
-        "target-arrow-color": "#B22222",
-        "transition-property":
-          "background-color, line-color, target-arrow-color",
+        "line-color": "#FF8C00",
       })
       .selector(`.${eleType.restaurant}`)
       .style({
