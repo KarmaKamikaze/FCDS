@@ -17,10 +17,10 @@ let timeMinutes = 479; // start at 8:00
 function startSimulation(cyGraph, tickSpeed) {
   let n = cyGraph.restaurants.length;
   for (let i = 0; i < n; i++) {
-    if (i < Math.ceil(n/2)) {
+    if (i < Math.ceil(n/2)) { // Set half of restaurants to be lunch intensive
       cyGraph.restaurants[i].intensityFunc = lunchRate;
       cyGraph.restaurants[i].addClass(eleType.lunch);
-    } else {
+    } else { // The rest should be dinner intensive
       cyGraph.restaurants[i].intensityFunc = dinnerRate;
       cyGraph.restaurants[i].addClass(eleType.dinner);
       }
@@ -78,11 +78,11 @@ function perTick(cyGraph) {
  * @param {Object} cyGraph The graph the simulation is contained within.
  */
 function maintainCouriers (cyGraph) {
-  // The expectedCouriers array denotes how many couriers should be available at each hour of the day (starting at 00:00)
+  // The expectedCourierMultiplier array denotes the courier multiplier of each hour of the day (starting at 00:00)
   //                                00   01   02   03   04   05   06   07   08   09   10   11   12   13   14   15   16   17   18   19   20   21   22   23
   let expectedCourierMultiplier = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.3, 0.3, 0.6, 0.6, 0.4, 0.4, 0.4, 0.6, 0.7, 1.0, 1.0, 0.6, 0.4, 0.0, 0.0];
   let curHour = Math.floor(cyGraph.timeMinutes/60);
-  let expectedCourierCount = Math.ceil(cyGraph.courierFreq * expectedCourierMultiplier[curHour]);
+  let expectedCourierCount = Math.ceil(cyGraph.courierFreq * expectedCourierMultiplier[curHour]); // Number of couriers = max * multiplier
   let courierCount = cyGraph.couriers.length;
 
   // If the amount of couriers is too high, try to 'send some of them home'
@@ -234,13 +234,13 @@ function assignCourier(cyGraph, order, index) {
   let courier = findCourier(cyGraph, order);
   if (courier) {
     courier.data("currentOrder", order);
+    order.assignedCourier = courier.id(); /* Used to print the assigned courier of an order only using an array of orders*/
     if (courier.data("moving")) {
       courier.data("pendingOrder", true);
     }
     else {
       cyGraph.traversePath(courier.id(), order.restaurant.id());
     }
-    // console.log(`[${courier.id()}] ${order.restaurant.id()} -> ${order.customer.id()}`)
     cyGraph.orders.splice(index, 1);
     cyGraph.simulationStats.pendingOrders = cyGraph.orders.length; // Stat: Updates the amount of waiting orders after an order starts being delivered
   }
