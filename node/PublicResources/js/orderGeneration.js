@@ -73,6 +73,7 @@ function perTick(cyGraph) {
 
   // Generate idle zones and update the courier amount every 60 ticks
   if (!(cyGraph.timeMinutes % 60)) {
+    cyGraph.simulationStats.avgDeliveryTime();
     if (!(cyGraph.timeMinutes % 180)) {
       generateObstructions(cyGraph);
     }
