@@ -2,7 +2,14 @@ import { dijkstra } from "./dijkstra.js";
 import { generateHeatmap, generateObstructions } from "./heatGeneration.js";
 import { eleType } from "./graphHelper.js";
 import { updateStats, updateTimeOnly } from "./stats.js";
-export { startSimulation, timeToFloat, orderIntensity, formatTime, assignCourier, Order };
+export {
+  startSimulation,
+  timeToFloat,
+  orderIntensity,
+  formatTime,
+  assignCourier,
+  Order,
+};
 
 const isHeadless = document.querySelector("div.headless");
 
@@ -73,7 +80,9 @@ function perTick(cyGraph) {
 
   // Generate idle zones and update the courier amount every 60 ticks
   if (!(cyGraph.timeMinutes % 60)) {
-    cyGraph.simulationStats.avgDeliveryTime();
+    if (cyGraph.simulationStats.deliveredOrdersArr.length) {
+      cyGraph.simulationStats.avgDeliveryTime();
+    }
     if (!(cyGraph.timeMinutes % 180)) {
       generateObstructions(cyGraph);
     }
