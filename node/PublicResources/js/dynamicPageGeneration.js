@@ -330,7 +330,7 @@ const generateOptionsHTML = (pageObject) => {
 
 /**
  * This function generates the headless-simulation html page, which can then be sent as
- * a response to a POST request.
+ * a response to a GET request.
  * @param {String} graph A deposited div html element in string form, representing the graph container.
  * @param {String} infoDiv A deposited div html element in string form, representing the information stat block.
  * @returns A string, which contains the generated headless-simulation.html site.
