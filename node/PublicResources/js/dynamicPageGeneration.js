@@ -25,6 +25,10 @@ const generateVisualizationHTML = (graphs) => {
           <link rel="icon" type="image/x-icon" href="../html/favicon.ico" />
         </head>
         <body>
+          <div class="simTime">
+          <p>Day: <span id="simulation-days" class="control-value"></span></p>
+          <p id="time"></p>
+          </div>
           ${graphs}
           <img class="legend disable-select" src="../html/legend.png" alt="Graph legend reference" title="Graph legend reference">
           <!-- Load application code at the end to ensure DOM is loaded -->
@@ -194,12 +198,14 @@ const generateOptionsHTML = (pageObject) => {
 
   body += `<div class="graph-size">
                   <label for="graph-size">`;
+
   body +=
     pageObject.h1 === "Visualization"
       ? `Size of graphs`
       : pageObject.h1 === `Simulation`
       ? `Size of graph`
       : "";
+
   body += `</label>
                   <div class="radio-container">
                     <input
@@ -222,6 +228,16 @@ const generateOptionsHTML = (pageObject) => {
                     />
                     <label for="graph-size-large" class="disable-select"
                       >Large</label
+                    >
+                    <input
+                      id="graph-size-aalborg"
+                      name="graph-size"
+                      type="radio"
+                      value="aalborg"
+                      required
+                    />
+                    <label for="graph-size-aalborg" class="disable-select"
+                      >Aalborg</label
                     >
                   </div>
                 </div>`;
@@ -377,6 +393,7 @@ const generateStatInformationDiv = (graphSize, algorithm, pageName = null) => {
   let sizeName = {
     small: "Small",
     large: "Large",
+    aalborg: "Aalborg Centrum",
   };
 
   let statDiv = `<div id="statistics-div" class="control-center disable-select">

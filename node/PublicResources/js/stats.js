@@ -1,4 +1,4 @@
-export { SimStats, updateStats };
+export { SimStats, updateStats, updateTimeOnly };
 
 // Constant abbreviations of html stat elements
 const simDaysStat = document.querySelector("#simulation-days");
@@ -120,4 +120,9 @@ function updateStats(simStatObject) {
       orderTextArea.scrollTop = orderTextArea.scrollHeight;
     }
   }
+}
+
+function updateTimeOnly(simStatObject) {
+  simDaysStat.textContent = simStatObject.simDays;
+  timeStat.textContent = simStatObject.simTime;
 }

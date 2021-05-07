@@ -1,3 +1,5 @@
+export { initializeSingleSource, relax, heuristicApprox, traceback };
+
 /**
  * All nodes are initialized by setting their distance to
  * the origin/source to infinity and setting their parents to null.
@@ -81,67 +83,5 @@ function traceback(graph, endNode) {
   shortestPath = jump.id() + " -> " + shortestPath;
   path.unshift(jump.id());
 
-  //console.log(`Shortest path: ${shortestPath}`); // Test print
   return path;
 }
-
-//Test area below
-
-/* Generates random value for determining traffic and temporary obstructions. Not yet implemented.
-const randomNumber = (max) => (Math.floor(Math.random() * max));
-*/
-
-/**
- * Not implemented yet. Needs to calculate factor for temporary obstructions: traffic and road work, etc.
- */
-/* function tempSlowdown() {
- let obstructions;
- let maxTraffic = 60; //navn?
- let maxObstruction = 10;
- let traffic = randomNumber(max);
-
- if (randomNumber(10) === 9) {
-   obstructions = 20;
- }
-
- if (traffic + obstructions > maxTraffic) {
-   return maxTraffic;
- } else {
-   return (traffic + obstructions);
- }
-} */
-
-//Placeholder for edge
-/* 
-let edge = {
-  distance: 100,
-  speedLimit: 50,
-  permObstructions: 60,
-  weight: 1,
-};
-
-//Placeholder for courier
-let courier = 2;
-  edgesArray = [edge];
-*/
-
-/*
-//Testing function
- edgesArray.forEach(edge => {
-   weightingFunction(courier, edge); 
- });
- */
-
-//Placeholder for edge
-/*
-let edge = {
-    distance: 1000,
-    speed_limit: 50,
-    perm_obstructions: 1,
-    temp_obstructions: tempObstructions(),
-    traffic: trafficGeneration(),
-    weight: () => (edges.distance *(130 / edges.speedLimit) * edges.traffic * edges.obstructions * edges.intersection);
-  }
-  */
-
-export { initializeSingleSource, relax, heuristicApprox, traceback };

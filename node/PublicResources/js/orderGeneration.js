@@ -1,7 +1,7 @@
 import { dijkstra } from "./dijkstra.js";
 import { generateHeatmap, generateObstructions } from "./heatGeneration.js";
 import { eleType } from "./graphHelper.js";
-import { updateStats } from "./stats.js";
+import { updateStats, updateTimeOnly } from "./stats.js";
 export { startSimulation, timeToFloat, orderIntensity, formatTime };
 
 const isHeadless = document.querySelector("div.headless");
@@ -65,6 +65,8 @@ function perTick(cyGraph) {
     cyGraph.simulationStats.calcRuntime(); // Stat: Calculates the amount of real-world time has passed
     if (isHeadless) {
       updateStats(cyGraph.simulationStats); // Updates all statistics
+    } else {
+      updateTimeOnly(cyGraph.simulationStats);
     }
     generateOrders(cyGraph);
   }

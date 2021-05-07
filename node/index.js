@@ -36,7 +36,7 @@ let options = {
   etag: true,
   extensions: ["htm", "html", "js", "css", "ico", "cyjs", "png", "jpg", "json"],
   index: false, // Disables directory indexing - won't serve a whole folder
-  // maxAge: "7d", // Expires after 7 days
+  maxAge: "7d", // Expires after 7 days
   redirect: false,
   setHeaders: function (res, path, stat) {
     // Add this to header of all static responses
@@ -65,7 +65,7 @@ app.use(limiter);
 // Validation rules
 let validateParameters = [
   body("number-of-graphs").isLength({ max: 1 }).isNumeric().toInt().escape(),
-  body("graph-size").isLength({ min: 5, max: 5 }).trim().toLowerCase().escape(),
+  body("graph-size").isLength({ min: 5, max: 7 }).trim().toLowerCase().escape(),
   body("simulation-1-spa").trim().toLowerCase().escape(),
   body("simulation-2-spa").trim().toLowerCase().escape(),
   body("simulation-3-spa").trim().toLowerCase().escape(),

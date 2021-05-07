@@ -79,10 +79,12 @@ async function startSim() {
   }
 
   let graphSize =
-      graphSettings["graph-size"] === "small"
-        ? GRAPH_PRESET_FILE
-        : BIG_GRAPH_PRESET_FILE,
-    tickSpeed = 1000 / graphSettings["ticks-per-second"];
+    graphSettings["graph-size"] === "small"
+      ? GRAPH_PRESET_FILE
+      : graphSettings["graph-size"] === "large"
+      ? BIG_GRAPH_PRESET_FILE
+      : AALBORG_GRAPH;
+  let tickSpeed = 1000 / graphSettings["ticks-per-second"];
 
   for (let i = 0; i < graphSettings["number-of-graphs"]; i++) {
     let cytoStyle = new CytoStyle(
@@ -111,6 +113,7 @@ async function startSim() {
 /// MAIN ///
 let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
 let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
+let AALBORG_GRAPH = "../graphPresets/AalborgCentrum.cyjs";
 const DISTANCE_PER_TICK = 300; // 300 units per tick -> meters per minute -> 18 km/h
 
 let graphArray = [];
