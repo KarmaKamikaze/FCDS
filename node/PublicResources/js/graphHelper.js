@@ -268,7 +268,7 @@ class CyGraph {
       startNode = courier.data("currentNode"),
       endNode = this.graph.$id(endId);
     this.pathFunc(this, startNode, endNode);
-    let path = traceback(this.graph, endNode);
+    let path = traceback(this.graph, startNode, endNode);
     let order = courier.data("currentOrder");
     if (order) {
       order.status = "transit";

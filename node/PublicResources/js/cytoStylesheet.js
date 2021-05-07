@@ -1,5 +1,6 @@
 import "../../../node_modules/cytoscape/dist/cytoscape.min.js";
-import { eleType } from "./graphHelper.js";
+import { eleType, CyGraph } from "./graphHelper.js";
+export { CytoStyle, TestCytoStyle };
 
 /**
  * Applies the stylesheet to the cytoscape graph
@@ -114,4 +115,122 @@ function CytoStyle(containerId, graphSize, headless) {
   });
 }
 
-export { CytoStyle };
+// Test graph
+function TestCytoStyle() {
+  let testCy = cytoscape({
+    container: null, // container to render in
+    headless: true,
+  });
+
+  let template = new CyGraph(
+    "Test",
+    testCy,
+    null,
+    300,
+    0.25,
+    true,
+    true,
+    1,
+    20
+  );
+  initTestTemplate(template);
+  return template;
+}
+
+function initTestTemplate(template) {
+  for (let i = 0; i < testNodes.length; i++) {
+    template.graph.add(testNodes[i]);
+  }
+  for (let i = 0; i < testEdges.length; i++) {
+    template.graph.add(testEdges[i]);
+    let id = testEdges[i].data.id,
+      src = testEdges[i].data.target,
+      target = testEdges[i].data.source;
+
+    template.calcLength(id);
+    template.calculateWeight(id);
+    template.addEdge(src + target, src, target, testEdges[i].data.obstructions);
+  }
+}
+
+let testNodes = [
+  {
+    data: { id: "R1", _parent: null, distanceOrigin: 0, weight: 0 },
+    position: { x: 30, y: -40 },
+  },
+  {
+    data: { id: "N2", _parent: null, distanceOrigin: 0, weight: 0 },
+    position: { x: 60, y: -70 },
+  },
+  {
+    data: { id: "N3", _parent: null, distanceOrigin: 0, weight: 0 },
+    position: { x: 10, y: -130 },
+  },
+  {
+    data: { id: "N4", _parent: null, distanceOrigin: 0, weight: 0 },
+    position: { x: 120, y: -110 },
+  },
+  {
+    data: { id: "C5", _parent: null, distanceOrigin: 0, weight: 0 },
+    position: { x: 100, y: -70 },
+  },
+  {
+    data: { id: "N6", _parent: null, distanceOrigin: 0, weight: 0 },
+    position: { x: 120, y: -40 },
+  },
+  {
+    data: { id: "N7", _parent: null, distanceOrigin: 0, weight: 0 },
+    position: { x: 90, y: -150 },
+  },
+];
+
+let testEdges = [
+  {
+    data: {
+      id: "R1N2",
+      source: "R1",
+      target: "N2",
+      obstructions: 2.0,
+    },
+  },
+  {
+    data: {
+      id: "R1N3",
+      source: "R1",
+      target: "N3",
+      obstructions: 1.0,
+    },
+  },
+  {
+    data: {
+      id: "R1N6",
+      source: "R1",
+      target: "N6",
+      obstructions: 1.0,
+    },
+  },
+  {
+    data: {
+      id: "N2N3",
+      source: "N2",
+      target: "N3",
+      obstructions: 3.0,
+    },
+  },
+  {
+    data: {
+      id: "N3N4",
+      source: "N3",
+      target: "N4",
+      obstructions: 1.0,
+    },
+  },
+  {
+    data: {
+      id: "N4C5",
+      source: "N4",
+      target: "C5",
+      obstructions: 1.0,
+    },
+  },
+];
