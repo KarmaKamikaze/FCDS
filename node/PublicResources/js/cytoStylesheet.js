@@ -18,8 +18,12 @@ function CytoStyle(containerId, graphSize, headless) {
     allowPanning = false;
   }
   //Settings specific to the large graph
-  else {
+  else if (graphSize == "large") {
     minZoomVal = 0.12;
+    maxZoomVal = 1.5;
+    allowPanning = true;
+  } else {
+    minZoomVal = 0.035;
     maxZoomVal = 1.5;
     allowPanning = true;
   }
@@ -54,13 +58,13 @@ function CytoStyle(containerId, graphSize, headless) {
         color: "lightgreen",
         content: "",
       })
-      .selector(`.${eleType.route}`)
+      .selector(`.${eleType.inroute}`)
       .style({
-        "background-color": "#B22222",
         "line-color": "#B22222",
-        "target-arrow-color": "#B22222",
-        "transition-property":
-          "background-color, line-color, target-arrow-color",
+      })
+      .selector(`.${eleType.obstructions}`)
+      .style({
+        "line-color": "#FF8C00",
       })
       .selector(`.${eleType.restaurant}`)
       .style({

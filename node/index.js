@@ -6,7 +6,9 @@ import {
   generateGraphDivs,
   generateOptionsHTML,
   generateHeadlessHTML,
+  generateStatInformationDiv,
 } from "./PublicResources/js/dynamicPageGeneration.js";
+import fs from "fs";
 import path from "path";
 const __dirname = path.resolve();
 
@@ -32,9 +34,9 @@ const pageObject = {
 let options = {
   dotfiles: "ignore", // allow, deny, ignore
   etag: true,
-  extensions: ["htm", "html", "js", "css", "ico", "cyjs", "png", "jpg"],
+  extensions: ["htm", "html", "js", "css", "ico", "cyjs", "png", "jpg", "json"],
   index: false, // Disables directory indexing - won't serve a whole folder
-  // maxAge: "7d", // Expires after 7 days
+  maxAge: "7d", // Expires after 7 days
   redirect: false,
   setHeaders: function (res, path, stat) {
     // Add this to header of all static responses
@@ -63,12 +65,30 @@ app.use(limiter);
 // Validation rules
 let validateParameters = [
   body("number-of-graphs").isLength({ max: 1 }).isNumeric().toInt().escape(),
-  body("graph-size").isLength({ min: 5, max: 5 }).trim().toLowerCase().escape(),
+  body("graph-size").isLength({ min: 5, max: 7 }).trim().toLowerCase().escape(),
   body("simulation-1-spa").trim().toLowerCase().escape(),
   body("simulation-2-spa").trim().toLowerCase().escape(),
   body("simulation-3-spa").trim().toLowerCase().escape(),
-  body("idle-zones").trim().toLowerCase().escape(),
+  body("idle-zones").isLength({ max: 2 }).isNumeric().toInt().escape(),
+  body("order-frequency").isLength({ max: 4 }).isNumeric().toFloat().escape(),
+  body("ticks-per-second").isLength({ max: 3 }).isNumeric().toInt().escape(),
+  body("courier-frequency").isLength({ max: 2 }).isNumeric().toInt().escape(),
+  body("obstruction-level").isLength({ max: 2 }).isNumeric().toInt().escape(),
 ];
+
+/**
+ * Validates request and check for an empty body
+ * @param {Object} req The request object, received from the client
+ * @param {Object} res The response object, used to respond to the client if an error occurs.
+ * @returns The response, which sends an error message to the client.
+ */
+const inputValidation = (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.error(errors);
+    return res.status(422).json({ errors: errors.array() });
+  }
+};
 
 // Routes
 app.get("/", (req, res) => {
@@ -84,37 +104,27 @@ app.get("/", (req, res) => {
 });
 
 app.post("/visualization", validateParameters, (req, res) => {
-  // Validate request and check for an empty body
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    console.error(errors);
-    return res.status(422).json({ errors: errors.array() });
-  }
+  inputValidation(req, res);
 
-  const graphAmount = req.body["number-of-graphs"];
-  const graphSize = req.body["graph-size"];
-  const simulationSPAs = [
-    req.body["simulation-1-spa"],
-    req.body["simulation-2-spa"],
-    req.body["simulation-3-spa"],
-  ];
-  const idleZones = req.body["idle-zones"];
+  // Write request parameters into json file
+  const requestData = JSON.stringify(req.body);
+  fs.writeFileSync(
+    path.join(
+      __dirname,
+      "node",
+      "PublicResources",
+      "js",
+      "HTMLRequestParams.json"
+    ),
+    requestData
+  );
 
   res.send(
     generateVisualizationHTML(
-      generateGraphDivs(
-        graphAmount,
-        graphSize,
-        simulationSPAs,
-        idleZones,
-        "visualization"
-      )
+      generateGraphDivs(req.body["number-of-graphs"], "visualization")
     )
   );
-  console.log(
-    `Sent: Visualization with params: Graph amount: ${graphAmount}, graph size: ${graphSize},` +
-      ` simulation SPAs: ${simulationSPAs}, idle zones: ${idleZones}`
-  );
+  console.log(siteInfo("Visualization", req));
 });
 
 app.get("/visualization-options", (req, res) => {
@@ -128,35 +138,60 @@ app.get("/headless-options", (req, res) => {
 });
 
 app.post("/headless-simulation", validateParameters, (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    console.error(errors);
-    return res.status(422).json({ errors: errors.array() });
-  }
+  inputValidation(req, res);
 
-  const graphAmount = req.body["number-of-graphs"];
-  const graphSize = req.body["graph-size"];
-  const simulationSPAs = [req.body["simulation-1-spa"]];
-  const idleZones = req.body["idle-zones"];
+  // Write request parameters into json file
+  const requestData = JSON.stringify(req.body);
+  fs.writeFileSync(
+    path.join(
+      __dirname,
+      "node",
+      "PublicResources",
+      "js",
+      "HTMLRequestParams.json"
+    ),
+    requestData
+  );
 
   res.send(
     generateHeadlessHTML(
-      graphSize,
-      simulationSPAs,
-      generateGraphDivs(
-        graphAmount,
-        graphSize,
-        simulationSPAs,
-        idleZones,
-        "headless-simulation"
+      generateGraphDivs(req.body["number-of-graphs"], "headless-simulation"),
+      generateStatInformationDiv(
+        req.body["graph-size"],
+        req.body["simulation-1-spa"],
+        "headless"
       )
     )
   );
-  console.log(
-    `Sent: Headless simulation with params: Graph amount: ${graphAmount}, graph size: ${graphSize},` +
-      ` simulation SPAs: ${simulationSPAs}, idle zones: ${idleZones}`
-  );
+  console.log(siteInfo("Headless", req));
 });
+
+/**
+ * This function constructs a string of page information corresponding to a request.
+ * @param {String} pageName The name of the page that will sent as response
+ * @param {Object} requestObject A page request object
+ * @returns A string containing the requested page information
+ */
+const siteInfo = (pageName, requestObject) => {
+  let text =
+    `Sent: ${pageName} simulation with params: ` +
+    `Graph amount: ${requestObject.body["number-of-graphs"]}, ` +
+    `graph size: ${requestObject.body["graph-size"]}, ` +
+    `simulation SPA: ${requestObject.body["simulation-1-spa"]},`;
+
+  pageName === "Visualization"
+    ? (text += ` ${requestObject.body["simulation-2-spa"]} ${requestObject.body["simulation-3-spa"]}, `)
+    : ``;
+
+  text +=
+    `idle zones: ${requestObject.body["idle-zones"]}, ` +
+    `order frequency: ${requestObject.body["order-frequency"]} ` +
+    `ticks per second: ${requestObject.body["ticks-per-second"]} ` +
+    `courier frequency: ${requestObject.body["courier-frequency"]} ` +
+    `obstruction level: ${requestObject.body["obstruction-level"]}.`;
+
+  return text;
+};
 
 // Start the server app
 app.listen(port, (error) => {

@@ -283,3 +283,41 @@ input[type="range"]:focus {
   outline: none;
   cursor: default;
 }
+
+.legend {
+  position: absolute;
+  width: 50%;
+  transform: translateX(50%);
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted white;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 240px;
+  background-color: rgb(114, 113, 113);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  left: 105%;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.simTime {
+  position: absolute;
+  left: 3%;
+  top: 5%;
+}

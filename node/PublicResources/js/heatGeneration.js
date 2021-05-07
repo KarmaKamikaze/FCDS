@@ -1,7 +1,7 @@
 import { dijkstra } from "./dijkstra.js";
 import { eleType } from "./graphHelper.js";
 import { orderIntensity, timeToFloat } from "./orderGeneration.js";
-export { generateHeatmap };
+export { generateHeatmap, generateObstructions };
 
 let graphRadius = null;
 /**
@@ -11,10 +11,10 @@ let graphRadius = null;
  */
 function getGraphRadius(cyGraph) {
   if (graphRadius) {
-      return graphRadius;
+    return graphRadius;
   }
   let edges = cyGraph.graph.edges(),
-      totalWeight = 0;
+    totalWeight = 0;
   for (const edge of edges) {
     totalWeight += edge.data("weight");
   }
@@ -34,7 +34,7 @@ function generateHeatmap(cyGraph) {
   assignHeat(cyGraph);
 
   //Find n waiting zones
-  let n = getZoneCount(cyGraph);
+  let n = cyGraph.idleZoneAmount;
   for (let i = 0; i < n; i++) {
     let zone = findIdleZone(cyGraph);
     cyGraph.idleZones.push(zone);
@@ -51,7 +51,7 @@ function generateHeatmap(cyGraph) {
  * @returns The amount of idle zones to assign (based on restaurants pr courier).
  */
 function getZoneCount(cyGraph) {
-  return Math.ceil(cyGraph.restaurants.length/2);
+  return Math.ceil(cyGraph.restaurants.length / 2);
 }
 
 /**
@@ -69,7 +69,7 @@ function resetHeat(cyGraph) {
  * @param {Object} cyGraph The graph the simulation is contained within.
  */
 function assignHeat(cyGraph) {
-  let radius = 3*getGraphRadius(cyGraph);
+  let radius = 3 * getGraphRadius(cyGraph);
   for (const restaurant of cyGraph.restaurants) {
     dijkstra(cyGraph, restaurant);
     let closeNodes = findNodesInRadius(cyGraph, restaurant, radius);
@@ -145,7 +145,8 @@ function updateColors(cyGraph) {
 
     if (isIdleZone(node, cyGraph)) {
       node.addClass(eleType.idlezone_red);
-    } else if (node.data("heat") > max * 0.33) { //? if the heat value is within 77% of the max heat
+    } else if (node.data("heat") > max * 0.33) {
+      //? if the heat value is within 77% of the max heat
       node.addClass(eleType.idlezone_orange);
     } else {
       node.addClass(eleType.idlezone_yellow);
@@ -190,4 +191,39 @@ function findNodesInRadius(cyGraph, startNode, radius) {
     }
   }
   return nodesInRadius;
+}
+
+/**
+ * Creates obstructions on random edges in the graph.
+ * @param {Object} cyGraph The graph the simulation is contained within.
+ */
+function generateObstructions(cyGraph) {
+  for (let obstructionEdge of cyGraph.obstructions) {
+    // Clear old obstructions
+    let obstructionVal = obstructionEdge.data("obstructions"); // Fetch edge's current obstruction value
+    obstructionEdge.data("obstructions", (obstructionVal * 2) / 3); // Scale edge's obstructions down to original obstruction value
+    cyGraph.calculateWeight(obstructionEdge.id()); // Update the weight property of the edge
+    obstructionEdge.removeClass(eleType.obstructions); // Remove class marking edge as obstruction edge
+  }
+  cyGraph.obstructions = []; // Empty obstructions array
+
+  let edges = cyGraph.graph.edges();
+  for (let i = 0; i < cyGraph.obstructionLevel; i++) {
+    // Create obstructions on random edges
+    let edge = edges[cyGraph.getRandomInt(edges.length - 1)]; // Get random edge
+    let revEdge = cyGraph.graph.$id(edge.target().id() + edge.source().id());
+
+    let edgeObstructions = edge.data("obstructions");
+    edge.data("obstructions", edgeObstructions * 1.5); // Upscale obstructions
+    cyGraph.calculateWeight(edge.id()); // Upate the weight property on the edge
+
+    let revEdgeObstructions = revEdge.data("obstructions");
+    edge.data("obstructions", revEdgeObstructions * 1.5);
+    cyGraph.calculateWeight(revEdge.id());
+
+    edge.addClass(eleType.obstructions); // Highlight edge
+    revEdge.addClass(eleType.obstructions);
+
+    cyGraph.obstructions = cyGraph.obstructions.concat([edge, revEdge]); // Add edges to obstructions array to reduce obstructions later
+  }
 }

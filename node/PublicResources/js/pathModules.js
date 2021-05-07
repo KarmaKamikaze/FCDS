@@ -1,3 +1,5 @@
+export { initializeSingleSource, relax, heuristicApprox, traceback };
+
 /**
  * All nodes are initialized by setting their distance to
  * the origin/source to infinity and setting their parents to null.
@@ -75,5 +77,3 @@ function traceback(graph, startNode, endNode) {
 
   return path;
 }
-
-export { initializeSingleSource, relax, heuristicApprox, traceback };

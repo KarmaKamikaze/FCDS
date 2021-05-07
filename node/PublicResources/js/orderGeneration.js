@@ -1,12 +1,10 @@
 import { dijkstra } from "./dijkstra.js";
-import { generateHeatmap } from "./heatGeneration.js";
+import { generateHeatmap, generateObstructions } from "./heatGeneration.js";
 import { eleType } from "./graphHelper.js";
-import { updateStats } from "./stats.js";
-export { startSimulation, timeToFloat, orderIntensity, assignCourier, Order };
+import { updateStats, updateTimeOnly } from "./stats.js";
+export { startSimulation, timeToFloat, orderIntensity, formatTime, assignCourier, Order };
 
 const isHeadless = document.querySelector("div.headless");
-
-let timeMinutes = 479; // start at 8:00
 
 /**
  * Starts the order generation simulation
@@ -39,12 +37,17 @@ function perTick(cyGraph) {
 
   if (cyGraph.timeMinutes == 1440) {
     cyGraph.simulationStats.failedOrders += cyGraph.orders.length;
+    for (let order of cyGraph.orders) {
+      order.status = "failed";
+      order.endTime = cyGraph.timeMinutes;
+      order.endTimeClock = formatTime(order.endTime);
+    }
     cyGraph.orders = new Array();
     console.log(
       `[${cyGraph.name}] Day ${
         cyGraph.simulationStats.simDays
       }: Succesful orders: ${
-        cyGraph.simulationStats.deliveredOrdersArr.length -
+        cyGraph.simulationStats.totalOrdersArr.length -
         cyGraph.simulationStats.failedOrders
       }/${
         cyGraph.simulationStats.totalOrdersArr.length
@@ -62,6 +65,8 @@ function perTick(cyGraph) {
     cyGraph.simulationStats.calcRuntime(); // Stat: Calculates the amount of real-world time has passed
     if (isHeadless) {
       updateStats(cyGraph.simulationStats); // Updates all statistics
+    } else {
+      updateTimeOnly(cyGraph.simulationStats);
     }
     generateOrders(cyGraph);
   }
@@ -69,7 +74,7 @@ function perTick(cyGraph) {
   // Generate idle zones and update the courier amount every 60 ticks
   if (!(cyGraph.timeMinutes % 60)) {
     if (
-      cyGraph.useIdleZones &&
+      cyGraph.idleZoneAmount &&
       cyGraph.timeMinutes >= 480 &&
       cyGraph.timeMinutes < 1260
     ) {
@@ -81,6 +86,10 @@ function perTick(cyGraph) {
         cyGraph.couriers.length
       } couriers, ${cyGraph.orders.length} pending orders`
     );
+  }
+
+  if (!(cyGraph.timeMinutes % 180)) {
+    generateObstructions(cyGraph);
   }
 
   if (!(cyGraph.timeMinutes % 2)) {
@@ -98,32 +107,31 @@ function perTick(cyGraph) {
  */
 function maintainCouriers(cyGraph) {
   // The expectedCourierMultiplier array denotes the courier multiplier of each hour of the day (starting at 00:00)
-  //                                00   01   02   03   04   05   06   07   08   09   10   11   12   13   14   15   16   17   18   19   20   21   22   23
   let expectedCourierMultiplier = [
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.2,
-    0.3,
-    0.3,
-    0.6,
-    0.6,
-    0.4,
-    0.4,
-    0.4,
-    0.6,
-    0.7,
-    1.0,
-    1.0,
-    0.6,
-    0.4,
-    0.0,
-    0.0,
+    0.0, // 00
+    0.0, // 01
+    0.0, // 02
+    0.0, // 03
+    0.0, // 04
+    0.0, // 05
+    0.0, // 06
+    0.0, // 07
+    0.2, // 08
+    0.3, // 09
+    0.3, // 10
+    0.6, // 11
+    0.6, // 12
+    0.4, // 13
+    0.4, // 14
+    0.4, // 15
+    0.6, // 16
+    0.7, // 17
+    1.0, // 18
+    1.0, // 19
+    0.6, // 20
+    0.4, // 21
+    0.0, // 22
+    0.0, // 23
   ];
   let curHour = Math.floor(cyGraph.timeMinutes / 60);
   let expectedCourierCount = Math.ceil(
@@ -214,18 +222,6 @@ function dinnerRate(x) {
 }
 
 /**
- * Creates a random number in an interval.
- * @param {Number} min The lower bound of the interval.
- * @param {Number} max The upper bound of the interval.
- * @returns A number between min and max.
- */
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-/**
  * Generates an order from a random restaurant to a random customer in the network based on the current intensity and some randomness.
  * @param {Object} cyGraph The graph the simulation is contained within.
  * @returns The new order.
@@ -238,7 +234,7 @@ function generateOrders(cyGraph) {
     );
     let roll = Math.random();
     if (roll <= restaurant.data("orderRate") * intensity) {
-      let i = getRandomInt(0, cyGraph.customers.length - 1);
+      let i = cyGraph.getRandomInt(cyGraph.customers.length - 1);
       let order = new Order(
         cyGraph.simulationStats.totalOrdersArr.length + 1,
         restaurant,

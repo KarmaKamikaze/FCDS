@@ -3,6 +3,7 @@ export {
   generateGraphDivs,
   generateOptionsHTML,
   generateHeadlessHTML,
+  generateStatInformationDiv,
 };
 
 /**
@@ -24,8 +25,12 @@ const generateVisualizationHTML = (graphs) => {
           <link rel="icon" type="image/x-icon" href="../html/favicon.ico" />
         </head>
         <body>
+          <div class="simTime">
+          <p>Day: <span id="simulation-days" class="control-value"></span></p>
+          <p id="time"></p>
+          </div>
           ${graphs}
-      
+          <img class="legend disable-select" src="../html/legend.png" alt="Graph legend reference" title="Graph legend reference">
           <!-- Load application code at the end to ensure DOM is loaded -->
           <script src="../js/graphCore.js" type="module"></script>
           <script src="../js/darkMode.js" type="module"></script>
@@ -38,35 +43,24 @@ const generateVisualizationHTML = (graphs) => {
  * This function generates an amount of divs to contain graph networks on the html page.
  * @param {Number} graphAmount The number of graph divs to generate. This value is usually
  * requested by the user.
- * @param {String} graphSize The size of the graphs which will be contained in the divs.
- * @param {String} algorithms The different types of algorithms associated with each graph div.
- * @param {String} idleZones Determines whether idle zones should be contained within the div.
  * @param {String} pageName This value determines the appropriate switch case, since the two end
  * points will need different properties for css reasons.
  * @returns A string, which contains the specified amount of graph divs in series. The graph will
  * have an id and three classes associated with it: The cy tag, the size of the graph which will
  * be placed in the div and the algorithm that should be used.
  */
-const generateGraphDivs = (
-  graphAmount,
-  graphSize,
-  algorithms,
-  idleZones,
-  pageName
-) => {
+const generateGraphDivs = (graphAmount, pageName) => {
   switch (pageName) {
     case "visualization":
       let graphs = `<div style="text-align: center">`;
       for (let i = 0; i < graphAmount; i++) {
-        graphs += `<div id="cy${i}" class="cy ${graphSize} ${algorithms[i]} ${idleZones}"></div>`;
+        graphs += `<div id="cy${i}" class="cy"></div>`;
       }
       graphs += `</div>`;
       return graphs;
 
     case "headless-simulation":
-      let graph = `<div id="cy${graphAmount - 1}" class="cy ${graphSize} ${
-        algorithms[0]
-      } ${idleZones} headless"></div>`;
+      let graph = `<div id="cy${graphAmount - 1}" class="cy headless"></div>`;
       return graph;
 
     default:
@@ -196,20 +190,22 @@ const generateOptionsHTML = (pageObject) => {
               <h1>Choose your options for the FCDP ${pageObject.h1}</h1>
               <div class="set">`;
   body +=
-    pageObject.formaction === "visualization"
+    pageObject.h1 === "Visualization"
       ? numberOfGraphOption
-      : pageObject.formaction === "headless-simulation"
+      : pageObject.h1 === "Simulation"
       ? oneGraphOption
       : ``;
 
   body += `<div class="graph-size">
                   <label for="graph-size">`;
+
   body +=
-    pageObject.formaction === "visualization"
+    pageObject.h1 === "Visualization"
       ? `Size of graphs`
-      : pageObject.formaction === `headless-simulation`
+      : pageObject.h1 === `Simulation`
       ? `Size of graph`
       : "";
+
   body += `</label>
                   <div class="radio-container">
                     <input
@@ -233,41 +229,103 @@ const generateOptionsHTML = (pageObject) => {
                     <label for="graph-size-large" class="disable-select"
                       >Large</label
                     >
+                    <input
+                      id="graph-size-aalborg"
+                      name="graph-size"
+                      type="radio"
+                      value="aalborg"
+                      required
+                    />
+                    <label for="graph-size-aalborg" class="disable-select"
+                      >Aalborg</label
+                    >
                   </div>
                 </div>`;
-  body +=
-    pageObject.formaction === "headless-simulation" ? algorithmOption : ``;
+  body += pageObject.h1 === "Simulation" ? algorithmOption : ``;
 
-  body += `<div class="idle-zones">
-      <label for="idle-zones"
-        >Idle zones</label
-      >
-      <div id="idle-zones" class="radio-container">
-        <input
-          id="idle-zones-yes"
-          name="idle-zones"
-          type="radio"
-          value="enable-idle"
-          checked
-          required
-        />
-        <label for="idle-zones-yes" class="disable-select"
-          >Enable</label
-        >
-        <input
-          id="idle-zones-no"
-          name="idle-zones"
-          type="radio"
-          value="disable-idle"
-          required
-        />
-        <label for="idle-zones-no" class="disable-select"
-          >Disable</label
-        >
-      </div>
-    </div>`;
-
-  body += `</div>
+  body += `<div class="slider-container">
+          <br>
+          <div class="tooltip">Idle zones:
+            <span class="tooltiptext">Number of idle zones to generate.</span>
+          </div>
+          <br>
+          <input
+            type="range"
+            name="idle-zones"
+            value="2"
+            id="idle-zones"
+            min="0"
+            max="10"
+            step="1"
+            oninput="this.nextElementSibling.value = this.value"
+          />
+          <output>2</output>
+          <br>
+          <div class="tooltip">Order frequency:
+            <span class="tooltiptext">Estimated orders per minute per restaurant at peak times.</span>
+          </div>
+          <br>
+          <input
+            type="range"
+            name="order-frequency"
+            value="0.25"
+            id="order-frequency"
+            min="0.2"
+            max="0.3"
+            step="0.01"
+            oninput="this.nextElementSibling.value = this.value"
+          />
+          <output>0.25</output>
+          <br>
+          <div class="tooltip">Ticks per second:
+            <span class="tooltiptext">10 or below for smoothly animated traversal - above 10 for headless traversal.</span>
+          </div>
+          <br>
+          <input
+            type="range"
+            name="ticks-per-second"
+            value="50"
+            id="ticks-per-second"
+            min="1"
+            max="100"
+            step="1"
+            oninput="this.nextElementSibling.value = this.value"
+          />
+          <output>50</output>
+          <br>
+          <div class="tooltip">Courier frequency:
+            <span class="tooltiptext">Factor determining the amount of couriers to simulate.</span>
+          </div>
+          <br>
+          <input
+            type="range"
+            name="courier-frequency"
+            value="10"
+            id="courier-frequency"
+            min="1"
+            max="20"
+            step="1"
+            oninput="this.nextElementSibling.value = this.value"
+          />
+          <output>10</output>
+        </div>
+        <br>
+          <div class="tooltip">Obstruction level:
+            <span class="tooltiptext">Determines the number of edges to create obstructions on periodically.</span>
+          </div>
+          <br>
+          <input
+            type="range"
+            name="obstruction-level"
+            value="5"
+            id="obstruction-level"
+            min="0"
+            max="10"
+            step="1"
+            oninput="this.nextElementSibling.value = this.value"
+          />
+          <output>5</output>
+        </div>
             </header>
             <footer>
               <div class="set">
@@ -288,23 +346,12 @@ const generateOptionsHTML = (pageObject) => {
 
 /**
  * This function generates the headless-simulation html page, which can then be sent as
- * a response to a POST request.
- * @param {Number} graphSize The size of the graphs which will be contained in the divs.
- * @param {String} algorithm The different types of algorithms associated with each graph div.
+ * a response to a GET request.
  * @param {String} graph A deposited div html element in string form, representing the graph container.
+ * @param {String} infoDiv A deposited div html element in string form, representing the information stat block.
  * @returns A string, which contains the generated headless-simulation.html site.
  */
-const generateHeadlessHTML = (graphSize, algorithm, graph) => {
-  let algorithmName = {
-    astar: "A*",
-    bfs: "BFS",
-    dijkstra: "Dijkstra",
-  };
-  let sizeName = {
-    small: "Small",
-    large: "Large",
-  };
-
+const generateHeadlessHTML = (graph, infoDiv) => {
   return `<!DOCTYPE html>
   <html>
     <head>
@@ -319,72 +366,60 @@ const generateHeadlessHTML = (graphSize, algorithm, graph) => {
     </head>
     <body>
     ${graph}
-      <div id="statistics-div" class="control-center disable-select">
-        <h1>Headless simulation</h1>
-        <p>Graph size: <span id="graph-size" class="control-value">${
-          sizeName[`${graphSize}`]
-        }</span></p>
-        <p>Current algorithm: <span id="SPA" class="control-value">${
-          algorithmName[`${algorithm}`]
-        }</span></p>
-        <p>Time: <span id="time" class="control-value"></span></p>
-        <p>Simulation runtime: <span id="simulation-runtime" class="control-value"></span></p>
-        <p>
-          Total orders: <span id="total-orders" class="control-value"></span>
-        </p>
-        <p>
-          Active orders: <span id="active-orders" class="control-value"></span>
-        </p>
-        <p>
-          Average delivery time:
-          <span id="avg-delivery-time" class="control-value"></span>
-        </p>
-        <p>
-          Failed orders: <span id="failed-orders" class="control-value"></span>
-        </p>
-        <div class="slider-container">
-          <p>Order frequency:</p>
-          <input
-            type="range"
-            value="0.5"
-            id="order-frequency"
-            min="0"
-            max="1"
-            step="0.01"
-            oninput="this.nextElementSibling.value = this.value"
-          />
-          <output>0.5</output>
-          <p>Tick rate:</p>
-          <input
-            type="range"
-            value="500"
-            id="tick-rate"
-            min="0"
-            max="1000"
-            step="10"
-            oninput="this.nextElementSibling.value = this.value"
-          />
-          <output>500</output>
-          <p>Couriers:</p>
-          <input
-            type="range"
-            value="25"
-            id="couriers"
-            min="1"
-            max="50"
-            step="1"
-            oninput="this.nextElementSibling.value = this.value"
-          />
-          <output>25</output>
-        </div>
-        <div id="orders">
-        <textarea readonly name="orders-textarea" id="order-textarea"></textarea>
-        </div>
-      </div>
+    ${infoDiv}
       <!-- Load application code at the end to ensure DOM is loaded -->
       <script src="../js/graphCore.js" type="module"></script>
       <script src="../js/darkMode.js" type="module"></script>
     </body>
   </html>
   `;
+};
+
+/**
+ * This function generates an information div to contain the different graph
+ * parameters for the ongoing simulation.
+ * @param {String} graphSize The size category of the requested graph.
+ * @param {String} algorithm The algorithm name for the requested graph.
+ * @param {String} pageName The HTML page name to differentiate between visualization
+ * and headless.
+ * @returns A string containing an information HTML div.
+ */
+const generateStatInformationDiv = (graphSize, algorithm, pageName = null) => {
+  let algorithmName = {
+    astar: "A*",
+    bfs: "BFS",
+    dijkstra: "Dijkstra",
+  };
+  let sizeName = {
+    small: "Small",
+    large: "Large",
+    aalborg: "Aalborg Centrum",
+  };
+
+  let statDiv = `<div id="statistics-div" class="control-center disable-select">
+  <h1>Headless simulation</h1>
+  <p>Graph size: <span id="graph-size" class="control-value">${
+    sizeName[`${graphSize}`]
+  }</span></p>
+  <p>Current algorithm: <span id="SPA" class="control-value">${
+    algorithmName[`${algorithm}`]
+  }</span></p>
+  <p>Simulation day: <span id="simulation-days" class="control-value"></span></p>
+  <p>Time: <span id="time" class="control-value"></span></p>
+  <p>Simulation runtime: <span id="simulation-runtime" class="control-value"></span></p>
+  <p>Total orders: <span id="total-orders" class="control-value"></span></p>
+  <p>Active orders: <span id="active-orders" class="control-value"></span></p>
+  <p>Average delivery time: <span id="avg-delivery-time" class="control-value"></span></p>
+  <p>Failed orders: <span id="failed-orders" class="control-value"></span></p>
+  <p>Success rate: <span id="success-rate" class="control-value"></span></p>`;
+
+  if (pageName === "headless") {
+    statDiv += `<div id="orders">
+  <textarea readonly name="orders-textarea" id="order-textarea"></textarea>
+  </div>`;
+  }
+
+  statDiv += `</div>`;
+
+  return statDiv;
 };
