@@ -262,7 +262,7 @@ const generateOptionsHTML = (pageObject) => {
           <output>0.25</output>
           <br>
           <div class="tooltip">Ticks per second:
-            <span class="tooltiptext">10 or below for visualization - above 10 for headless.</span>
+            <span class="tooltiptext">10 or below for smoothly animated traversal - above 10 for headless traversal.</span>
           </div>
           <br>
           <input
