@@ -34,7 +34,7 @@ Alternatively, the program can be accessed directly on [GitHub Pages](https://ww
 
 `Number of graphs:` The amount of simulations to show and run simultaneously.
 
-`Graph size:` Specifies which of the [graph presets](presets) to use.
+`Graph size:` Specifies which of the graph presets to use (see [here](#graph-presets)).
 
 `Simulation algorithm:` Specifies which of the shortest-path algorithms to use.
 
@@ -53,8 +53,8 @@ Alternatively, the program can be accessed directly on [GitHub Pages](https://ww
 
 Wot is dis and how variables are there now here ???
 
-### Graph presets
-<a name="presets"></a>
+### <a name="#graph-presets"></a>Graph presets
+
 ![Graph presets](https://raw.githubusercontent.com/KarmaKamikaze/P2-Project/2822bc552ca0f7d3a5cd7845db7f1076b9e03171/.github/Graphs.png)
 
 
