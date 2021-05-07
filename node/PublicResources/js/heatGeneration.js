@@ -1,7 +1,7 @@
 import { dijkstra } from "./dijkstra.js";
 import { eleType } from "./graphHelper.js";
 import { orderIntensity, timeToFloat } from "./orderGeneration.js";
-export { generateHeatmap };
+export { generateHeatmap, generateObstructions };
 
 let graphRadius = null;
 /**
@@ -191,4 +191,39 @@ function findNodesInRadius(cyGraph, startNode, radius) {
     }
   }
   return nodesInRadius;
+}
+
+/**
+ * Creates obstructions on random edges in the graph.
+ * @param {Object} cyGraph The graph the simulation is contained within.
+ */
+function generateObstructions(cyGraph) {
+  for (let obstructionEdge of cyGraph.obstructions) {
+    // Clear old obstructions
+    let obstructionVal = obstructionEdge.data("obstructions"); // Fetch edge's current obstruction value
+    obstructionEdge.data("obstructions", (obstructionVal * 2) / 3); // Scale edge's obstructions down to original obstruction value
+    cyGraph.calculateWeight(obstructionEdge.id()); // Update the weight property of the edge
+    obstructionEdge.removeClass(eleType.obstructions); // Remove class marking edge as obstruction edge
+  }
+  cyGraph.obstructions = []; // Empty obstructions array
+
+  let edges = cyGraph.graph.edges();
+  for (let i = 0; i < cyGraph.obstructionLevel; i++) {
+    // Create obstructions on random edges
+    let edge = edges[cyGraph.getRandomInt(edges.length - 1)]; // Get random edge
+    let revEdge = cyGraph.graph.$id(edge.target().id() + edge.source().id());
+
+    let edgeObstructions = edge.data("obstructions");
+    edge.data("obstructions", edgeObstructions * 1.5); // Upscale obstructions
+    cyGraph.calculateWeight(edge.id()); // Upate the weight property on the edge
+
+    let revEdgeObstructions = revEdge.data("obstructions");
+    edge.data("obstructions", revEdgeObstructions * 1.5);
+    cyGraph.calculateWeight(revEdge.id());
+
+    edge.addClass(eleType.obstructions); // Highlight edge
+    revEdge.addClass(eleType.obstructions);
+
+    cyGraph.obstructions = cyGraph.obstructions.concat([edge, revEdge]); // Add edges to obstructions array to reduce obstructions later
+  }
 }

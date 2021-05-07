@@ -11,8 +11,8 @@ let eleType = {
   courier: "courier",
   restaurant: "restaurant",
   customer: "customer",
-  route: "route",
-  routeDone: "routeDone",
+  inroute: "inroute",
+  obstructions: "obstructions",
   idlezone_yellow: "idlezone-yellow",
   idlezone_orange: "idlezone-orange",
   idlezone_red: "idlezone-red",
@@ -30,7 +30,8 @@ class CyGraph {
     idleZoneAmount,
     headless,
     courierFreq,
-    tickSpeed
+    tickSpeed,
+    obstructionLevel
   ) {
     this.name = name;
     this.graph = graph;
@@ -44,6 +45,7 @@ class CyGraph {
     this.idleZoneAmount = idleZoneAmount;
     this.orderRate = orderRate;
     this.courierFreq = courierFreq;
+    this.obstructionLevel = obstructionLevel;
   }
 
   // Arrays that keep track of all elements in the graph
@@ -52,6 +54,7 @@ class CyGraph {
   customers = new Array();
   orders = new Array();
   idleZones = new Array();
+  obstructions = new Array();
 
   /**
    * Adds a node at specified location with potential weight
@@ -146,7 +149,9 @@ class CyGraph {
         newId = this.getEdgeId(source, target),
         newIdRev = this.getEdgeId(target, source),
         obstructions = edges[i].data("obstructions");
-
+      if (!obstructions) {
+        obstructions = 1;
+      }
       this.addEdge(newId, source, target, obstructions);
       this.addEdge(newIdRev, target, source, obstructions);
       this.delNode(edges[i].id());
@@ -267,7 +272,7 @@ class CyGraph {
     if (order) {
       order.status = "transit";
     }
-    if (this.headless) {
+    if (this.headless || this.tickSpeed < 100) {
       this.moveCourierHeadless(courier, path);
     } else {
       // Edge/route highlighting
@@ -275,7 +280,7 @@ class CyGraph {
       for (const edge of pathEdges) {
         edge.inRoute.push(courierId);
       }
-      pathEdges.addClass(eleType.route);
+      pathEdges.addClass(eleType.inroute);
       this.animateCourier(path, courier, pathEdges);
     }
   }
@@ -382,22 +387,30 @@ class CyGraph {
         if (courier.data("pendingOrder")) {
           courier.data("pendingOrder", false);
           courier.data("moving", false);
+          for (const edge of edges) {
+            let courierIndex = edge.inRoute.indexOf(courier.id());
+            edge.inRoute.splice(courierIndex, 1);
+            if (!edge.inRoute.length) {
+              edge.removeClass(eleType.inroute);
+            } else {
+              edge.addClass(eleType.inroute);
+            }
+          }
           return this.traversePath(
             courier.id(),
             courier.data("currentOrder").restaurant.id()
           );
-        }
-        if (index < path.length - 2) {
+        } else if (index < path.length - 2) {
           // on traversing a node
           return this.animateCourier(path, courier, edges, index + 1);
         } else {
           for (const edge of edges) {
-            let index = edge.inRoute.indexOf(courier.id());
-            edge.inRoute.splice(index, 1);
+            let courierIndex = edge.inRoute.indexOf(courier.id());
+            edge.inRoute.splice(courierIndex, 1);
             if (!edge.inRoute.length) {
-              edge.removeClass(eleType.route);
+              edge.removeClass(eleType.inroute);
             } else {
-              edge.addClass(eleType.route);
+              edge.addClass(eleType.inroute);
             }
           }
           // on arrival

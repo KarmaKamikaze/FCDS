@@ -98,9 +98,10 @@ async function startSim() {
       DISTANCE_PER_TICK, // courier movement speed
       graphSettings["order-frequency"], // order rate (pr restaurant)
       graphSettings["idle-zones"], // use idle zones
-      true, // headless traversal
+      graphDivs[i].classList.contains("headless"), // headless traversal
       graphSettings["courier-frequency"], // max number of couriers
-      tickSpeed // ms per tick
+      tickSpeed, // ms per tick
+      graphSettings["obstruction-level"]
     );
     graphArray.push(cyGraph);
     SetupGraph(cyGraph, graphSize, simulationTest, tickSpeed);

@@ -1,12 +1,10 @@
 import { dijkstra } from "./dijkstra.js";
-import { generateHeatmap } from "./heatGeneration.js";
+import { generateHeatmap, generateObstructions } from "./heatGeneration.js";
 import { eleType } from "./graphHelper.js";
 import { updateStats } from "./stats.js";
 export { startSimulation, timeToFloat, orderIntensity, formatTime };
 
 const isHeadless = document.querySelector("div.headless");
-
-let timeMinutes = 479; // start at 8:00
 
 /**
  * Starts the order generation simulation
@@ -39,12 +37,17 @@ function perTick(cyGraph) {
 
   if (cyGraph.timeMinutes == 1440) {
     cyGraph.simulationStats.failedOrders += cyGraph.orders.length;
+    for (let order of cyGraph.orders) {
+      order.status = "failed";
+      order.endTime = cyGraph.timeMinutes;
+      order.endTimeClock = formatTime(order.endTime);
+    }
     cyGraph.orders = new Array();
     console.log(
       `[${cyGraph.name}] Day ${
         cyGraph.simulationStats.simDays
       }: Succesful orders: ${
-        cyGraph.simulationStats.deliveredOrdersArr.length -
+        cyGraph.simulationStats.totalOrdersArr.length -
         cyGraph.simulationStats.failedOrders
       }/${
         cyGraph.simulationStats.totalOrdersArr.length
@@ -81,6 +84,10 @@ function perTick(cyGraph) {
         cyGraph.couriers.length
       } couriers, ${cyGraph.orders.length} pending orders`
     );
+  }
+
+  if (!(cyGraph.timeMinutes % 180)) {
+    generateObstructions(cyGraph);
   }
 
   if (!(cyGraph.timeMinutes % 2)) {
@@ -213,18 +220,6 @@ function dinnerRate(x) {
 }
 
 /**
- * Creates a random number in an interval.
- * @param {Number} min The lower bound of the interval.
- * @param {Number} max The upper bound of the interval.
- * @returns A number between min and max.
- */
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-/**
  * Generates an order from a random restaurant to a random customer in the network based on the current intensity and some randomness.
  * @param {Object} cyGraph The graph the simulation is contained within.
  * @returns The new order.
@@ -237,7 +232,7 @@ function generateOrders(cyGraph) {
     );
     let roll = Math.random();
     if (roll <= restaurant.data("orderRate") * intensity) {
-      let i = getRandomInt(0, cyGraph.customers.length - 1);
+      let i = cyGraph.getRandomInt(cyGraph.customers.length - 1);
       let order = new Order(
         cyGraph.simulationStats.totalOrdersArr.length + 1,
         restaurant,

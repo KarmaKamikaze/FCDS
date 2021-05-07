@@ -3,6 +3,7 @@ export {
   generateGraphDivs,
   generateOptionsHTML,
   generateHeadlessHTML,
+  generateStatInformationDiv,
 };
 
 /**
@@ -25,7 +26,7 @@ const generateVisualizationHTML = (graphs) => {
         </head>
         <body>
           ${graphs}
-      
+          <img class="legend disable-select" src="../html/legend.png" alt="Graph legend reference" title="Graph legend reference">
           <!-- Load application code at the end to ensure DOM is loaded -->
           <script src="../js/graphCore.js" type="module"></script>
           <script src="../js/darkMode.js" type="module"></script>
@@ -227,7 +228,11 @@ const generateOptionsHTML = (pageObject) => {
   body += pageObject.h1 === "Simulation" ? algorithmOption : ``;
 
   body += `<div class="slider-container">
-          <p>Idle zones:</p>
+          <br>
+          <div class="tooltip">Idle zones:
+            <span class="tooltiptext">Number of idle zones to generate.</span>
+          </div>
+          <br>
           <input
             type="range"
             name="idle-zones"
@@ -239,7 +244,11 @@ const generateOptionsHTML = (pageObject) => {
             oninput="this.nextElementSibling.value = this.value"
           />
           <output>2</output>
-          <p>Order frequency:</p>
+          <br>
+          <div class="tooltip">Order frequency:
+            <span class="tooltiptext">Estimated orders per minute per restaurant at peak times.</span>
+          </div>
+          <br>
           <input
             type="range"
             name="order-frequency"
@@ -251,7 +260,11 @@ const generateOptionsHTML = (pageObject) => {
             oninput="this.nextElementSibling.value = this.value"
           />
           <output>0.25</output>
-          <p>Ticks per second:</p>
+          <br>
+          <div class="tooltip">Ticks per second:
+            <span class="tooltiptext">10 or below for smoothly animated traversal - above 10 for headless traversal.</span>
+          </div>
+          <br>
           <input
             type="range"
             name="ticks-per-second"
@@ -263,7 +276,11 @@ const generateOptionsHTML = (pageObject) => {
             oninput="this.nextElementSibling.value = this.value"
           />
           <output>50</output>
-          <p>Courier frequency:</p>
+          <br>
+          <div class="tooltip">Courier frequency:
+            <span class="tooltiptext">Factor determining the amount of couriers to simulate.</span>
+          </div>
+          <br>
           <input
             type="range"
             name="courier-frequency"
@@ -276,6 +293,22 @@ const generateOptionsHTML = (pageObject) => {
           />
           <output>10</output>
         </div>
+        <br>
+          <div class="tooltip">Obstruction level:
+            <span class="tooltiptext">Determines the number of edges to create obstructions on periodically.</span>
+          </div>
+          <br>
+          <input
+            type="range"
+            name="obstruction-level"
+            value="5"
+            id="obstruction-level"
+            min="0"
+            max="10"
+            step="1"
+            oninput="this.nextElementSibling.value = this.value"
+          />
+          <output>5</output>
         </div>
             </header>
             <footer>
@@ -297,23 +330,12 @@ const generateOptionsHTML = (pageObject) => {
 
 /**
  * This function generates the headless-simulation html page, which can then be sent as
- * a response to a POST request.
- * @param {Number} graphSize The size of the graphs which will be contained in the divs.
- * @param {String} algorithm The different types of algorithms associated with each graph div.
+ * a response to a GET request.
  * @param {String} graph A deposited div html element in string form, representing the graph container.
+ * @param {String} infoDiv A deposited div html element in string form, representing the information stat block.
  * @returns A string, which contains the generated headless-simulation.html site.
  */
-const generateHeadlessHTML = (graphSize, algorithm, graph) => {
-  let algorithmName = {
-    astar: "A*",
-    bfs: "BFS",
-    dijkstra: "Dijkstra",
-  };
-  let sizeName = {
-    small: "Small",
-    large: "Large",
-  };
-
+const generateHeadlessHTML = (graph, infoDiv) => {
   return `<!DOCTYPE html>
   <html>
     <head>
@@ -328,37 +350,59 @@ const generateHeadlessHTML = (graphSize, algorithm, graph) => {
     </head>
     <body>
     ${graph}
-      <div id="statistics-div" class="control-center disable-select">
-        <h1>Headless simulation</h1>
-        <p>Graph size: <span id="graph-size" class="control-value">${
-          sizeName[`${graphSize}`]
-        }</span></p>
-        <p>Current algorithm: <span id="SPA" class="control-value">${
-          algorithmName[`${algorithm}`]
-        }</span></p>
-        <p>Time: <span id="time" class="control-value"></span></p>
-        <p>Simulation runtime: <span id="simulation-runtime" class="control-value"></span></p>
-        <p>
-          Total orders: <span id="total-orders" class="control-value"></span>
-        </p>
-        <p>
-          Active orders: <span id="active-orders" class="control-value"></span>
-        </p>
-        <p>
-          Average delivery time:
-          <span id="avg-delivery-time" class="control-value"></span>
-        </p>
-        <p>
-          Failed orders: <span id="failed-orders" class="control-value"></span>
-        </p>
-        <div id="orders">
-        <textarea readonly name="orders-textarea" id="order-textarea"></textarea>
-        </div>
-      </div>
+    ${infoDiv}
       <!-- Load application code at the end to ensure DOM is loaded -->
       <script src="../js/graphCore.js" type="module"></script>
       <script src="../js/darkMode.js" type="module"></script>
     </body>
   </html>
   `;
+};
+
+/**
+ * This function generates an information div to contain the different graph
+ * parameters for the ongoing simulation.
+ * @param {String} graphSize The size category of the requested graph.
+ * @param {String} algorithm The algorithm name for the requested graph.
+ * @param {String} pageName The HTML page name to differentiate between visualization
+ * and headless.
+ * @returns A string containing an information HTML div.
+ */
+const generateStatInformationDiv = (graphSize, algorithm, pageName = null) => {
+  let algorithmName = {
+    astar: "A*",
+    bfs: "BFS",
+    dijkstra: "Dijkstra",
+  };
+  let sizeName = {
+    small: "Small",
+    large: "Large",
+  };
+
+  let statDiv = `<div id="statistics-div" class="control-center disable-select">
+  <h1>Headless simulation</h1>
+  <p>Graph size: <span id="graph-size" class="control-value">${
+    sizeName[`${graphSize}`]
+  }</span></p>
+  <p>Current algorithm: <span id="SPA" class="control-value">${
+    algorithmName[`${algorithm}`]
+  }</span></p>
+  <p>Simulation day: <span id="simulation-days" class="control-value"></span></p>
+  <p>Time: <span id="time" class="control-value"></span></p>
+  <p>Simulation runtime: <span id="simulation-runtime" class="control-value"></span></p>
+  <p>Total orders: <span id="total-orders" class="control-value"></span></p>
+  <p>Active orders: <span id="active-orders" class="control-value"></span></p>
+  <p>Average delivery time: <span id="avg-delivery-time" class="control-value"></span></p>
+  <p>Failed orders: <span id="failed-orders" class="control-value"></span></p>
+  <p>Success rate: <span id="success-rate" class="control-value"></span></p>`;
+
+  if (pageName === "headless") {
+    statDiv += `<div id="orders">
+  <textarea readonly name="orders-textarea" id="order-textarea"></textarea>
+  </div>`;
+  }
+
+  statDiv += `</div>`;
+
+  return statDiv;
 };

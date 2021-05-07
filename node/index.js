@@ -6,6 +6,7 @@ import {
   generateGraphDivs,
   generateOptionsHTML,
   generateHeadlessHTML,
+  generateStatInformationDiv,
 } from "./PublicResources/js/dynamicPageGeneration.js";
 import fs from "fs";
 import path from "path";
@@ -72,6 +73,7 @@ let validateParameters = [
   body("order-frequency").isLength({ max: 4 }).isNumeric().toFloat().escape(),
   body("ticks-per-second").isLength({ max: 3 }).isNumeric().toInt().escape(),
   body("courier-frequency").isLength({ max: 2 }).isNumeric().toInt().escape(),
+  body("obstruction-level").isLength({ max: 2 }).isNumeric().toInt().escape(),
 ];
 
 /**
@@ -122,18 +124,7 @@ app.post("/visualization", validateParameters, (req, res) => {
       generateGraphDivs(req.body["number-of-graphs"], "visualization")
     )
   );
-  console.log(
-    `Sent: Visualization with params: ` +
-      `Graph amount: ${req.body["number-of-graphs"]}, ` +
-      `graph size: ${req.body["graph-size"]}, ` +
-      `simulation SPAs: ${req.body["simulation-1-spa"]} ` +
-      `${req.body["simulation-2-spa"]} ` +
-      `${req.body["simulation-3-spa"]}, ` +
-      `idle zones: ${req.body["idle-zones"]}, ` +
-      `order frequency: ${req.body["order-frequency"]}, ` +
-      `ticks per second: ${req.body["ticks-per-second"]}, ` +
-      `courier frequency: ${req.body["courier-frequency"]}.`
-  );
+  console.log(siteInfo("Visualization", req));
 });
 
 app.get("/visualization-options", (req, res) => {
@@ -164,22 +155,43 @@ app.post("/headless-simulation", validateParameters, (req, res) => {
 
   res.send(
     generateHeadlessHTML(
-      req.body["graph-size"],
-      req.body["simulation-1-spa"],
-      generateGraphDivs(req.body["number-of-graphs"], "headless-simulation")
+      generateGraphDivs(req.body["number-of-graphs"], "headless-simulation"),
+      generateStatInformationDiv(
+        req.body["graph-size"],
+        req.body["simulation-1-spa"],
+        "headless"
+      )
     )
   );
-  console.log(
-    `Sent: Headless simulation with params: ` +
-      `Graph amount: ${req.body["number-of-graphs"]}, ` +
-      `graph size: ${req.body["graph-size"]}, ` +
-      `simulation SPA: ${req.body["simulation-1-spa"]}, ` +
-      `idle zones: ${req.body["idle-zones"]}, ` +
-      `order frequency: ${req.body["order-frequency"]} ` +
-      `ticks per second: ${req.body["ticks-per-second"]} ` +
-      `courier frequency: ${req.body["courier-frequency"]}.`
-  );
+  console.log(siteInfo("Headless", req));
 });
+
+/**
+ * This function constructs a string of page information corresponding to a request.
+ * @param {String} pageName The name of the page that will sent as response
+ * @param {Object} requestObject A page request object
+ * @returns A string containing the requested page information
+ */
+const siteInfo = (pageName, requestObject) => {
+  let text =
+    `Sent: ${pageName} simulation with params: ` +
+    `Graph amount: ${requestObject.body["number-of-graphs"]}, ` +
+    `graph size: ${requestObject.body["graph-size"]}, ` +
+    `simulation SPA: ${requestObject.body["simulation-1-spa"]},`;
+
+  pageName === "Visualization"
+    ? (text += ` ${requestObject.body["simulation-2-spa"]} ${requestObject.body["simulation-3-spa"]}, `)
+    : ``;
+
+  text +=
+    `idle zones: ${requestObject.body["idle-zones"]}, ` +
+    `order frequency: ${requestObject.body["order-frequency"]} ` +
+    `ticks per second: ${requestObject.body["ticks-per-second"]} ` +
+    `courier frequency: ${requestObject.body["courier-frequency"]} ` +
+    `obstruction level: ${requestObject.body["obstruction-level"]}.`;
+
+  return text;
+};
 
 // Start the server app
 app.listen(port, (error) => {
