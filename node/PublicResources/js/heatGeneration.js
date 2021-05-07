@@ -210,7 +210,7 @@ function generateObstructions(cyGraph) {
   let edges = cyGraph.graph.edges();
   for (let i = 0; i < cyGraph.obstructionLevel; i++) {
     // Create obstructions on random edges
-    let edge = edges[Math.floor(Math.random() * edges.length)]; // Get random edge
+    let edge = edges[cyGraph.getRandomInt(edges.length - 1)]; // Get random edge
     let revEdge = cyGraph.graph.$id(edge.target().id() + edge.source().id());
 
     let edgeObstructions = edge.data("obstructions");

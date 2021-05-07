@@ -220,18 +220,6 @@ function dinnerRate(x) {
 }
 
 /**
- * Creates a random number in an interval.
- * @param {Number} min The lower bound of the interval.
- * @param {Number} max The upper bound of the interval.
- * @returns A number between min and max.
- */
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-/**
  * Generates an order from a random restaurant to a random customer in the network based on the current intensity and some randomness.
  * @param {Object} cyGraph The graph the simulation is contained within.
  * @returns The new order.
@@ -244,7 +232,7 @@ function generateOrders(cyGraph) {
     );
     let roll = Math.random();
     if (roll <= restaurant.data("orderRate") * intensity) {
-      let i = getRandomInt(0, cyGraph.customers.length - 1);
+      let i = cyGraph.getRandomInt(cyGraph.customers.length - 1);
       let order = new Order(
         cyGraph.simulationStats.totalOrdersArr.length + 1,
         restaurant,

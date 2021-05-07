@@ -363,9 +363,6 @@ class CyGraph {
    * @param {Number} index The index to start from (default: 0)
    */
   animateCourier(path, courier, edges, index = 0) {
-    console.log(
-      `Path = ${path} - Index: ${index} - Path[index]: ${path[index]}`
-    );
     if (path.length === 1) {
       let order = courier.data("currentOrder");
       if (order && courier.data("currentNode") === order.restaurant) {
