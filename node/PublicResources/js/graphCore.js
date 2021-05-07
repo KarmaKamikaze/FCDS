@@ -7,7 +7,7 @@ import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 import { startSimulation } from "./orderGeneration.js";
 import * as tests from "./tests.js";
 
-export { SetupGraph, simulationTest, getGraphSize, getAlgorithm, startSim };
+export { SetupGraph, simulationTest, getAlgorithm, startSim };
 
 /**
  * Performs setup and initialization of the input Cytoscape graph
