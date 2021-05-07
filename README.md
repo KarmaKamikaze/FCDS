@@ -30,7 +30,10 @@ Alternatively, the program can be accessed directly on [GitHub Pages](https://ww
 
 ### Using the program
 
- 1. Graph visualization
+ 1. **Graph visualization**
+
+In graph visualization mode, the simulation runs visually and is updated in real-time.
+This mode does not provide as much in-depth statistics, but the behaviour of couriers, idle zone generation etc. can be studied closely.
 
 `Number of graphs:` The amount of simulations to show and run simultaneously.
 
@@ -49,14 +52,15 @@ Alternatively, the program can be accessed directly on [GitHub Pages](https://ww
 `Obstruction level:` The number of edges to add random obstructions on (which affects the weight of an edge).
 
 
- 2. Headless simulation page
+ 2. **Headless simulation**
 
-Wot is dis and how variables are there now here ???
+In headless simulation mode, the visual aspect of the simulation is removed entirely.
+This means that the simulation performs faster, and provides many useful statistics which are updated in real-time.
 
-### <a name="#graph-presets"></a>Graph presets
+### <a name="#graph-presets"></a>Graph presets (and legend)
 
 ![Graph presets](https://raw.githubusercontent.com/KarmaKamikaze/P2-Project/2822bc552ca0f7d3a5cd7845db7f1076b9e03171/.github/Graphs.png)
-
+![Graph legend](https://raw.githubusercontent.com/KarmaKamikaze/P2-Project/dev/node/PublicResources/html/legend.png)
 
  <!-- LICENSE -->
  ## License
