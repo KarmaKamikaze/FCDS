@@ -7,6 +7,8 @@ import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 import { startSimulation } from "./orderGeneration.js";
 import * as tests from "./tests.js";
 
+export { SetupGraph, simulationTest, getGraphSize, getAlgorithm, startSim };
+
 /**
  * Performs setup and initialization of the input Cytoscape graph
  * @param {CyGraph} cyGraph The CyGraph class to set up
@@ -122,5 +124,3 @@ let graphArray = [];
 startSim();
 
 addDarkBtn(graphArray);
-
-export { SetupGraph, simulationTest, getGraphSize, getAlgorithm, startSim };
