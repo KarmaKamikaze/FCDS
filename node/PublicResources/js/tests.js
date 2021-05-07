@@ -1,18 +1,11 @@
 //Graph imports
-import "../../../node_modules/cytoscape/dist/cytoscape.min.js";
-import * as graphCore from "./graphCore";
-import { CyGraph, eleType } from "./graphHelper.js";
 import { CytoStyle, TestCytoStyle } from "./cytoStylesheet.js";
-import { addDarkBtn } from "./darkMode.js";
-import { SimStats, updateStats } from "./stats.js";
 import { generateHeatmap } from "./heatGeneration.js";
-import * as orderGeneration from "./orderGeneration.js";
 //Traversal imports
 import * as pathModules from "../js/pathModules.js";
 import { dijkstra } from "./dijkstra.js";
 import { aStar } from "./aStar.js";
 import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
-import { PriorityQueue } from "./queue.js";
 
 /* Since certain functions modify the values of nodes/edges in the graph,
  * the immutable test graph 'template' is used to reset the graph after
