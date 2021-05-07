@@ -14,13 +14,18 @@ This program is designed to simulate the effect of adding idle zones to a food c
 ```sh
 git clone https://github.com/KarmaKamikaze/P2-Project
 ```
- 2. Navigate to the root folder and run `index.js` with `NodeJS`
 
+ 2. Navigate to the root folder and run `npm install` to install all dependencies
+```sh
+npm install
+```
+
+ 3. While in the root folder, start the server by running `index.js` with `NodeJS`
 ```sh
 node .\node\index.js
 ```
 
- 3. While the server is running, open the site on port `3190` in a browser 
+ 4. The site can be visited in a browser at the address `localhost:3190`
 
 ```sh
 http://localhost:3190/
