@@ -262,7 +262,7 @@ const generateOptionsHTML = (pageObject) => {
           <output>2</output>
           <br>
           <div class="tooltip">Order frequency:
-            <span class="tooltiptext">Estimated orders per minute per restaurant at peak times.</span>
+            <span class="tooltiptext">Estimated orders per minute per restaurant at peak times. A value of 0.3 is recommended for the small graph.</span>
           </div>
           <br>
           <input
@@ -278,7 +278,7 @@ const generateOptionsHTML = (pageObject) => {
           <output>0.25</output>
           <br>
           <div class="tooltip">Ticks per second:
-            <span class="tooltiptext">10 or below for smoothly animated traversal - above 10 for headless traversal.</span>
+            <span class="tooltiptext">10 or below recommended for smoothly animated traversal, recommended for small graph. Can also be used on large graph. Above 10 for headless traversal.</span>
           </div>
           <br>
           <input
@@ -294,7 +294,7 @@ const generateOptionsHTML = (pageObject) => {
           <output>50</output>
           <br>
           <div class="tooltip">Courier frequency:
-            <span class="tooltiptext">Factor determining the amount of couriers to simulate.</span>
+            <span class="tooltiptext">Factor determining the amount of couriers to simulate. A value of 2 is recommended for the small graph. </span>
           </div>
           <br>
           <input
@@ -311,7 +311,7 @@ const generateOptionsHTML = (pageObject) => {
         </div>
         <br>
           <div class="tooltip">Obstruction level:
-            <span class="tooltiptext">Determines the number of edges to create obstructions on periodically.</span>
+            <span class="tooltiptext">Determines the number of edges to create obstructions on periodically. A value of 3 is recommended for the small graph. </span>
           </div>
           <br>
           <input
