@@ -78,6 +78,12 @@ function aStar(cyGraph, startNode, endNode) {
      *  the parent node is added to the closed list. */
     fullyExpanded.add(currentShortest);
   }
+
+  if (currentShortest.id() !== endNode.id()) {
+    console.error(
+      "A* error: Open list is empty. Path could not be found! (Ignore if error occurred during tests)"
+    );
+  }
 }
 
 export { aStar };
