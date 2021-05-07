@@ -73,6 +73,9 @@ function perTick(cyGraph) {
 
   // Generate idle zones and update the courier amount every 60 ticks
   if (!(cyGraph.timeMinutes % 60)) {
+    if (!(cyGraph.timeMinutes % 180)) {
+      generateObstructions(cyGraph);
+    }
     if (
       cyGraph.idleZoneAmount &&
       cyGraph.timeMinutes >= 480 &&
@@ -86,10 +89,6 @@ function perTick(cyGraph) {
         cyGraph.couriers.length
       } couriers, ${cyGraph.orders.length} pending orders`
     );
-  }
-
-  if (!(cyGraph.timeMinutes % 180)) {
-    generateObstructions(cyGraph);
   }
 
   if (!(cyGraph.timeMinutes % 2)) {

@@ -36,7 +36,6 @@ let options = {
   etag: true,
   extensions: ["htm", "html", "js", "css", "ico", "cyjs", "png", "jpg", "json"],
   index: false, // Disables directory indexing - won't serve a whole folder
-  maxAge: "7d", // Expires after 7 days
   redirect: false,
   setHeaders: function (res, path, stat) {
     // Add this to header of all static responses

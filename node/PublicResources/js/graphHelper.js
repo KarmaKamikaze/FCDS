@@ -368,6 +368,10 @@ class CyGraph {
       if (order && courier.data("currentNode") === order.restaurant) {
         return this.traversePath(courier.id(), order.customer.id());
       }
+      if (courier.data("moving")) {
+        courier.data("moving", false);
+        return;
+      }
     }
 
     let nextPos = this.getPos(path[index + 1]),
@@ -415,6 +419,9 @@ class CyGraph {
           }
           // on arrival
           let order = courier.data("currentOrder");
+          if (courier.data("moving")) {
+            courier.data("moving", false);
+          }
           if (order) {
             // check if the current node is the restaurant node of a given order, then send the courier to its destination
             if (courier.data("currentNode") === order.restaurant) {
