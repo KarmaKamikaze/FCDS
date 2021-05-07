@@ -5,6 +5,9 @@ import { aStar } from "./aStar.js";
 import { addDarkBtn } from "./darkMode.js";
 import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 import { startSimulation } from "./orderGeneration.js";
+import * as tests from "./tests.js";
+
+export { SetupGraph, simulationTest, getGraphSize, getAlgorithm, startSim };
 
 /**
  * Performs setup and initialization of the input Cytoscape graph
@@ -111,12 +114,13 @@ async function startSim() {
 }
 
 /// MAIN ///
-let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
-let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
-let AALBORG_GRAPH = "../graphPresets/AalborgCentrum.cyjs";
+let GRAPH_PRESET_FILE = "../graphPresets/graphRegular.cyjs";
+let BIG_GRAPH_PRESET_FILE = "../graphPresets/graphBig.cyjs";
+let AALBORG_GRAPH = "../graphPresets/graphAalborg.cyjs";
 const DISTANCE_PER_TICK = 300; // 300 units per tick -> meters per minute -> 18 km/h
 
 let graphArray = [];
+
 startSim();
 
 addDarkBtn(graphArray);

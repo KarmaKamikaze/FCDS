@@ -2,7 +2,7 @@ import { dijkstra } from "./dijkstra.js";
 import { generateHeatmap, generateObstructions } from "./heatGeneration.js";
 import { eleType } from "./graphHelper.js";
 import { updateStats, updateTimeOnly } from "./stats.js";
-export { startSimulation, timeToFloat, orderIntensity, formatTime };
+export { startSimulation, timeToFloat, orderIntensity, formatTime, assignCourier, Order };
 
 const isHeadless = document.querySelector("div.headless");
 
