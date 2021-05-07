@@ -93,10 +93,10 @@ class CyGraph {
   /**
    * Adds a courier to the map on rootNode
    */
-  addCourier() {
+  addCourier(rootNode = null) {
     let nodes = this.graph.nodes().filter((n) => this.couriers.indexOf(n));
     let i = this.getRandomInt(nodes.length - 1),
-      randomNode = nodes[i];
+      randomNode = rootNode ? this.graph.$id(rootNode) : nodes[i];
 
     let courier = this.graph.add({
       group: "nodes",
@@ -114,6 +114,7 @@ class CyGraph {
     if (this.useIdleZones && this.orders.length === 0) {
       this.moveToIdleZone(courier);
     }
+    return courier;
   }
 
   /**

@@ -65,9 +65,6 @@ function greedyBestFirstSearch(cyGraph, startNode, endNode) {
       }
     });
   }
-  /*if (currentShortest.id() !== endNode.id()) {
-    throw new Error("BFS error: Open list is empty. Path could not be found!");
-  }*/
 }
 
 export { greedyBestFirstSearch };

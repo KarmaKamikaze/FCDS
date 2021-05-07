@@ -100,7 +100,7 @@ let GRAPH_PRESET_FILE = "../graphPresets/GraphTest1.cyjs";
 let BIG_GRAPH_PRESET_FILE = "../graphPresets/GraphBig.cyjs";
 const DEFAULT_TICKSPEED = 20;
 const DISTANCE_PER_TICK = 300; // 300 units per tick -> meters per minute -> 18 km/h
-const HEADLESS = true; // should be determined by user input
+const HEADLESS = false; // should be determined by user input
 
 let graphArray = [];
 
