@@ -165,11 +165,11 @@ function testGreedyBestFirstSearch(testGraph) {
     msg: VIABLE,
   };
 
-  let BFSTests = [test1, test2, test3];
+  let bfsTests = [test1, test2, test3];
 
-  for (let i = 0; i < BFSTests.length; i++) {
+  for (let i = 0; i < bfsTests.length; i++) {
     testGraph = TEMPLATE;
-    if (testPathfinding(testGraph, greedyBestFirstSearch, BFSTests[i])) {
+    if (testPathfinding(testGraph, greedyBestFirstSearch, bfsTests[i])) {
       testResults.successes++;
     }
     testResults.total++;
