@@ -122,6 +122,10 @@ function updateStats(simStatObject) {
   }
 }
 
+/**
+ * Visually updates time and day on visualization page
+ * @param {Object} simStatObject The statistics object for the current graph
+ */
 function updateTimeOnly(simStatObject) {
   simDaysStat.textContent = simStatObject.simDays;
   timeStat.textContent = simStatObject.simTime;
