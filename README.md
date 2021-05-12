@@ -64,7 +64,7 @@ This means that the simulation performs faster, and provides many useful statist
 
 ### <a name="#graph-presets"></a>Graph presets (and legend)
 
-![Graph presets](https://raw.githubusercontent.com/KarmaKamikaze/P2-Project/2822bc552ca0f7d3a5cd7845db7f1076b9e03171/.github/Graphs.png)
+![Graph presets](https://raw.githubusercontent.com/KarmaKamikaze/FCDS/master/.github/Graphs.png)
 ![Graph legend](https://raw.githubusercontent.com/KarmaKamikaze/P2-Project/dev/node/PublicResources/html/legend.png)
 
  <!-- LICENSE -->
