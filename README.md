@@ -1,6 +1,7 @@
-# P2-Project
+# FCDS (Food Courier Distribution Simulation)
 
 This program is designed to simulate the effect of adding idle zones to a food courier delivery service.
+The software is developed by the P2-Project SW2 B2-14 team.
 
 <!-- GETTING STARTED -->
  ## Getting Started
@@ -22,7 +23,7 @@ npm install
 
  3. While in the root folder, start the server by running `index.js` with `NodeJS`
 ```sh
-node .\node\index.js
+node node/index.js
 ```
 
  4. The site can be visited in a browser at the address `localhost:3190`
@@ -30,8 +31,6 @@ node .\node\index.js
 ```sh
 http://localhost:3190/
 ```
-
-Alternatively, the program can be accessed directly on [GitHub Pages](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
 
 ### Using the program
 
@@ -65,7 +64,7 @@ This means that the simulation performs faster, and provides many useful statist
 ### <a name="#graph-presets"></a>Graph presets (and legend)
 
 ![Graph presets](https://raw.githubusercontent.com/KarmaKamikaze/FCDS/master/.github/Graphs.png)
-![Graph legend](https://raw.githubusercontent.com/KarmaKamikaze/P2-Project/dev/node/PublicResources/html/legend.png)
+![Graph legend](https://raw.githubusercontent.com/KarmaKamikaze/FCDS/master/node/PublicResources/html/legend.png)
 
  <!-- LICENSE -->
  ## License
@@ -76,4 +75,4 @@ This means that the simulation performs faster, and provides many useful statist
  <!-- CONTACT --> 
  ## Contact 
  
- Project Link: [https://github.com/KarmaKamikaze/FCDS](https://github.com/KarmaKamikaze/P2-Project)
+ Project Link: [https://github.com/KarmaKamikaze/FCDS](https://github.com/KarmaKamikaze/FCDS)
