@@ -173,10 +173,7 @@ const generateOptionsHTML = (pageObject) => {
                 <a href="https://github.com/KarmaKamikaze/FCDS">Project</a>
               </li>
               <li>
-                <a
-                  href="https://github.com/KarmaKamikaze/FCDS#readme"
-                  >About</a
-                >
+                <a href="https://github.com/KarmaKamikaze/FCDS#readme">About</a>
               </li>
             </ul>
           </div>

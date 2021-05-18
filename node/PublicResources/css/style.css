@@ -80,6 +80,10 @@ body {
   color: #fff;
 }
 
+.options-container {
+  transform: translateY(-40%);
+}
+
 .content h1 {
   margin-top: 80px;
   font-size: 50px;
@@ -87,7 +91,7 @@ body {
 }
 
 .options-container h1 {
-  margin-top: 240px;
+  margin-top: 80px;
   font-size: 40px;
   text-transform: uppercase;
 }
@@ -205,10 +209,6 @@ div.cy.headless {
   font-size: 18px;
   padding: 5px;
   margin-left: 50px;
-}
-
-div.slider-container {
-  padding-top: 50px;
 }
 
 .control-center input {
