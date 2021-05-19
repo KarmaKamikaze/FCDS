@@ -35,7 +35,7 @@ class SimStats {
     this.failedOrders = 0; // The number of failed orders
     this.averageDeliveryTime = 0; // The average delivery time of orders on the graph
     this.totalDeliveryTime = 0; // Total delivery time
-    this.ordersPrinted = 0;
+    this.ordersPrinted = 0; // The amount of printed orders
   }
 
   /**
@@ -81,7 +81,7 @@ function updateStats(simStatObject) {
       ).toFixed(2) + "%";
   }
 
-  // The textarea containing the entire log of orders in the simulation
+  // The textarea containing the previous 200 orders in the simulation
   if (simStatObject.totalOrdersArr !== null) {
     let data = "";
     for (

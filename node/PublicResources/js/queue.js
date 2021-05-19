@@ -1,13 +1,4 @@
-/**
- * Class to create queue elements and assign their distance,
- * which in this case is their priority.
- */
-class QueueElement {
-  constructor(identifier, distanceOrigin) {
-    this.identifier = identifier;
-    this.distanceOrigin = distanceOrigin;
-  }
-}
+export { PriorityQueue };
 
 /**
  * Class to hold the priority queue set. Since the queue can keep
@@ -19,7 +10,6 @@ class PriorityQueue {
   }
 
   enqueue(element) {
-    // let queueElement = new QueueElement(identifier, distanceOrigin);
     let fitsBetween = false; // Boolean to decide if the element fits between others.
 
     for (let i = 0; i < this.nodes.length; i++) {
@@ -68,5 +58,3 @@ class PriorityQueue {
     return this.nodes.length === 0;
   }
 }
-
-export { PriorityQueue };

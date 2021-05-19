@@ -33,7 +33,6 @@ const generateVisualizationHTML = (graphs) => {
           <img class="legend disable-select" src="../html/legend.png" alt="Graph legend reference" title="Graph legend reference">
           <!-- Load application code at the end to ensure DOM is loaded -->
           <script src="../js/graphCore.js" type="module"></script>
-          <script src="../js/darkMode.js" type="module"></script>
         </body>
       </html>
       `;
@@ -170,13 +169,10 @@ const generateOptionsHTML = (pageObject) => {
             <ul>
               <li><a href="/">Home</a></li>
               <li>
-                <a href="https://github.com/KarmaKamikaze/P2-Project">Project</a>
+                <a href="https://github.com/KarmaKamikaze/FCDS">Project</a>
               </li>
               <li>
-                <a
-                  href="https://github.com/KarmaKamikaze/P2-Project/blob/master/README.md"
-                  >About</a
-                >
+                <a href="https://github.com/KarmaKamikaze/FCDS#readme">About</a>
               </li>
             </ul>
           </div>
@@ -369,7 +365,6 @@ const generateHeadlessHTML = (graph, infoDiv) => {
     ${infoDiv}
       <!-- Load application code at the end to ensure DOM is loaded -->
       <script src="../js/graphCore.js" type="module"></script>
-      <script src="../js/darkMode.js" type="module"></script>
     </body>
   </html>
   `;

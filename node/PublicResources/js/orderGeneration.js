@@ -15,11 +15,11 @@ const isHeadless = document.querySelector("div.headless");
 
 /**
  * Starts the order generation simulation
- * @param {Object} cyGraph The graph the simulation is contained within.
- * @param {integer} tickSpeed the time (in ms) per tick.
+ * @param {Class} cyGraph The graph the simulation is contained within.
+ * @param {Number} tickDuration the time (in ms) per tick.
  * @returns The update interval.
  */
-function startSimulation(cyGraph, tickSpeed) {
+function startSimulation(cyGraph, tickDuration) {
   let n = cyGraph.restaurants.length;
   for (let i = 0; i < n; i++) {
     if (i < Math.ceil(n / 2)) {
@@ -32,18 +32,19 @@ function startSimulation(cyGraph, tickSpeed) {
       cyGraph.restaurants[i].addClass(eleType.dinner);
     }
   }
-  return setInterval(() => perTick(cyGraph), tickSpeed);
+  return setInterval(() => perTick(cyGraph), tickDuration);
 }
 
 /**
- * Assigns the time throughout the simulation.
- * @param {Object} cyGraph The graph the simulation is contained within.
+ * Handles the simulation time, and all actions that should be performed at specific times or intervals.
+ * @param {Class} cyGraph The graph the simulation is contained within.
  */
 function perTick(cyGraph) {
   cyGraph.timeMinutes++;
 
   if (cyGraph.timeMinutes == 1440) {
     cyGraph.simulationStats.failedOrders += cyGraph.orders.length;
+    cyGraph.simulationStats.activeOrders = 0;
     for (let order of cyGraph.orders) {
       order.status = "failed";
       order.endTime = cyGraph.timeMinutes;
@@ -70,6 +71,9 @@ function perTick(cyGraph) {
   // Handle order generation every 5 ticks
   if (!(cyGraph.timeMinutes % 5)) {
     cyGraph.simulationStats.calcRuntime(); // Stat: Calculates the amount of real-world time has passed
+    cyGraph.simulationStats.activeOrders = // Stat: keeps track of the current amount of orders both in waiting and actively being delivered
+      cyGraph.simulationStats.totalOrdersArr.length -
+      cyGraph.simulationStats.deliveredOrdersArr.length;
     if (isHeadless) {
       updateStats(cyGraph.simulationStats); // Updates all statistics
     } else {
@@ -112,7 +116,7 @@ function perTick(cyGraph) {
 
 /**
  * Ensures that the number of couriers is set according to expected values for each hour
- * @param {Object} cyGraph The graph the simulation is contained within.
+ * @param {Class} cyGraph The graph the simulation is contained within.
  */
 function maintainCouriers(cyGraph) {
   // The expectedCourierMultiplier array denotes the courier multiplier of each hour of the day (starting at 00:00)
@@ -204,12 +208,18 @@ function formatTime(timeMinutes) {
 /**
  * Determines the intensity in the amount of orders generated every hour.
  * @param {Number} x The current minutes to the hour as a float.
+ * @param {Function} func The function to provide return value of input x for.
  * @returns The order intensity based on predefined restaurant rush-hour spikes (piecewise equations).
  */
 function orderIntensity(x, func) {
   return func(x);
 }
 
+/**
+ * Determines current intensity (business) of restaurants for order generation
+ * @param {Number} x The current minutes to the hour as a float.
+ * @returns The order intensity
+ */
 function lunchRate(x) {
   if (x >= 8 && x < 15) {
     return (Math.sin(0.86 * x - 2.3) + 1) / 2;
@@ -220,6 +230,11 @@ function lunchRate(x) {
   }
 }
 
+/**
+ * Determines current intensity (business) of restaurants for order generation
+ * @param {Number} x The current minutes to the hour as a float.
+ * @returns The order intensity
+ */
 function dinnerRate(x) {
   if (x >= 8 && x < 15) {
     return Math.sin(0.43 * x + 2.9) / 2;
@@ -232,7 +247,7 @@ function dinnerRate(x) {
 
 /**
  * Generates an order from a random restaurant to a random customer in the network based on the current intensity and some randomness.
- * @param {Object} cyGraph The graph the simulation is contained within.
+ * @param {Class} cyGraph The graph the simulation is contained within.
  * @returns The new order.
  */
 function generateOrders(cyGraph) {
@@ -253,9 +268,6 @@ function generateOrders(cyGraph) {
       cyGraph.orders.push(order);
       cyGraph.simulationStats.totalOrdersArr.push(order); // Stat: pushes the new order to the array of total orders
       cyGraph.simulationStats.pendingOrders = cyGraph.orders.length; // Stat: keeps track of the current amount of orders waiting to be picked up
-      cyGraph.simulationStats.activeOrders = // Stat: keeps track of the current amount of orders both in waiting and actively being delivered
-        cyGraph.simulationStats.totalOrdersArr.length -
-        cyGraph.simulationStats.deliveredOrdersArr.length;
     }
   }
 }
@@ -280,7 +292,7 @@ function Order(id, origin, destination, startTime) {
 
 /**
  * Assigns and dispatches a courier to the given order.
- * @param {CyGraph} cyGraph The cyGraph to perform the assignment on.
+ * @param {Class} cyGraph The cyGraph to perform the assignment on.
  * @param {Object} order The order to be assigned.
  * @param {Number} index The index of the order in the CyGraph's order array.
  */
@@ -288,7 +300,8 @@ function assignCourier(cyGraph, order, index) {
   let courier = findCourier(cyGraph, order);
   if (courier) {
     courier.data("currentOrder", order);
-    order.assignedCourier = courier.id(); /* Used to print the assigned courier of an order only using an array of orders*/
+    order.assignedCourier =
+      courier.id(); /* Used to print the assigned courier of an order only using an array of orders*/
     if (courier.data("moving")) {
       courier.data("pendingOrder", true);
     } else {
@@ -301,7 +314,7 @@ function assignCourier(cyGraph, order, index) {
 
 /**
  * Searches the given graph for a courier that is closest to the origin of a given order.
- * @param {CyGraph} cyGraph The cyGraph to perform the search on.
+ * @param {Class} cyGraph The cyGraph to perform the search on.
  * @param {Object} order The order to find a courier for.
  * @returns The best courier of all candidates, or null no none are found.
  */
