@@ -6,6 +6,7 @@ export { CytoStyle, TestCytoStyle };
  * Applies the stylesheet to the cytoscape graph
  * @param {string} containerId The id of the given graph
  * @param {string} graphSize The size of the graph, either "small" or "large", that the stylesheet is to be applied to
+ * @param {boolean} headless Whether the graph should be rendered or not
  * @returns The finished graph object
  */
 function CytoStyle(containerId, graphSize, headless) {

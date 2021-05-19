@@ -42,6 +42,7 @@ function relax(currentNode, adjacentNode, weight) {
 
 /**
  * Approximates the direct distance from the current node being observed
+ * @param {Class} cyGraph The container for the graph
  * @param {Object} currentNodeId The current node we are evaluating in respect to the end goal.
  * @param {Object} endNodeId The end goal node.
  * @returns The Pythagorean distance between the currentNodeId and the endNodeId.
@@ -60,6 +61,7 @@ function heuristicApprox(cyGraph, currentNodeId, endNodeId) {
  * and walks fra the endNode and backwards toward the starting point.
  * @param {Object} graph The graph which contains distances and parents,
  * which we will use for navigation.
+ * @param {Object} startNode The node to pathfind from
  * @param {Object} endNode The end goal for which we want to find the shortest path.
  */
 function traceback(graph, startNode, endNode) {

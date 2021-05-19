@@ -3,28 +3,27 @@ import { eleType } from "./graphHelper.js";
 import { orderIntensity, timeToFloat } from "./orderGeneration.js";
 export { generateHeatmap, generateObstructions };
 
-let graphRadius = null;
 /**
  * Gets the graph 'radius', which is the average edge weight of the graph
- * @param {Object} cyGraph The graph the simulation is contained within.
+ * @param {Class} cyGraph The graph the simulation is contained within.
  * @returns The graph radius
  */
 function getGraphRadius(cyGraph) {
-  if (graphRadius) {
-    return graphRadius;
+  if (cyGraph.graphRadius) {
+    return cyGraph.graphRadius;
   }
   let edges = cyGraph.graph.edges(),
     totalWeight = 0;
   for (const edge of edges) {
     totalWeight += edge.data("weight");
   }
-  graphRadius = totalWeight / edges.length;
-  return graphRadius;
+  cyGraph.graphRadius = totalWeight / edges.length;
+  return cyGraph.graphRadius;
 }
 
 /**
  * Generates a heat map based on restaurant order activity, and finds/assigns appropriate idle-zones
- * @param {Object} cyGraph The graph the simulation is contained within.
+ * @param {Class} cyGraph The graph the simulation is contained within.
  */
 function generateHeatmap(cyGraph) {
   resetHeat(cyGraph);
@@ -46,17 +45,8 @@ function generateHeatmap(cyGraph) {
 }
 
 /**
- * Calculates a number of idle zones based on the number of restaurants and couriers
- * @param {Object} cyGraph The graph the simulation is contained within.
- * @returns The amount of idle zones to assign (based on restaurants pr courier).
- */
-function getZoneCount(cyGraph) {
-  return Math.ceil(cyGraph.restaurants.length / 2);
-}
-
-/**
  * Sets the heat of all nodes in the graph to 0
- * @param {Object} cyGraph The graph the simulation is contained within.
+ * @param {Class} cyGraph The graph the simulation is contained within.
  */
 function resetHeat(cyGraph) {
   for (let node of cyGraph.graph.nodes()) {
@@ -66,7 +56,7 @@ function resetHeat(cyGraph) {
 
 /**
  * Calculates a heat property for all nodes in a specific radius of each restaurant
- * @param {Object} cyGraph The graph the simulation is contained within.
+ * @param {Class} cyGraph The graph the simulation is contained within.
  */
 function assignHeat(cyGraph) {
   let radius = 3 * getGraphRadius(cyGraph);
@@ -86,7 +76,7 @@ function assignHeat(cyGraph) {
 
 /**
  * Finds the current best idle zone in the graph
- * @param {Object} cyGraph
+ * @param {Class} cyGraph
  * @returns The 'warmest' node (read: best idle zone)
  */
 function findIdleZone(cyGraph) {
@@ -109,7 +99,7 @@ function findIdleZone(cyGraph) {
 
 /**
  * Reduces heat of nodes in a radius around the input idle zone node
- * @param {Object} cyGraph The graph the simulation is contained within.
+ * @param {Class} cyGraph The graph the simulation is contained within.
  * @param {Object} zone The node around which heat should be updated.
  */
 function updateHeat(cyGraph, zone) {
@@ -122,7 +112,7 @@ function updateHeat(cyGraph, zone) {
 
 /**
  * Colors the graph based on heat values.
- * @param {Object} cyGraph The graph the simulation is contained within.
+ * @param {Class} cyGraph The graph the simulation is contained within.
  */
 function updateColors(cyGraph) {
   let warmNodes = cyGraph.graph
@@ -157,7 +147,7 @@ function updateColors(cyGraph) {
 /**
  * Determines whether a given node is currently an idle-zone
  * @param {Object} node the node to check
- * @param {Object} cyGraph the graph the node is present on
+ * @param {Class} cyGraph the graph the node is present on
  * @returns True if the node in question is an idle-zone, false if not
  */
 function isIdleZone(node, cyGraph) {
@@ -176,7 +166,7 @@ function isRegNode(n) {
 
 /**
  * Finds all nodes in a radius around the given startNode.
- * @param {Object} cyGraph The graph the simulation is contained within.
+ * @param {Class} cyGraph The graph the simulation is contained within.
  * @param {Object} startNode The center of the selection circle
  * @param {Number} radius The radius of the circle.
  * @returns An array of nodes in circle centered on 'startNode' with the radius 'radius'.
@@ -195,7 +185,7 @@ function findNodesInRadius(cyGraph, startNode, radius) {
 
 /**
  * Creates obstructions on random edges in the graph.
- * @param {Object} cyGraph The graph the simulation is contained within.
+ * @param {Class} cyGraph The graph the simulation is contained within.
  */
 function generateObstructions(cyGraph) {
   for (let obstructionEdge of cyGraph.obstructions) {

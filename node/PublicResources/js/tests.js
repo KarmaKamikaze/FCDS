@@ -6,16 +6,17 @@ import * as pathModules from "./pathModules.js";
 import { dijkstra } from "./dijkstra.js";
 import { aStar } from "./aStar.js";
 import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
+//Exports
+export { runAllTests };
 
 /* Since certain functions modify the values of nodes/edges in the graph,
  * the immutable test graph 'TEMPLATE' is used to reset the graph after
- * each test is executed. */
+ * each test is executed.
+ */
 const TEMPLATE = new TestCytoStyle();
 const UNREACHABLE = "Unreachable end node",
   START_NO_ADJ = "Start node with no adjacent nodes",
   VIABLE = "Viable path";
-
-runAllTests();
 
 /** Runs all application tests sequentially. */
 function runAllTests() {

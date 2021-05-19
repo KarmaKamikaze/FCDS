@@ -3,7 +3,7 @@ import { initializeSingleSource, relax } from "../js/pathModules.js";
 
 /**
  * Dijkstra's algorithm will find the shortest path between all nodes in a weighted graph.
- * @param {Object} cyGraph The graph nodes will be updated with new distances
+ * @param {Class} cyGraph The graph nodes will be updated with new distances
  * and parents in terms of the new starting point.
  * @param {Object} startNode The starting point node. Also called source.
  */

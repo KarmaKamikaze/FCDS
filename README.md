@@ -13,7 +13,7 @@ The software is developed by the P2-Project SW2 B2-14 team.
  1. Clone the repository
 
 ```sh
-git clone https://github.com/KarmaKamikaze/P2-Project
+git clone https://github.com/KarmaKamikaze/FCDS.git
 ```
 
  2. Navigate to the root folder and run `npm install` to install all dependencies
