@@ -44,6 +44,7 @@ function perTick(cyGraph) {
 
   if (cyGraph.timeMinutes == 1440) {
     cyGraph.simulationStats.failedOrders += cyGraph.orders.length;
+    cyGraph.simulationStats.activeOrders = 0;
     for (let order of cyGraph.orders) {
       order.status = "failed";
       order.endTime = cyGraph.timeMinutes;
@@ -70,6 +71,9 @@ function perTick(cyGraph) {
   // Handle order generation every 5 ticks
   if (!(cyGraph.timeMinutes % 5)) {
     cyGraph.simulationStats.calcRuntime(); // Stat: Calculates the amount of real-world time has passed
+    cyGraph.simulationStats.activeOrders = // Stat: keeps track of the current amount of orders both in waiting and actively being delivered
+      cyGraph.simulationStats.totalOrdersArr.length -
+      cyGraph.simulationStats.deliveredOrdersArr.length;
     if (isHeadless) {
       updateStats(cyGraph.simulationStats); // Updates all statistics
     } else {
@@ -253,9 +257,6 @@ function generateOrders(cyGraph) {
       cyGraph.orders.push(order);
       cyGraph.simulationStats.totalOrdersArr.push(order); // Stat: pushes the new order to the array of total orders
       cyGraph.simulationStats.pendingOrders = cyGraph.orders.length; // Stat: keeps track of the current amount of orders waiting to be picked up
-      cyGraph.simulationStats.activeOrders = // Stat: keeps track of the current amount of orders both in waiting and actively being delivered
-        cyGraph.simulationStats.totalOrdersArr.length -
-        cyGraph.simulationStats.deliveredOrdersArr.length;
     }
   }
 }
@@ -288,7 +289,8 @@ function assignCourier(cyGraph, order, index) {
   let courier = findCourier(cyGraph, order);
   if (courier) {
     courier.data("currentOrder", order);
-    order.assignedCourier = courier.id(); /* Used to print the assigned courier of an order only using an array of orders*/
+    order.assignedCourier =
+      courier.id(); /* Used to print the assigned courier of an order only using an array of orders*/
     if (courier.data("moving")) {
       courier.data("pendingOrder", true);
     } else {

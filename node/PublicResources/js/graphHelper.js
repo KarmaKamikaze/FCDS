@@ -46,6 +46,7 @@ class CyGraph {
     this.orderRate = orderRate;
     this.courierFreq = courierFreq;
     this.obstructionLevel = obstructionLevel;
+    this.graphRadius = null;
   }
 
   // Arrays that keep track of all elements in the graph
@@ -115,7 +116,7 @@ class CyGraph {
     });
     courier.addClass(eleType.courier);
     this.couriers.push(courier); // add the courier to the list of couriers
-    if (this.useIdleZones && this.orders.length === 0) {
+    if (this.idleZoneAmount > 0 && this.orders.length === 0) {
       this.moveToIdleZone(courier);
     }
     return courier;
@@ -468,7 +469,7 @@ class CyGraph {
 
     courier.data("currentOrder", null);
     // If there are no pending orders, send the courier to an idle zone
-    if (this.idleZoneAmount && !this.orders.length) {
+    if (this.idleZoneAmount > 0 && !this.orders.length) {
       this.moveToIdleZone(courier);
     }
   }

@@ -10,7 +10,6 @@ class PriorityQueue {
   }
 
   enqueue(element) {
-    // let queueElement = new QueueElement(identifier, distanceOrigin);
     let fitsBetween = false; // Boolean to decide if the element fits between others.
 
     for (let i = 0; i < this.nodes.length; i++) {

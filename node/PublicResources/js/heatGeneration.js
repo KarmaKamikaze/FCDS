@@ -3,23 +3,22 @@ import { eleType } from "./graphHelper.js";
 import { orderIntensity, timeToFloat } from "./orderGeneration.js";
 export { generateHeatmap, generateObstructions };
 
-let graphRadius = null;
 /**
  * Gets the graph 'radius', which is the average edge weight of the graph
  * @param {Object} cyGraph The graph the simulation is contained within.
  * @returns The graph radius
  */
 function getGraphRadius(cyGraph) {
-  if (graphRadius) {
-    return graphRadius;
+  if (cyGraph.graphRadius) {
+    return cyGraph.graphRadius;
   }
   let edges = cyGraph.graph.edges(),
     totalWeight = 0;
   for (const edge of edges) {
     totalWeight += edge.data("weight");
   }
-  graphRadius = totalWeight / edges.length;
-  return graphRadius;
+  cyGraph.graphRadius = totalWeight / edges.length;
+  return cyGraph.graphRadius;
 }
 
 /**
