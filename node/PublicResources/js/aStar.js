@@ -1,6 +1,8 @@
 import { PriorityQueue } from "../js/queue.js";
 import { heuristicApprox } from "../js/pathModules.js";
 
+export { aStar };
+
 /**
  * This functions changes the network elements. The nodes have their distanceOrigin
  * property and their parent property assigned. This allows for the traceback
@@ -13,7 +15,7 @@ import { heuristicApprox } from "../js/pathModules.js";
  */
 function aStar(cyGraph, startNode, endNode) {
   let pending = new PriorityQueue(); // Open list
-  let fullyExpanded = new Set(); // Close list
+  let fullyExpanded = new Set(); // Closed list
   let currentShortest = {}; // The minimum distance element from the priority queue.
 
   // Initialization
@@ -53,6 +55,7 @@ function aStar(cyGraph, startNode, endNode) {
             if (successor.data("distanceOrigin") <= possibleImprovedCost) {
               return;
             }
+            pending.nodes.splice(pending.nodes.indexOf(successor), 1);
           }
           // If the successor is in the closed list, but possibly needs reassessment:
           else if (fullyExpanded.has(successor)) {
@@ -69,8 +72,8 @@ function aStar(cyGraph, startNode, endNode) {
             possibleImprovedCost +
               heuristicApprox(cyGraph, successor.id(), endNode.id())
           );
-          pending.enqueue(successor);
           successor.data("_parent", currentShortest.id());
+          pending.enqueue(successor);
         }
       }
     });
@@ -85,5 +88,3 @@ function aStar(cyGraph, startNode, endNode) {
     );
   }
 }
-
-export { aStar };
