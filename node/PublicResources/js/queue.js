@@ -44,16 +44,6 @@ class PriorityQueue {
     }
   }
 
-  front() {
-    if (this.isEmpty()) {
-      throw new Error("There is no front. The queue is empty!");
-    }
-    // Return the lowest distance element, as this is a minimum priority queue.
-    else {
-      return this.nodes[0];
-    }
-  }
-
   isEmpty() {
     return this.nodes.length === 0;
   }
