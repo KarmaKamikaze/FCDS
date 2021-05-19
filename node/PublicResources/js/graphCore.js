@@ -2,24 +2,24 @@ import { CyGraph } from "./graphHelper.js";
 import { CytoStyle } from "./cytoStylesheet.js";
 import { dijkstra } from "./dijkstra.js";
 import { aStar } from "./aStar.js";
-import { addDarkBtn } from "./darkMode.js";
 import { greedyBestFirstSearch } from "./greedyBestFirstSearch.js";
 import { startSimulation } from "./orderGeneration.js";
-import * as tests from "./tests.js";
+import { runAllTests } from "./tests.js";
 
 export { SetupGraph, simulationTest, getAlgorithm, startSim };
 
 /**
  * Performs setup and initialization of the input Cytoscape graph
- * @param {CyGraph} cyGraph The CyGraph class to set up
+ * @param {Class} cyGraph The CyGraph class to set up
  * @param {File} presetFile The graph preset file to load
  * @param {Function} startSimulationCallback Callback function which starts the simulation
+ * @param {Number} tickDuration the desired miliseconds per simulation tick
  */
 function SetupGraph(
   cyGraph,
   presetFile = null,
   startSimulationCallback,
-  tickSpeed
+  tickDuration
 ) {
   if (presetFile === null) {
     startSimulation(cyGraph);
@@ -35,16 +35,18 @@ function SetupGraph(
       cyGraph.initializeNodes();
       cyGraph.graph.fit(cyGraph.graph.elements());
       // then call the given start simulation function for this graph
-      startSimulationCallback(cyGraph, tickSpeed);
+      startSimulationCallback(cyGraph, tickDuration);
     });
 }
 
 /**
  * Callback function which starts the simulation once the graph is initialized
- * @param {CyGraph} cyGraph The graph to perform the simulation on
+ * @param {Class} cyGraph The graph to perform the simulation on
+ * @param {Number} tickDuration the desired miliseconds per simulation tick
  */
-function simulationTest(cyGraph, tickSpeed) {
-  startSimulation(cyGraph, tickSpeed);
+function simulationTest(cyGraph, tickDuration) {
+  startSimulation(cyGraph, tickDuration);
+  runAllTests();
   console.log(`[${cyGraph.name}] Started simulation`);
 }
 
@@ -87,7 +89,7 @@ async function startSim() {
       : graphSettings["graph-size"] === "large"
       ? BIG_GRAPH_PRESET_FILE
       : AALBORG_GRAPH;
-  let tickSpeed = 1000 / graphSettings["ticks-per-second"];
+  let tickDuration = 1000 / graphSettings["ticks-per-second"];
 
   for (let i = 0; i < graphSettings["number-of-graphs"]; i++) {
     let cytoStyle = new CytoStyle(
@@ -105,11 +107,11 @@ async function startSim() {
       graphSettings["idle-zones"], // use idle zones
       graphDivs[i].classList.contains("headless"), // headless traversal
       graphSettings["courier-frequency"], // max number of couriers
-      tickSpeed, // ms per tick
+      tickDuration, // ms per tick
       graphSettings["obstruction-level"]
     );
     graphArray.push(cyGraph);
-    SetupGraph(cyGraph, graphSize, simulationTest, tickSpeed);
+    SetupGraph(cyGraph, graphSize, simulationTest, tickDuration);
   }
 }
 
@@ -122,5 +124,3 @@ const DISTANCE_PER_TICK = 300; // 300 units per tick -> meters per minute -> 18 
 let graphArray = [];
 
 startSim();
-
-addDarkBtn(graphArray);

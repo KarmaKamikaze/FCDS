@@ -33,7 +33,6 @@ const generateVisualizationHTML = (graphs) => {
           <img class="legend disable-select" src="../html/legend.png" alt="Graph legend reference" title="Graph legend reference">
           <!-- Load application code at the end to ensure DOM is loaded -->
           <script src="../js/graphCore.js" type="module"></script>
-          <script src="../js/darkMode.js" type="module"></script>
         </body>
       </html>
       `;
@@ -366,7 +365,6 @@ const generateHeadlessHTML = (graph, infoDiv) => {
     ${infoDiv}
       <!-- Load application code at the end to ensure DOM is loaded -->
       <script src="../js/graphCore.js" type="module"></script>
-      <script src="../js/darkMode.js" type="module"></script>
     </body>
   </html>
   `;
