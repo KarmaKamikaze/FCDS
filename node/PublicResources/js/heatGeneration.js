@@ -208,7 +208,7 @@ function generateObstructions(cyGraph) {
     cyGraph.calculateWeight(edge.id()); // Upate the weight property on the edge
 
     let revEdgeObstructions = revEdge.data("obstructions");
-    edge.data("obstructions", revEdgeObstructions * 1.5);
+    revEdge.data("obstructions", revEdgeObstructions * 1.5);
     cyGraph.calculateWeight(revEdge.id());
 
     edge.addClass(eleType.obstructions); // Highlight edge
