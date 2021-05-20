@@ -12,6 +12,7 @@ export {
 };
 
 const isHeadless = document.querySelector("div.headless");
+const END_DAY = 0; // 0 if endless simulation, otherwise simulation stops on the set day.
 
 /**
  * Starts the order generation simulation
@@ -40,6 +41,10 @@ function startSimulation(cyGraph, tickDuration) {
  * @param {Class} cyGraph The graph the simulation is contained within.
  */
 function perTick(cyGraph) {
+  if (cyGraph.simulationStats.simDays == END_DAY) {
+    stopSimulation(cyGraph);
+  }
+
   cyGraph.timeMinutes++;
 
   if (cyGraph.timeMinutes == 1440) {
@@ -339,4 +344,28 @@ function findCourier(cyGraph, order) {
     }
   }
   return bestCourier;
+}
+
+function stopSimulation(cyGraph) {
+  clearInterval(cyGraph.simHandler);
+  console.log(
+    "Simulation results: \n" +
+      "Total orders: " +
+      cyGraph.simulationStats.totalOrdersArr.length +
+      "\n" +
+      "Failed orders: " +
+      cyGraph.simulationStats.failedOrders +
+      "\n" +
+      "Success rate: " +
+      (
+        (1 -
+          cyGraph.simulationStats.failedOrders /
+            cyGraph.simulationStats.totalOrdersArr.length) *
+        100
+      ).toFixed(2) +
+      "%\n" +
+      "Average delivery time: " +
+      cyGraph.simulationStats.averageDeliveryTime.toFixed(2) +
+      " minutes"
+  );
 }
