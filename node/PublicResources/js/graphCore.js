@@ -45,7 +45,7 @@ function SetupGraph(
  * @param {Number} tickDuration the desired miliseconds per simulation tick
  */
 function simulationTest(cyGraph, tickDuration) {
-  startSimulation(cyGraph, tickDuration);
+  cyGraph.simHandler = startSimulation(cyGraph, tickDuration);
   runAllTests();
   console.log(`[${cyGraph.name}] Started simulation`);
 }
