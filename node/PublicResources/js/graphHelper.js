@@ -47,6 +47,7 @@ class CyGraph {
     this.courierFreq = courierFreq;
     this.obstructionLevel = obstructionLevel;
     this.graphRadius = null;
+    this.numSimulations = 1;
   }
 
   // Arrays that keep track of all elements in the graph
@@ -56,6 +57,12 @@ class CyGraph {
   orders = new Array();
   idleZones = new Array();
   obstructions = new Array();
+
+  reset() {
+    this.courierCount = 0;
+    this.simulationStats = new SimStats();
+    this.timeMinutes = simStartTime;
+  }
 
   /**
    * Removes a node and returns it

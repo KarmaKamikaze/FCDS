@@ -47,7 +47,13 @@ function SetupGraph(
 function simulationTest(cyGraph, tickDuration) {
   cyGraph.simHandler = startSimulation(cyGraph, tickDuration);
   runAllTests();
-  console.log(`[${cyGraph.name}] Started simulation`);
+  console.log(
+    `[${cyGraph.name}] Started simulation with settings:\n${JSON.stringify(
+      cyGraph.settings,
+      null,
+      4
+    )}`
+  );
 }
 
 /**
@@ -111,6 +117,7 @@ async function startSim() {
       graphSettings["obstruction-level"]
     );
     graphArray.push(cyGraph);
+    cyGraph.settings = graphSettings;
     SetupGraph(cyGraph, graphSize, simulationTest, tickDuration);
   }
 }
