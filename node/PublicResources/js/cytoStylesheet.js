@@ -1,6 +1,6 @@
 import "../../../node_modules/cytoscape/dist/cytoscape.min.js";
 import { eleType, CyGraph } from "./graphHelper.js";
-export { CytoStyle, TestCytoStyle };
+export { CytoStyle, TestCytoStyle, TestCytoStyleBFS };
 
 /**
  * Applies the stylesheet to the cytoscape graph
@@ -134,23 +134,44 @@ function TestCytoStyle() {
     1,
     20
   );
-  initTestTemplate(template);
+  initTestTemplate(template, testNodes, testEdges);
   return template;
 }
 
-function initTestTemplate(template) {
-  for (let i = 0; i < testNodes.length; i++) {
-    template.graph.add(testNodes[i]);
+function TestCytoStyleBFS() {
+  let testCy = cytoscape({
+    container: null, // container to render in
+    headless: true,
+  });
+    
+  let template = new CyGraph(
+    "TestBFS",
+    testCy,
+    null,
+    300,
+    0.25,
+    true,
+    true,
+    1,
+    20
+  );
+  initTestTemplate(template, testNodesBFS, testEdgesBFS);
+  return template;
+}
+
+function initTestTemplate(template, nodes, edges) {
+  for (let i = 0; i < nodes.length; i++) {
+    template.graph.add(nodes[i]);
   }
-  for (let i = 0; i < testEdges.length; i++) {
-    template.graph.add(testEdges[i]);
-    let id = testEdges[i].data.id,
-      src = testEdges[i].data.target,
-      target = testEdges[i].data.source;
+  for (let i = 0; i < edges.length; i++) {
+    template.graph.add(edges[i]);
+    let id = edges[i].data.id,
+      src = edges[i].data.target,
+      target = edges[i].data.source;
 
     template.calcLength(id);
     template.calculateWeight(id);
-    template.addEdge(src + target, src, target, testEdges[i].data.obstructions);
+    template.addEdge(src + target, src, target, edges[i].data.obstructions);
   }
 }
 
@@ -231,6 +252,85 @@ let testEdges = [
       id: "N4C5",
       source: "N4",
       target: "C5",
+      obstructions: 1.0,
+    },
+  },
+];
+
+// Nodes and edges specifically for the greedy BFS algorithm
+let testNodesBFS = [
+  {
+    data: { id: "C1", _parent: null, distanceOrigin: 0, weight: 0 },
+    position: { x: 0, y: 200 },
+  },
+  {
+    data: { id: "R1", _parent: null, distanceOrigin: 0, weight: 0 },
+    position: { x: 0, y: 0 },
+  },
+  {
+    data: { id: "N1", _parent: null, distanceOrigin: 0, weight: 0 },
+    position: { x: -80, y: 150 },
+  },
+  {
+    data: { id: "N2", _parent: null, distanceOrigin: 0, weight: 0 },
+    position: { x: -30, y: 150 },
+  },
+  {
+    data: { id: "N3", _parent: null, distanceOrigin: 0, weight: 0 },
+    position: { x: 30, y: 150 },
+  },
+  {
+    data: { id: "N4", _parent: null, distanceOrigin: 0, weight: 0 },
+    position: { x: 30, y: 250 },
+  },
+];
+
+let testEdgesBFS = [  
+  {
+    data: {
+      id: "N3N2",
+      source: "N3",
+      target: "N2",
+      obstructions: 1.0,
+    },
+  },
+  {
+    data: {
+      id: "R1N2",
+      source: "R1",
+      target: "N2",
+      obstructions: 1.0,
+    },
+  },
+  {
+    data: {
+      id: "R1N1",
+      source: "R1",
+      target: "N1",
+      obstructions: 1.0,
+    },
+  },
+  {
+    data: {
+      id: "N3N4",
+      source: "N3",
+      target: "N4",
+      obstructions: 1.0,
+    },
+  },
+  {
+    data: {
+      id: "C1N4",
+      source: "C1",
+      target: "N4",
+      obstructions: 1.0,
+    },
+  },
+  {
+    data: {
+      id: "C1N1",
+      source: "C1",
+      target: "N1",
       obstructions: 1.0,
     },
   },
