@@ -13,7 +13,7 @@ export {
 
 const isHeadless = document.querySelector("div.headless");
 const END_DAY = 0; // 0 if endless simulation, otherwise simulation stops on the set day.
-
+const SHOULD_RESTART = false; // if END_DAY is configured, controls whether or not the simulation should loop.
 /**
  * Starts the order generation simulation
  * @param {Class} cyGraph The graph the simulation is contained within.
@@ -43,6 +43,9 @@ function startSimulation(cyGraph, tickDuration) {
 function perTick(cyGraph) {
   if (cyGraph.simulationStats.simDays == END_DAY) {
     stopSimulation(cyGraph);
+    if (SHOULD_RESTART) {
+      restartSimulation(cyGraph);
+    }
   }
 
   cyGraph.timeMinutes++;
@@ -57,16 +60,6 @@ function perTick(cyGraph) {
       cyGraph.simulationStats.timedOutOrders++;
     }
     cyGraph.orders = new Array();
-    console.log(
-      `[${cyGraph.name}] Day ${
-        cyGraph.simulationStats.simDays
-      }: Succesful orders: ${
-        cyGraph.simulationStats.totalOrdersArr.length -
-        cyGraph.simulationStats.failedOrders
-      }/${
-        cyGraph.simulationStats.totalOrdersArr.length
-      }. Average delivery time: ${cyGraph.simulationStats.avgDeliveryTime()} minutes.`
-    );
     cyGraph.timeMinutes = 0;
     cyGraph.simulationStats.simDays++;
   }
@@ -105,11 +98,6 @@ function perTick(cyGraph) {
       generateHeatmap(cyGraph);
     }
     maintainCouriers(cyGraph);
-    console.log(
-      `[${cyGraph.name}][${formatTime(cyGraph.timeMinutes)}]: ${
-        cyGraph.couriers.length
-      } couriers, ${cyGraph.orders.length} pending orders`
-    );
   }
 
   if (!(cyGraph.timeMinutes % 2)) {
@@ -349,7 +337,13 @@ function findCourier(cyGraph, order) {
 function stopSimulation(cyGraph) {
   clearInterval(cyGraph.simHandler);
   console.log(
-    "Simulation results: \n" +
+    "[" +
+      cyGraph.name +
+      "] Simulation #" +
+      cyGraph.numSimulations +
+      " - Results on day " +
+      END_DAY +
+      ": \n" +
       "Total orders: " +
       cyGraph.simulationStats.totalOrdersArr.length +
       "\n" +
@@ -368,4 +362,10 @@ function stopSimulation(cyGraph) {
       cyGraph.simulationStats.averageDeliveryTime.toFixed(2) +
       " minutes"
   );
+}
+
+function restartSimulation(cyGraph) {
+  cyGraph.numSimulations++;
+  cyGraph.reset();
+  cyGraph.simHandler = startSimulation(cyGraph, cyGraph.tickDuration);
 }
