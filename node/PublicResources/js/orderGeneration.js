@@ -49,6 +49,7 @@ function perTick(cyGraph) {
       order.status = "failed";
       order.endTime = cyGraph.timeMinutes;
       order.endTimeClock = formatTime(order.endTime);
+      cyGraph.simulationStats.timedOutOrders++;
     }
     cyGraph.orders = new Array();
     console.log(
@@ -73,7 +74,8 @@ function perTick(cyGraph) {
     cyGraph.simulationStats.calcRuntime(); // Stat: Calculates the amount of real-world time has passed
     cyGraph.simulationStats.activeOrders = // Stat: keeps track of the current amount of orders both in waiting and actively being delivered
       cyGraph.simulationStats.totalOrdersArr.length -
-      cyGraph.simulationStats.deliveredOrdersArr.length;
+      cyGraph.simulationStats.deliveredOrdersArr.length -
+      cyGraph.simulationStats.timedOutOrders;
     if (isHeadless) {
       updateStats(cyGraph.simulationStats); // Updates all statistics
     } else {
