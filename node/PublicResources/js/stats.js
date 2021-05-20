@@ -33,6 +33,7 @@ class SimStats {
     this.pendingOrders = 0; // The number of orders waiting to have a courier assigned
     this.activeOrders = 0; // The number of orders assigned to couriers
     this.failedOrders = 0; // The number of failed orders
+    this.timedOutOrders = 0; // The number of orders timed out at 24:00
     this.averageDeliveryTime = 0; // The average delivery time of orders on the graph
     this.totalDeliveryTime = 0; // Total delivery time
     this.ordersPrinted = 0; // The amount of printed orders

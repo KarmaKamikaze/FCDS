@@ -8,7 +8,6 @@ export { initializeSingleSource, relax, heuristicApprox, traceback };
  * @param {Object} startNode The source node/origin point.
  */
 function initializeSingleSource(graph, startNode) {
-  // Change identifier after Cytoscape is implemented
   graph.nodes().forEach((element) => {
     element.data("distanceOrigin", Infinity);
     element.data("_parent", null);
