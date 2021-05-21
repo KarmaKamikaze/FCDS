@@ -1,5 +1,5 @@
 //Graph imports
-import { TestCytoStyle } from "./cytoStylesheet.js";
+import { TestCytoStyle, TestCytoStyleBFS } from "./cytoStylesheet.js";
 import { Order, assignCourier } from "./orderGeneration.js";
 //Traversal imports
 import * as pathModules from "./pathModules.js";
@@ -148,6 +148,7 @@ function testGreedyBestFirstSearch(testGraph) {
     endId: "N7",
     expected: ["R1"],
     msg: UNREACHABLE,
+    graph: null
   };
 
   //Test if BFS reaches end node from start node with no adjacent nodes
@@ -156,6 +157,7 @@ function testGreedyBestFirstSearch(testGraph) {
     endId: "R1",
     expected: ["N7"],
     msg: START_NO_ADJ,
+    graph: null
   };
 
   //Test if BFS reaches end node from start node when a possible path exists with the expected path
@@ -164,12 +166,22 @@ function testGreedyBestFirstSearch(testGraph) {
     endId: "C5",
     expected: ["R1", "N2", "N3", "N4", "C5"],
     msg: VIABLE,
+    graph: null
   };
 
-  let bfsTests = [test1, test2, test3];
+  let test4 = {
+    startId: "R1",
+    endId: "C1",
+    expected: ["R1", "N2", "N3", "N4", "C1"],
+    msg: VIABLE,
+    graph: new TestCytoStyleBFS(),
+  };
+
+  let bfsTests = [test1, test2, test3, test4];
 
   for (let i = 0; i < bfsTests.length; i++) {
-    testGraph = TEMPLATE;
+    testGraph = bfsTests[i].graph || TEMPLATE;
+
     if (testPathfinding(testGraph, greedyBestFirstSearch, bfsTests[i])) {
       testResults.successes++;
     }
