@@ -334,6 +334,10 @@ function findCourier(cyGraph, order) {
   return bestCourier;
 }
 
+/**
+ * Stops the simulation, logging stats in the console.
+ * @param {Class} cyGraph The simulation object.
+ */
 function stopSimulation(cyGraph) {
   clearInterval(cyGraph.simHandler);
   console.log(
@@ -364,6 +368,10 @@ function stopSimulation(cyGraph) {
   );
 }
 
+/**
+ * Restarts the simulation, allowing for endless loops of a certain amount of simulation days.
+ * @param {Class} cyGraph The simulation object.
+ */
 function restartSimulation(cyGraph) {
   cyGraph.numSimulations++;
   cyGraph.reset();

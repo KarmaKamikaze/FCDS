@@ -58,6 +58,9 @@ class CyGraph {
   idleZones = new Array();
   obstructions = new Array();
 
+  /**
+   * Resets the simulation stats, allowing for a simulation restart
+   */
   reset() {
     this.courierCount = 0;
     this.simulationStats = new SimStats();
