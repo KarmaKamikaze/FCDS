@@ -148,7 +148,7 @@ function testGreedyBestFirstSearch(testGraph) {
     endId: "N7",
     expected: ["R1"],
     msg: UNREACHABLE,
-    graph: null
+    graph: null,
   };
 
   //Test if BFS reaches end node from start node with no adjacent nodes
@@ -157,7 +157,7 @@ function testGreedyBestFirstSearch(testGraph) {
     endId: "R1",
     expected: ["N7"],
     msg: START_NO_ADJ,
-    graph: null
+    graph: null,
   };
 
   //Test if BFS reaches end node from start node when a possible path exists with the expected path
@@ -166,9 +166,10 @@ function testGreedyBestFirstSearch(testGraph) {
     endId: "C5",
     expected: ["R1", "N2", "N3", "N4", "C5"],
     msg: VIABLE,
-    graph: null
+    graph: null,
   };
 
+  //Test if BFS exhibits greedy behaviour
   let test4 = {
     startId: "R1",
     endId: "C1",
